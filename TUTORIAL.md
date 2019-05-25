@@ -121,4 +121,46 @@ $ ionic cordova platform add ios
 See https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/
 
 
+### Add side menu / tabs navigation
+
+Ionic 4 starter "sidemenu" does not have tabs, and starter "tabs" does not have side menu. Both these patterns are needed for good UX, so we will do that.
+
+It differs from Ionic 4 sidemenu starter, which does sidemenu on the app module level - we will use a separate menu module. It will be easier to do pages without side menu.
+
+```bash
+$ ionic g page pages/menu
+$ ionic g page pages/tabs
+```
+
+Remove paths we won't need from src/app/app-routing.module.ts:
+
+```js
+  { path: 'home', loadChildren: './home/home.module#HomePageModule' },
+  { path: 'tabs', loadChildren: './pages/tabs/tabs.module#TabsPageModule' },
+```
+
+And change default route '' to (we will keep home page for now, but insert it into the tabs):
+
+```js
+  { path: '', redirectTo: 'menu/app/home', pathMatch: 'full' },
+```
+
+See how to change the generated code of menu and tabs pages in github, and how to edit home.page.html to show a menu icon.
+
+When growing the app, these are the points to insert into:
+
+ 1. Global and intital app routes (e.g. '', 'menu' and later we will add 'login') should go into Routes[] in src/app/app-routing.module.ts
+ 2. Routes from the menu (e.g. tabs and about pages) should go into Routes[] in src/app/pages/menu/menu.module.ts. We use routes like 'menu/app/tabs/home' or 'menu/app/about'.
+ 3. Menu entries should go into MenuPage.pages[] in src/app/pages/menu/menu.page.ts (menu.page.html will automatically show them on the menu).
+ 4. Routes for tabs that are shown on tabs page should go into Routes[] in src/app/pages/tabs/tabs.module.ts
+ 5. Tab buttons should be added to src/app/pages/tabs/tabs.page.html
+
+Note: there is some obvious duplication of entries between menu and tabs for all tabbed pages. Perhaps a single module that describes all routes and menus can do a better job, maybe will do it later.
+
+The solution has just one line in the menu and one tab, so its hard to see how it works. Once we add more pages, it will be clear that it works well - menu and tabs are synchronized, thanks to Angular router.
+
+### Summary
+
+We created minimum functionality Ionic 4 app with side menu and tabs.
+
 ##END
