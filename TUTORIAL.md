@@ -25,6 +25,41 @@ $ cd ionic4-feathersjsplus-starter
 
 Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
 
+### VSCode
 
+```bash
+$ cd client/ionic4-feathersjsplus-starter
+$ code .
+```
+
+To debug Ionic 4 app using **VSCode**, see [this link](http://www.damirscorner.com/blog/posts/20161122-DebuggingIonic2AppsInChromeFromVisualStudioCode.html). 
+
+Create ```launch.json``` file for VSCode project in the client/ionic4-feathersjsplus-starter\.vscode\ directory (can use VSCode shortcuts in Debug ribbon):
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch in Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8100",
+      "sourceMaps": true,
+      "webRoot": "${workspaceRoot}/www"
+    }
+  ]
+}
+```
+
+For debugging, first, run in the VSCode terminal:
+
+```bash
+$ ionic serve -b
+```
+
+Alternatively see Github for setup in tasks.json file that launches ionic app.
+
+Next, start debug with "Launch in Chrome" configuration.
 
 ##END
