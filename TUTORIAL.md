@@ -23,7 +23,7 @@ $ ionic start ionic4-feathersjsplus-starter blank --type=angular
 $ cd ionic4-feathersjsplus-starter
 ```
 
-Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
+Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
 
 
 
