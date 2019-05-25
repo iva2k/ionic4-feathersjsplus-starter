@@ -112,4 +112,13 @@ $ ionic cordova run android
 Use  "Run android on device" configuration (in launch.json file) for debugging in VSCode.
 
 
+#### IOS Device
+
+```bash
+$ ionic cordova platform add ios
+```
+
+See https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/
+
+
 ##END
