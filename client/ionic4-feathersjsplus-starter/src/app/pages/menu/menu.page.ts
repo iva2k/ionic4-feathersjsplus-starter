@@ -7,6 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuPage implements OnInit {
 
+  pages = [
+    {
+      title: 'Home',
+      url: '/menu/app/tabs/home',
+      icon: 'home'
+    },
+  ];
+
   constructor() { }
 
   ngOnInit() {
