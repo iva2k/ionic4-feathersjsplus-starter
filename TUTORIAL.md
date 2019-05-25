@@ -1,4 +1,4 @@
-# ionic3-feathers app Tutorial
+# ionic4-feathersjsplus-starter app Tutorial
 
 Tutorial / step-by-step building of Ionic 4 app with FeathersJS+ backend services. 
 
