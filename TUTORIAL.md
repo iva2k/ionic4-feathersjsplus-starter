@@ -21,6 +21,7 @@ $ mkdir client
 $ cd client
 $ ionic start ionic4-feathersjsplus-starter blank --type=angular
 $ cd ionic4-feathersjsplus-starter
+$ npm i -D -E @ionic/lab
 ```
 
 Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
@@ -162,5 +163,35 @@ The solution has just one line in the menu and one tab, so its hard to see how i
 ### Summary
 
 We created minimum functionality Ionic 4 app with side menu and tabs.
+
+## Step 2. Add Feathers Client to Ionic 4
+
+_Inspired by https://berndsgn.ch/posts/observables-with-angular-and-feathersjs/ ._
+
+```bash
+$ npm install --save @feathersjs/client socket.io-client
+$ npm install --save-dev @types/socket.io-client
+$ npm install --save rxjs@6 rxjs-compat@6
+$ ionic g service services/todos
+$ ionic g module components ;# Common module for all shared components (it should be imported into every page where any of the components are used).
+$ ionic g component components/todos --export --module=/src/app/components/components.module.ts ;## Somehow Ionic 4 and Angular 7 got "--export" broken without "--module" with full path to the file. Argh!
+$ ionic g interface models/todo
+```
+
+See code edits in the generated files (see code on Github):
+
+ * src/app/components/components.module.ts
+ * src/app/components/todos/todos.component.html (.component.scss not changed)
+ * src/app/components/todos/todos.component.ts (.spec.ts not changed)
+ * src/app/services/todos.service.ts (.spec.ts not changed)
+ * src/app/models/todo.ts
+
+Modify src/app/app.module.ts to load the service (see code on Github).
+
+Modify src/app/home.module.ts to import components.module and src/app/home.html to use <app-todos/> component (see code on Github).
+
+### Summary
+
+With all the source code in place, but no server running, the app fills a few dummy items into the Todo list. This will be changed in the next section.
 
 ##END
