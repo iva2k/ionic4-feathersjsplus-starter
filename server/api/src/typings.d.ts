@@ -7,6 +7,9 @@ declare module '*.json';
 
 // Application.
 
+// Services.
+declare module 'feathers-nedb';
+
 // !code: more // !end
 
 // !code: funcs // !end

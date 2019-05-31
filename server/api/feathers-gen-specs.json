@@ -18,6 +18,24 @@
       "socketio"
     ]
   },
-  "services": {},
-  "hooks": {}
+  "services": {
+    "todos": {
+      "name": "todos",
+      "nameSingular": "todo",
+      "subFolder": "",
+      "fileName": "todos",
+      "adapter": "nedb",
+      "path": "/todos",
+      "isAuthEntity": false,
+      "graphql": true
+    }
+  },
+  "hooks": {},
+  "connections": {
+    "nedb": {
+      "database": "nedb",
+      "adapter": "nedb",
+      "connectionString": "nedb://../data"
+    }
+  }
 }

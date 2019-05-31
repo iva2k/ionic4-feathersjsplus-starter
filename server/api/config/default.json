@@ -10,5 +10,6 @@
     "environmentsAllowingSeedData": [
       ""
     ]
-  }
+  },
+  "nedb": "../data"
 }

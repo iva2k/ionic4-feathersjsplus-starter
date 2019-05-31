@@ -216,9 +216,6 @@ Answer some questions:
 feathers-plus generate app
 ```
 
-Note: Feathers-plus requires NodeJS v10. However, there is a some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 - @see <https://github.com/feathers-plus/generator-feathers-plus/issues/103>.
-Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus.
-
 Answer some questions:
 
 ```feathers-plus
@@ -237,13 +234,46 @@ npm start
 ```
 
 Notes:
-1. feathers-plus has some issues with changing source files folder (from src) - some entries remain "src". So we won't change the default.
-2. ```npm start``` fails in Typescript version (App declaration without services does not compile with TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi)
+1. Feathers-plus requires NodeJS v10. However, there is some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 - @see <https://github.com/feathers-plus/generator-feathers-plus/issues/103>. Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus.
+2. feathers-plus has some issues with changing source files folder (from src) - some entries remain "src". So we won't change the default.
+3. right after ```feathers-plus generate app``` command ```npm start``` fails in Typescript compilation (App declaration without services does not compile with error TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi). Adding first service seems to rectify that problem.
 
 To run tests:
 
 ```bash
 npm test
 ```
+
+Now let's create a backend service using Feathers to respond to the client in the Ionic app. Call the command and answer some questions:
+
+```bash
+$ feathers-plus generate service
+  ? What is the name of the service? todos
+  ? What would you call one row in the todos database? todo
+  ? What kind of service is it? NeDB
+  ? Place service code in which nested folder, e.g. `v1/blog`? (optional)
+  ? Which path should the service be registered on? /todos
+  ? Should this be served by GraphQL? Yes
+  ? What is the database connection string? nedb://../data
+```
+
+(Skip authentication service in the source guide for now)
+
+Add hooks to check and fulfill the incoming data:
+
+```bash
+$ feathers-plus generate hook
+  ? What is the name of the hook? process-todo
+  ? What kind of hook should it be? before
+  ? What service(s) should this hook be for (select none to add it yourself)? todos
+  ? What methods should the hook be for (select none to add it yourself)? create
+
+  ? What is the name of the hook? process-todo
+  We will be adding the new hook processTodo in file process-todo.
+  ? The hook will be used with  One service (src/services/*/hooks/)
+  ? Which service will this hook be used with? todos
+```
+
+Edit the generated files (see code on Github).
 
 ##END
