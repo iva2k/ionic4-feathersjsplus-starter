@@ -264,11 +264,6 @@ Add hooks to check and fulfill the incoming data:
 ```bash
 $ feathers-plus generate hook
   ? What is the name of the hook? process-todo
-  ? What kind of hook should it be? before
-  ? What service(s) should this hook be for (select none to add it yourself)? todos
-  ? What methods should the hook be for (select none to add it yourself)? create
-
-  ? What is the name of the hook? process-todo
   We will be adding the new hook processTodo in file process-todo.
   ? The hook will be used with  One service (src/services/*/hooks/)
   ? Which service will this hook be used with? todos

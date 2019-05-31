@@ -2,6 +2,8 @@
 // Hooks for service `todos`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
 import { HooksObject } from '@feathersjs/feathers';
+// tslint:disable-next-line:no-unused-variable
+import processTodo from './hooks/process-todo';
 // !code: imports // !end
 
 // !<DEFAULT> code: used

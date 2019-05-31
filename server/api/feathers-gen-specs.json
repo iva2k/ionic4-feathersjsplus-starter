@@ -30,7 +30,15 @@
       "graphql": true
     }
   },
-  "hooks": {},
+  "hooks": {
+    "process-todo": {
+      "fileName": "process-todo",
+      "camelName": "processTodo",
+      "ifMulti": "n",
+      "multiServices": [],
+      "singleService": "todos"
+    }
+  },
   "connections": {
     "nedb": {
       "database": "nedb",
