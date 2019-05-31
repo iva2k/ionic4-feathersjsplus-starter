@@ -1,39 +1,39 @@
 # ionic4-feathersjsplus-starter app Tutorial
 
-Tutorial / step-by-step building of Ionic 4 app with FeathersJS+ backend services. 
+Tutorial / step-by-step building of Ionic 4 app with FeathersJS+ backend services.
 
-# Get Started - Step-by-Step Instructions
+## Get Started - Step-by-Step Instructions
 
 Create an app from scratch following these steps. See source code edits (you can check out commit for the current step) as you go on Github: [github.com/iva2k/ionic4-feathersjsplus-starter](https://github.com/iva2k/ionic4-feathersjsplus-starter)
 
-## Step 1. Blank Ionic 4 app
+### Step 1. Blank Ionic 4 app
 
-_From https://ionicframework.com/getting-started ._
+_From <https://ionicframework.com/getting-started> ._
 
 First, install [NodeJS](http://nodejs.org/). Then in a terminal / command line:
 
 ```bash
-$ sudo npm install -g ionic cordova
-$ mkdir ionic4-feathersjsplus-starter
-$ cd ionic4-feathersjsplus-starter
-$ mkdir server
-$ mkdir client
-$ cd client
-$ ionic start ionic4-feathersjsplus-starter blank --type=angular
-$ cd ionic4-feathersjsplus-starter
-$ npm i -D -E @ionic/lab
+sudo npm install -g ionic cordova
+mkdir ionic4-feathersjsplus-starter
+cd ionic4-feathersjsplus-starter ;## Project root
+mkdir server
+mkdir client
+cd client ;## From project root
+ionic start ionic4-feathersjsplus-starter blank --type=angular
+cd ionic4-feathersjsplus-starter
+npm i -D -E @ionic/lab
 ```
 
 Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
 
-### VSCode
+#### VSCode
 
 ```bash
-$ cd client/ionic4-feathersjsplus-starter
-$ code .
+cd client/ionic4-feathersjsplus-starter
+code .
 ```
 
-To debug Ionic 4 app using **VSCode**, see [this link](http://www.damirscorner.com/blog/posts/20161122-DebuggingIonic2AppsInChromeFromVisualStudioCode.html). 
+To debug Ionic 4 app using **VSCode**, see [this link](http://www.damirscorner.com/blog/posts/20161122-DebuggingIonic2AppsInChromeFromVisualStudioCode.html).
 
 Create ```launch.json``` file for VSCode project in the client/ionic4-feathersjsplus-starter\.vscode\ directory (can use VSCode shortcuts in Debug ribbon):
 
@@ -56,14 +56,14 @@ Create ```launch.json``` file for VSCode project in the client/ionic4-feathersjs
 For debugging, first, run in the VSCode terminal:
 
 ```bash
-$ ionic serve -b
+ionic serve -b
 ```
 
 Alternatively see Github for setup in tasks.json file that launches ionic app.
 
 Next, start debug with "Launch in Chrome" configuration (in launch.json file).
 
-#### Android Device
+##### Android Device
 
 For debugging in VSCode on Android device, see [this link](https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/).
 
@@ -77,20 +77,19 @@ Install Android Studio, download SDKs and make sure to install:
 - Android SDK Platform-Tools
 - Android SDK Tools
 - Google USB Driver (adb)
-- Support Repository (Android Support Repository and Google Repository) 
+- Support Repository (Android Support Repository and Google Repository)
 - Google Play Services
 
-
 ```bash
-$ ionic cordova platform add android
+ionic cordova platform add android
 ```
 
-To avoid issues in Cordova plugins (e.g. https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/478),
+To avoid issues in Cordova plugins (e.g. <https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/478),>
 patch file node_modules/cordova-android/bin/templates/project/build.gradle with code
 (required since [11.2.0](https://developers.google.com/android/guides/releases#august_2017_-_version_1120)
 see also [this link](https://developer.android.com/studio/build/dependencies#google-maven)):
 
-```
+```gradle
         maven {
             url "https://maven.google.com"
         }
@@ -98,39 +97,36 @@ see also [this link](https://developer.android.com/studio/build/dependencies#goo
 
 into sections:
 
- - buildscript { repositories { ... } }
- - allprojects { repositories { ... } }
-
+- buildscript { repositories { ... } }
+- allprojects { repositories { ... } }
 
 Note: this is a package file, will be overwritten upon updates.
 
 To run on Android phone, plug in, and:
 
 ```bash
-$ ionic cordova run android
+ionic cordova run android
 ```
 
 Use  "Run android on device" configuration (in launch.json file) for debugging in VSCode.
 
-
-#### IOS Device
+##### IOS Device
 
 ```bash
-$ ionic cordova platform add ios
+ionic cordova platform add ios
 ```
 
-See https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/
+See <https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/>
 
-
-### Add side menu / tabs navigation
+#### Add side menu / tabs navigation
 
 Ionic 4 starter "sidemenu" does not have tabs, and starter "tabs" does not have side menu. Both these patterns are needed for good UX, so we will do that.
 
 It differs from Ionic 4 sidemenu starter, which does sidemenu on the app module level - we will use a separate menu module. It will be easier to do pages without side menu.
 
 ```bash
-$ ionic g page pages/menu
-$ ionic g page pages/tabs
+ionic g page pages/menu
+ionic g page pages/tabs
 ```
 
 Remove paths we won't need from src/app/app-routing.module.ts:
@@ -160,37 +156,37 @@ Note: there is some obvious duplication of entries between menu and tabs for all
 
 The solution has just one line in the menu and one tab, so its hard to see how it works. Once we add more pages, it will be clear that it works well - menu and tabs are synchronized, thanks to Angular router.
 
-### Summary
+#### Step 1 Summary
 
 We created minimum functionality Ionic 4 app with side menu and tabs.
 
-## Step 2. Add Feathers Client to Ionic 4
+### Step 2. Add Feathers Client to Ionic 4
 
-_Inspired by https://berndsgn.ch/posts/observables-with-angular-and-feathersjs/ ._
+_Inspired by <https://berndsgn.ch/posts/observables-with-angular-and-feathersjs/> ._
 
 ```bash
-$ npm install --save @feathersjs/client socket.io-client
-$ npm install --save-dev @types/socket.io-client
-$ npm install --save rxjs@6 rxjs-compat@6
-$ ionic g service services/todos
-$ ionic g module components ;# Common module for all shared components (it should be imported into every page where any of the components are used).
-$ ionic g component components/todos --export --module=/src/app/components/components.module.ts ;## Somehow Ionic 4 and Angular 7 got "--export" broken without "--module" with full path to the file. Argh!
-$ ionic g interface models/todo
+npm install --save @feathersjs/client socket.io-client
+npm install --save-dev @types/socket.io-client
+npm install --save rxjs@6 rxjs-compat@6
+ionic g service services/todos
+ionic g module components ;## Common module for all shared components (it should be imported into every page where any of the components are used).
+ionic g component components/todos --export --module=/src/app/components/components.module.ts ;## Somehow Ionic 4 and Angular 7 got "--export" broken without "--module" with full path to the file. Argh!
+ionic g interface models/todo
 ```
 
 See code edits in the generated files (see code on Github):
 
- * src/app/components/components.module.ts
- * src/app/components/todos/todos.component.html (.component.scss not changed)
- * src/app/components/todos/todos.component.ts (.spec.ts not changed)
- * src/app/services/todos.service.ts (.spec.ts not changed)
- * src/app/models/todo.ts
+- src/app/components/components.module.ts
+- src/app/components/todos/todos.component.html (.component.scss not changed)
+- src/app/components/todos/todos.component.ts (.spec.ts not changed)
+- src/app/services/todos.service.ts (.spec.ts not changed)
+- src/app/models/todo.ts
 
 Modify src/app/app.module.ts to load the service (see code on Github).
 
-Modify src/app/home.module.ts to import components.module and src/app/home.html to use <app-todos/> component (see code on Github).
+Modify src/app/home.module.ts to import components.module and src/app/home.html to use \<app-todos/\> component (see code on Github).
 
-### Summary
+#### Step 2 Summary
 
 With all the source code in place, but no server running, the app fills a few dummy items into the Todo list. This will be changed in the next section.
 
