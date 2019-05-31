@@ -190,4 +190,60 @@ Modify src/app/home.module.ts to import components.module and src/app/home.html 
 
 With all the source code in place, but no server running, the app fills a few dummy items into the Todo list. This will be changed in the next section.
 
+### Step 3. Create Feathers server
+
+_From Feathers guide <https://docs.feathersjs.com/guides/chat/readme.html> ._
+
+We will use Feathers+ generator, see <https://generator.feathers-plus.com:> instead of ```feathers generate ...``` we will do ```feathers-plus generate ...```, so any existing tutorials can be used.
+
+```bash
+npm i -g @feathers-plus/cli
+cd server ;## From project root
+mkdir api
+cd api
+feathers-plus generate options
+```
+
+Answer some questions:
+
+```feathers-plus
+? Generate TypeScript code? Yes
+? Use semicolons? Yes
+? View module changes and control replacement (not recommended)? No
+```
+
+```bash
+feathers-plus generate app
+```
+
+Note: Feathers-plus requires NodeJS v10. However, there is a some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 - @see <https://github.com/feathers-plus/generator-feathers-plus/issues/103>.
+Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus.
+
+Answer some questions:
+
+```feathers-plus
+? Project name: api
+? Description:  Feathers api server
+? What folder should the source files live in? src
+? Which package manager are you using (has to be installed globally)? npm
+? What type of API are you making? REST, Realtime via Socket.io
+? Data mutating tests and seeding may run when NODE_ENV is one of (optional) ()
+```
+
+To start server:
+
+```bash
+npm start
+```
+
+Notes:
+1. feathers-plus has some issues with changing source files folder (from src) - some entries remain "src". So we won't change the default.
+2. ```npm start``` fails in Typescript version (App declaration without services does not compile with TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi)
+
+To run tests:
+
+```bash
+npm test
+```
+
 ##END
