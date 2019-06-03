@@ -35,7 +35,27 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "stopOnEntry": false,
-      "sourceMaps": true,
+      "timeout": 120000
+    },
+    {
+      "name": "Test All TRY",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "-r", "ts-node/register",
+        "-P", "tsconfig.test.json",
+        "--timeout", "120000", "--colors",
+        "${workspaceFolder}/test/**/*.test.ts"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "stopOnEntry": false,
+      "env": {
+        "TS_NODE_FILES": "true",
+        "TS_NODE_PROJECT": "tsconfig.test.json"
+      },
+      "protocol": "inspector",
       "timeout": 120000
     },
   ]
