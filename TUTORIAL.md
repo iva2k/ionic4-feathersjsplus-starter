@@ -24,9 +24,9 @@ cd ionic4-feathersjsplus-starter
 npm i -D -E @ionic/lab
 ```
 
-Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around statusBar.styleDefault() and splashScreen.hide().
+Fix an error when running without cordova, in src/app/app.component.ts add guard ```if (this.platform.is('cordova')) { ... }``` around ```statusBar.styleDefault()``` and ```splashScreen.hide()```.
 
-#### VSCode
+#### Client VSCode
 
 ```bash
 cd client/ionic4-feathersjsplus-starter
@@ -144,7 +144,7 @@ And change default route '' to (we will keep home page for now, but insert it in
 
 See how to change the generated code of menu and tabs pages in github, and how to edit home.page.html to show a menu icon.
 
-When growing the app, these are the points to insert into:
+When growing the app, these are the points in code to insert into:
 
  1. Global and intital app routes (e.g. '', 'menu' and later we will add 'login') should go into Routes[] in src/app/app-routing.module.ts
  2. Routes from the menu (e.g. tabs and about pages) should go into Routes[] in src/app/pages/menu/menu.module.ts. We use routes like 'menu/app/tabs/home' or 'menu/app/about'.
@@ -154,7 +154,7 @@ When growing the app, these are the points to insert into:
 
 Note: there is some obvious duplication of entries between menu and tabs for all tabbed pages. Perhaps a single module that describes all routes and menus can do a better job, maybe will do it later.
 
-The solution has just one line in the menu and one tab, so its hard to see how it works. Once we add more pages, it will be clear that it works well - menu and tabs are synchronized, thanks to Angular router.
+The solution has just one line in the menu and one tab, so it is hard to see how it works. Once we add more pages, it will be clear that it works well - menu and tabs are synchronized, thanks to Angular router.
 
 #### Step 1 Summary
 
@@ -192,9 +192,9 @@ With all the source code in place, but no server running, the app fills a few du
 
 ### Step 3. Create Feathers server
 
-_From Feathers guide <https://docs.feathersjs.com/guides/chat/readme.html> ._
+_From Feathers guide <https://docs.feathersjs.com/guides/chat/readme.html> with changes for TypeScript and Feathers+ generator._
 
-We will use Feathers+ generator, see <https://generator.feathers-plus.com:> instead of ```feathers generate ...``` we will do ```feathers-plus generate ...```, so any existing tutorials can be used.
+We will use Feathers+ generator, see <https://generator.feathers-plus.com:> instead of ```feathers generate ...``` we will do ```feathers-plus generate ...```, so any existing tutorials can be used. BTW, according to the [FeathersJS blog](https://blog.feathersjs.com/feathers-2019-new-years-news-f478d5f2c8cd), Feathers+ is scheduled to move into mainline FeathersJS in Crow release.
 
 ```bash
 npm i -g @feathers-plus/cli
@@ -227,16 +227,29 @@ Answer some questions:
 ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) ()
 ```
 
+Notes:
+
+1. Feathers-plus requires NodeJS v10. However, there is some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 - @see <https://github.com/feathers-plus/generator-feathers-plus/issues/103>. Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus until the issue is resolved.
+2. feathers-plus has some issues with changing source files folder from the default 'src' - some entries remain 'src'. So we won't change the default.
+3. app.configure() has been removed in express 4 (actually, kept until 4.16.0 and deleted in 4.16.6 of @types/express-serve-static-core), @see <https://github.com/feathersjs/feathers/issues/1090>. Further, feathersjs app.configure() polyfill calls the callback with two arguments instead of one. That causes some issues with TypeScript compilation:
+
+   a. Right after ```feathers-plus generate app``` command ```npm start``` fails in TypeScript compilation (App declaration without services does not compile with error TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi). Adding first service seems to rectify that problem.
+
+   b. Adding 'todos' service resolves #a, but command ```npm start``` still fails, now in TypeScript compilation of todos.service configure call (this, app) vs. (app) function types. Pinning express and express-serve-static-core versions to 4.16.0 in package-lock.json helps.
+
+   c. Running ```node -r ts-node/register``` instead of ```ts-node``` removes some TypeScript issues (though doing so needs some tweaks).
+
+In package.json "scripts" section change "start" script to:
+
+```json
+    "start": "cross-env NODE_ENV=development TS_NODE_FILES=true node -r ts-node/register src/index.ts",
+```
+
 To start server:
 
 ```bash
 npm start
 ```
-
-Notes:
-1. Feathers-plus requires NodeJS v10. However, there is some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 - @see <https://github.com/feathers-plus/generator-feathers-plus/issues/103>. Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus.
-2. feathers-plus has some issues with changing source files folder (from src) - some entries remain "src". So we won't change the default.
-3. right after ```feathers-plus generate app``` command ```npm start``` fails in Typescript compilation (App declaration without services does not compile with error TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi). Adding first service seems to rectify that problem.
 
 To run tests:
 
@@ -247,7 +260,7 @@ npm test
 Now let's create a backend service using Feathers to respond to the client in the Ionic app. Call the command and answer some questions:
 
 ```bash
-$ feathers-plus generate service
+feathers-plus generate service
   ? What is the name of the service? todos
   ? What would you call one row in the todos database? todo
   ? What kind of service is it? NeDB
@@ -262,7 +275,7 @@ $ feathers-plus generate service
 Add hooks to check and fulfill the incoming data:
 
 ```bash
-$ feathers-plus generate hook
+feathers-plus generate hook
   ? What is the name of the hook? process-todo
   We will be adding the new hook processTodo in file process-todo.
   ? The hook will be used with  One service (src/services/*/hooks/)
@@ -271,4 +284,75 @@ $ feathers-plus generate hook
 
 Edit the generated files (see code on Github).
 
-##END
+#### Server VSCode
+
+VSCode support for node.js TypeScript debugging has improved (see <https://code.visualstudio.com/docs/nodejs/nodejs-debugging>), so tricks used in the past are not needed.
+
+```bash
+cd server/api
+code .
+```
+
+Create ```launch.json``` file for VSCode project in the app's server/api directory (use VSCode shortcuts in Debug ribbon):
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch via NPM",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "stopOnEntry": false,
+      "env": {
+        "TS_NODE_FILES": "true"
+      },
+      "args": [
+        "${workspaceFolder}/src/index.ts"
+      ]
+    },
+
+```
+
+To debug mocha tests in VSCode, use the following configuration:
+
+In package.json "scripts" section:
+
+```json
+    "test:debug": "npm run clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
+```
+
+in launch.json:
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+    ...
+        {
+            "name": "Test All",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "test:debug",
+                "--"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "timeout": 120000
+        },
+```
+
+Mocha does not have the hiccup on the appended "--inspect-brk" parameter, so no "args" trick is needed.
+
+## END

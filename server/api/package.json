@@ -24,13 +24,16 @@
   "scripts": {
     "test": "npm run tslint && npm run mocha",
     "test:all": "npm run tslint && cross-env NODE_ENV= npm run mocha",
+    "test:debug": "npm run clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
     "tslint": "tslint -p tsconfig.json -c tslint.json && tslint -p tsconfig.test.json -c tslint.json",
     "dev": "nodemon src/index.ts",
     "dev:seed": "nodemon src/index.ts --seed",
-    "start": "ts-node --files src/",
+    "startORIG": "cross-env NODE_ENV=development ts-node --files src/",
+    "start": "cross-env NODE_ENV=development TS_NODE_FILES=true node -r ts-node/register src/index.ts",
     "start:seed": "cross-env NODE_ENV= ts-node --files src/ --seed",
     "mocha": "ts-mocha -p tsconfig.test.json \"test/**/*.test.ts\" --timeout 10000 --exit",
-    "compile": "tsc -p tsconfig.json"
+    "compile": "tsc -p tsconfig.json",
+    "clean": ""
   },
   "dependencies": {
     "@feathersjs/configuration": "^2.0.6",

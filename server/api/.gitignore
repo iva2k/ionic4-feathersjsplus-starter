@@ -110,6 +110,7 @@ $RECYCLE.BIN/
 ### Language ###
 # TypeScript
 compiled/
+.ts-node/
 
 # Others
 lib/
