@@ -22,7 +22,7 @@ let moduleExports: HooksObject = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [processTodo()],
     update: [],
     patch: [],
     remove: []

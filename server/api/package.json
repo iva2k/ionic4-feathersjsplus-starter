@@ -24,8 +24,8 @@
   "scripts": {
     "test": "npm run tslint && npm run mocha",
     "test:all": "npm run tslint && cross-env NODE_ENV= npm run mocha",
-    "test:debug": "npm run clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
-    "clean": "",
+    "test:debug": "npm run test:clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
+    "test:clean": "",
     "tslint": "tslint -p tsconfig.json -c tslint.json && tslint -p tsconfig.test.json -c tslint.json",
     "dev": "nodemon src/index.ts",
     "dev:seed": "nodemon src/index.ts --seed",
