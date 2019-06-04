@@ -115,3 +115,5 @@ compiled/
 # Others
 lib/
 data/
+.nyc_output/
+coverage/

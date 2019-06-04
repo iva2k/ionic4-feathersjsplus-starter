@@ -6,7 +6,7 @@ Tutorial / step-by-step building of Ionic 4 app with FeathersJS+ backend service
 
 Create an app from scratch following these steps. See source code edits (you can check out commit for the current step) as you go on Github: [github.com/iva2k/ionic4-feathersjsplus-starter](https://github.com/iva2k/ionic4-feathersjsplus-starter)
 
-### Step 1. Blank Ionic 4 app
+### Step 1. Blank Ionic 4 App
 
 _From <https://ionicframework.com/getting-started> ._
 
@@ -190,7 +190,7 @@ Modify src/app/home.module.ts to import components.module and src/app/home.html 
 
 With all the source code in place, but no server running, the app fills a few dummy items into the Todo list. This will be changed in the next section.
 
-### Step 3. Create Feathers server
+### Step 3. Create Feathers Server
 
 _From Feathers guide <https://docs.feathersjs.com/guides/chat/readme.html> with changes for TypeScript and Feathers+ generator. Also see <https://medium.com/feathers-plus/feathers-plus-cli-5c7ba0015e8e> ._
 
@@ -362,5 +362,106 @@ Note that ts-mocha returns an error code when running under VSCode debugger, eve
 #### Step 3 Summary
 
 With the api project in place, we have server running. With all the added source code, the app fetches some todo items from the server. The list on the server is empty - we will need to seed some auto-generated data, which will do in the next sections.
+
+### Step 4. Improve Server Tests and Add Data Seeder
+
+#### Test Coverage
+
+Let's implement measurement of test coverage using nyc/istanbul.
+
+
+```bash
+npm install shx nyc source-map-support @istanbuljs/nyc-config-typescript --save-dev
+```
+
+We need to wipe out test data and call nyc to measure coverage. Add to "scripts" section in package.json:
+
+```json
+    "test:clean": "shx rm -rf test/data",
+    "coverage": "npm run test:clean && cross-env NODE_ENV=test nyc npm run mocha && nyc report --reporter=html",
+```
+
+Add new section to package.json:
+
+```json
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": false,
+    "watermarks": {
+      "lines": [70, 95],
+      "functions": [70, 95],
+      "branches": [70, 95],
+      "statements": [70, 95]
+    }
+  },
+```
+
+(Configuration is based on recommended settings in <https://github.com/istanbuljs/istanbuljs/blob/master/packages/nyc-config-typescript/index.json>, instead of installing the package, just copied the settings here)
+
+We can change "check-coverage" to "true" later, when coverage is improved, so we can keep enforcing good coverage.
+
+Run coverage to see where we are before any more tests are added:
+
+```bash
+npm run coverage
+```
+
+Open <./server/api/coverage/index.html> in a browser to see nicely formatted results.
+
+#### Tests
+
+Let's implement some additional tests and improve how tests are performed and add data seeder for tests and development.
+
+The referenced guide provides unit tests, expanding the tests created by the generator. Though they are good to test individual isolated hooks, the effort is almost wasted on unit tests, as there are hook inter-dependencies and hook insertion that is not tested, so we will need integration tests. It will drastically increase code coverage and make more robust regression tests.
+
+The feathers+ generator can generate unit tests and integration tests, which we will use. There are also some great articles on testing:
+
+  1. <https://medium.com/feathers-plus/fake-data-with-feathers-plus-cli-e668b0e16a8>
+  2. <https://medium.com/feathers-plus/automatically-seeding-data-with-feathers-plus-cli-336302adfe3>
+  3. <https://medium.com/feathers-plus/automatic-tests-with-feathers-plus-cli-4844721a29cf>
+  4. <https://blog.usejournal.com/use-decision-tables-to-write-better-tests-faster-835b18906cf8?sk=d464c55af3b7bb4be795794afaa86247>
+
+Making system/integration hook tests is chosen here as most practical and high ROI change. Also we'll fix some issues between feathers-plus generate and Mocha.
+
+Use in-memory DB:
+
+```bash
+npm install feathers-memory --save-dev
+```
+
+See its use in: <https://docs.feathersjs.com/guides/chat/testing.html>
+
+Note: feathers-memory service uses 'id' field name by default, while database-backed services typically use '_id' field name. It creates bugs in tests with in-memory services. Good practice is to force all services to use the same id field, '_id' is preferred in this project.
+
+```bash
+feathers-plus generate test
+  ? Which kind of test is required? hook - integration (tested using a fake service)
+  ? Which hook is being tested? todos/hooks/process-todo.ts
+       skip test\services\todos\hooks\process-todo.integ.test.ts
+     create test\services\todos\hooks\process-todo.integ.test.ts
+```
+
+Add properties to server/api/src/services/todos/todos.schema.ts (see code on Github) and regenerate faker data:
+
+```bash
+feathers-plus generate fakes
+```
+
+and look at the fake data now stored in server/api/seeds/fake-data.js
+
+#### Add data seeder for development
+
+// Data seeder. see https://github.com/thosakwe/feathers-seeder
+// Also see possible data patterns: https://github.com/marak/Faker.js
+
+```bash
+npm install --save feathers-seeder
+```
+
+See file server/api/src/index.js on Github for the seeder code.
+
+#### Step 4 Summary
+
+With all the added source code in place, the app fetches some todo items from the server. These items are auto-generated by the seeder, which will be changed in the next sections.
 
 ## END
