@@ -35,6 +35,8 @@ cd client/ionic4-feathersjsplus-starter
 code .
 ```
 
+(Note: You can start and leave 2 instances of VSCode - one for the client, and one for the server, shown later)
+
 To debug Ionic 4 app using **VSCode**, see [this link](http://www.damirscorner.com/blog/posts/20161122-DebuggingIonic2AppsInChromeFromVisualStudioCode.html).
 
 Create ```launch.json``` file for VSCode project in the client/ionic4-feathersjsplus-starter\.vscode\ directory (can use VSCode shortcuts in Debug ribbon):
@@ -298,6 +300,8 @@ cd server/api
 code .
 ```
 
+(Note: You can start and leave 2 instances of VSCode - one for the client, shown above, and one for the server)
+
 Create ```launch.json``` file for VSCode project in the app's server/api directory (use VSCode shortcuts in Debug ribbon):
 
 ```json
@@ -415,7 +419,7 @@ Open the report file [server/api/coverage/index.html](./server/api/coverage/inde
 
 Let's add proper production, test and development environments.
 
-If not done already, add "dev" and "test" environments to allow data seeding, to do so regenerate the app:
+If not done already, add "dev" and "test" environments to allow data seeding, to do so regenerate the app and enter "dev,test" as environments where data mutating and seeding is allowed, also choose "yes" for --seed:
 
 ```bash
 feathers-plus generate app
@@ -423,12 +427,11 @@ feathers-plus generate app
    (has to be installed globally)? npm
  ? What type of API are you making?
   REST, Realtime via Socket.io
- ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) (dev,test) dev,testinput:'dev,test'
  ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) dev,test
  ? Seed data records on startup when command line includes --seed? Yes
 ```
 
-It will change feathers-gen-specs.json:
+It will change feathers-gen-specs.json and modify relevant files:
 
 ```json
   "app": {
@@ -442,8 +445,8 @@ Add / modify "scripts" section in package.json:
     "dev"             : "cross-env NODE_ENV=dev        nodemon src/index.ts",
     "dev:seed"        : "cross-env NODE_ENV=dev        nodemon src/index.ts --seed",
     "start"           : "cross-env NODE_ENV=production ts-node --files src/",
+    "start:seed"      : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
     "start:dev"       : "cross-env NODE_ENV=dev        ts-node --files src/",
-    "start:dev:seed"  : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
     "start:test"      : "cross-env NODE_ENV=test       ts-node --files src/",
     "start:test:seed" : "cross-env NODE_ENV=test       ts-node --files src/ --seed",
 ```
@@ -452,7 +455,7 @@ Make sure all config files exist in server/api/config/: dev.json, test.json, pro
 
 #### More Tests
 
-Let's implement some additional tests and improve how tests are performed and add data seeder for tests and development.
+Let's implement some additional tests and improve how tests are performed.
 
 The referenced guide provides unit tests, expanding the tests created by the generator. Though they are good to test individual isolated hooks, the effort is almost wasted on unit tests, as there are hook inter-dependencies and hook insertion that is not tested, so we will need integration tests. It will drastically increase code coverage and make more robust regression tests.
 
@@ -465,7 +468,7 @@ The feathers+ generator can generate unit tests and integration tests, which we 
 
 Making system/integration hook tests is chosen here as most practical and high ROI change. Also we'll fix some issues between feathers-plus generate and Mocha.
 
-Use in-memory DB:
+Use in-memory DB to improve test runtime preformance:
 
 ```bash
 npm install feathers-memory --save-dev
@@ -475,6 +478,8 @@ See in-memory DB use in: <https://docs.feathersjs.com/guides/chat/testing.html>
 
 Note: feathers-memory service uses 'id' field name by default, while database-backed services typically use '_id' field name. It creates bugs in tests with in-memory services. Good practice is to force all services to use the same id field, '_id' is preferred in this project.
 
+We will also create integration tests:
+
 ```bash
 feathers-plus generate test
   ? Which kind of test is required? hook - integration (tested using a fake service)
@@ -483,12 +488,22 @@ feathers-plus generate test
      create test\services\todos\hooks\process-todo.integ.test.ts
 ```
 
-Add properties to server/api/src/services/todos/todos.schema.ts (see code on Github) and regenerate faker data:
+See code edits on Github. In the edits notice how we made few improvement compared to the generated code. beforeEach() and it() tests should be either async, call done(), or promises can be returned. Generator does not always do that, so we have to manually fix those.
+
+#### Data Seeder
+
+Let's add data seeder for tests and development.
+
+Add properties to server/api/src/services/todos/todos.schema.ts (see code on Github).
+
+See all possible faker data patterns: <https://github.com/marak/Faker.js>
+
+Finally regenerate faker data:
 
 ```bash
 feathers-plus generate fakes
 ```
 
-Look at the fake data now stored in server/api/seeds/fake-data.js
+Look at the generated fake data in server/api/seeds/fake-data.js (not saved to Github as it is always regenerated).
 
 ## END

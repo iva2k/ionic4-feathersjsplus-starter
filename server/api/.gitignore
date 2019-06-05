@@ -117,4 +117,5 @@ compiled/
 lib/
 data/
 test/data/
+seeds/
 *.backup

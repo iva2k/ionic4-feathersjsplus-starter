@@ -3,10 +3,11 @@ import assert from 'assert';
 import app from '../../src/app';
 
 describe('\'todos\' service', () => {
-  it('registered the service', () => {
+  it('registered the service', (done) => {
     const service = app.service('todos');
 
     assert.ok(service, 'Registered the service');
+    done();
   });
 
   it('creates and processes todo, adds user information', async () => {

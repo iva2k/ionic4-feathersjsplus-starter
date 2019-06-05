@@ -11,7 +11,7 @@ describe('Test todos/hooks/process-todo.unit.test.ts', () => {
     // tslint:disable-next-line:no-unused-variable
     contextAfter: HookContext, contextAfterMultiple: HookContext;
 
-  beforeEach(() => {
+  beforeEach((done) => {
     contextBefore = {
       service: null!,
       type: 'before',
@@ -51,13 +51,15 @@ describe('Test todos/hooks/process-todo.unit.test.ts', () => {
       }
     };
     contextAfterPaginated.result.total = contextAfterPaginated.result.data.length;
+    done();
   });
 
-  it('Hook exists', () => {
+  it('Hook exists', (done) => {
     assert(typeof processTodo === 'function', 'Hook is not a function.');
+    done();
   });
 
-  it('???', () => {
+  it('???', (done) => {
     contextBefore.method = 'create';
     assert(true);
 
@@ -68,5 +70,6 @@ describe('Test todos/hooks/process-todo.unit.test.ts', () => {
 
     });
     */
+    done();
   });
 });

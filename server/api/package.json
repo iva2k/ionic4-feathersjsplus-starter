@@ -33,7 +33,6 @@
     "start"           : "cross-env NODE_ENV=production ts-node --files src/",
     "start:seed"      : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
     "start:dev"       : "cross-env NODE_ENV=dev        ts-node --files src/",
-    "start:dev:seed"  : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
     "start:test"      : "cross-env NODE_ENV=test       ts-node --files src/",
     "start:test:seed" : "cross-env NODE_ENV=test       ts-node --files src/ --seed",
     "mocha"           : "ts-mocha -p tsconfig.test.json \"test/**/*.test.ts\" --timeout 10000 --exit",
