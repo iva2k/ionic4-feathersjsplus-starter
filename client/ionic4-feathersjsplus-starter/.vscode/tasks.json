@@ -14,12 +14,9 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
-    },
-    {
-      "type": "npm",
-      "script": "ionic:serve",
-      "problemMatcher": []
+      },
+      "problemMatcher": [
+      ]
     },
     {
       "label": "Serve Cordova browser app",
@@ -47,7 +44,6 @@
       ],
       "group": "build"
     },
-
     {
       "label": "Serve Cordova android app",
       "type": "shell",
@@ -62,7 +58,7 @@
         "localhost"
       ],
       "group": "build"
-  },
+    },
     {
       "label": "Build Cordova android app",
       "type": "shell",
