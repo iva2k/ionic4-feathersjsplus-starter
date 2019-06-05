@@ -2,11 +2,10 @@
 /// <reference types="mocha"/>
 import feathers, { Params, Service, Application } from '@feathersjs/feathers';
 import assert from 'assert';
-import feathers from '@feathersjs/feathers';
 import { join } from 'path';
 import { readJsonFileSync } from '@feathers-plus/test-utils';
 import hooks from '../../../../src/services/todos/todos.hooks';
-//import processTodo from '../../../../src/services/todos/hooks/process-todo';
+// import processTodo from '../../../../src/services/todos/hooks/process-todo';
 
 // Get generated fake data
 // tslint:disable-next-line:no-unused-variable
@@ -30,13 +29,13 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
     });
 
     app.service('/todos').hooks(hooks);
-    //app.service('/todos').hooks({
+    // app.service('/todos').hooks({
     //  before: {
     //    create: processTodo()
     //  }
-    //});
+    // });
 
-    service = app.service('/todos');
+    service = app.service('todos');
     params = {
       user, // Provide the user for service method calls
     };
@@ -44,12 +43,12 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
   });
 
 
-  //it('Hook exists', (done) => {
+  // it('Hook exists', (done) => {
   //  assert(typeof processTodo === 'function', 'Hook is not a function.');
   //  done();
-  //});
+  // });
   //
-  //it('???', async (done) => {
+  // it('???', async (done) => {
   //  params.provider = undefined;
   //  assert(true);
   //
@@ -63,7 +62,7 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
   //  }, result);
   //  */
   //  done();
-  //});
+  // });
 
   it('processes the todo as expected', () => {
     // Create a new message
@@ -74,7 +73,7 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
     }, params)
       .then(todo => {
         assert.equal(todo.title, 'Test task');
-        //TODO:    assert.equal(todo.userId, 'test'); // `userId` was set
+        // TODO:    assert.equal(todo.userId, 'test'); // `userId` was set
         assert.ok(!todo.additional); // `additional` property has been removed
         assert.equal(todo.notes, 'should be passed');
       });
@@ -101,7 +100,7 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
     }, params)
       .then(todo => {
         assert.equal(todo.title, 'Test task 2');
-        //TODO:    assert.equal(todo.userId, 'test'); // `userId` was set
+        // TODO:    assert.equal(todo.userId, 'test'); // `userId` was set
         assert.ok(!todo.additional); // `additional` property has been removed
         assert.equal(todo.notes, ''); // empty `notes` property has been created
       });

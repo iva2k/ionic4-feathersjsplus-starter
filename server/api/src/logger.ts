@@ -8,9 +8,9 @@ import { createLogger, format, transports } from 'winston';
 const moduleExports = createLogger({
   // !code: level
   // To see more detailed errors, change this to debug'
-  level: (process.env.NODE_ENV === 'production')
-    ? 'info' // production
-    : 'debug', // development, staging, test.
+  level: (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test')
+    ? 'info' // production, test
+    : 'debug', // development, staging
   // !end
   // !<DEFAULT> code: format
   format: format.combine(

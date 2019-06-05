@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from "rxjs/Observable";
-import { Observer } from "rxjs/Observer";
-import * as io from "socket.io-client";
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import * as io from 'socket.io-client';
 
-//import feathers from "@feathersjs/rest-client";
-//import feathers from "@feathersjs/primus-client";
-//import socketio from "@feathersjs/socketio-client";
-import feathers from "@feathersjs/client";
+// import feathers from '@feathersjs/rest-client';
+// import feathers from '@feathersjs/primus-client';
+// import socketio from '@feathersjs/socketio-client';
+import feathers from '@feathersjs/client';
 
-import { Todo } from "../models/todo";
+import { Todo } from '../models/todo';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class TodosService {
 
   constructor() {
     console.log('Hello from TodosService');
-    //super();
+    // super();
     const socket = io(this.apiUrl, {
 //      transports: ['websocket'],
 //      forceNew: true
@@ -38,11 +38,11 @@ export class TodosService {
 
 //    client.configure(feathers.authentication());
 
-    this.feathersService = client.service("todos");
+    this.feathersService = client.service('todos');
 
-    this.feathersService.on("created", todo => this.onCreated(todo));
-    this.feathersService.on("updated", todo => this.onUpdated(todo));
-    this.feathersService.on("removed", todo => this.onRemoved(todo));
+    this.feathersService.on('created', todo => this.onCreated(todo));
+    this.feathersService.on('updated', todo => this.onUpdated(todo));
+    this.feathersService.on('removed', todo => this.onRemoved(todo));
 
     this.todos$ = new Observable(observer => (this.todosObserver = observer));
     this.dataStore = { todos: [] };
@@ -70,7 +70,7 @@ export class TodosService {
 //    });
 //  }
 
-//?  public addTodo(data: Todo) {
+// ?  public addTodo(data: Todo) {
 //    this.feathersService.create(data);
 //  }
 
@@ -78,12 +78,18 @@ export class TodosService {
     this.feathersService.find({
       query: {}
     })
-    .then( (todos: Todo[]) => {
-      this.dataStore.todos = todos;
+    .then( (todos: any) => {
+      this.dataStore.todos = todos.data;
       this.todosObserver.next(this.dataStore.todos);
     })
     .catch( (err) => {
-      this.dataStore.todos = [{ id: '1qwe', title: "Task1", notes: "Oxo numa lupaer hicka" }, { id: '2wer', title: "Task2", notes: "Didal vensi minaf wisa" }, { id: '3ert', title: "Task3", notes: "Plofer dular mendi fiser" } ]; this.todosObserver.next(this.dataStore.todos); // DEBUG only
+       // DEBUG only:
+      this.dataStore.todos = [
+        { id: '1qwe', title: 'Task1', notes: 'Oxo numa lupaer hicka' },
+        { id: '2wer', title: 'Task2', notes: 'Didal vensi minaf wisa' },
+        { id: '3ert', title: 'Task3', notes: 'Plofer dular mendi fiser' },
+      ];
+      this.todosObserver.next(this.dataStore.todos);
       console.error(err);
     });
   }
