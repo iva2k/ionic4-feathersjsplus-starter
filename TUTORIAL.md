@@ -10,7 +10,9 @@ Create an app from scratch following these steps. See source code edits (you can
 
 _From <https://ionicframework.com/getting-started> ._
 
-First, install [NodeJS](http://nodejs.org/). Then in a terminal / command line:
+First, install [NodeJS](http://nodejs.org/). Alternatively, install nvm (or nvm-windows) and use ```nvm install latest``` command to download and install latest NodeJS version. nvm can switch between multiple node versions.
+
+Then in a terminal / command line:
 
 ```bash
 sudo npm install -g ionic cordova
@@ -224,7 +226,8 @@ Answer some questions:
 ? What folder should the source files live in? src
 ? Which package manager are you using (has to be installed globally)? npm
 ? What type of API are you making? REST, Realtime via Socket.io
-? Data mutating tests and seeding may run when NODE_ENV is one of (optional) ()
+? Data mutating tests and seeding may run when NODE_ENV is one of (optional) dev,test
+? Seed data records on startup when command line includes --seed? Yes
 ```
 
 Notes:
@@ -327,7 +330,8 @@ To debug mocha tests in VSCode, use the following configuration:
 In package.json "scripts" section:
 
 ```json
-    "test:debug": "npm run test:clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
+    "test:all"        : "npm run tslint && cross-env NODE_ENV=test npm run mocha",
+    "test:debug"      : "npm run test:clean && cross-env NODE_ENV=test npm run mocha -- --recursive",
     "test:clean": "",
 ```
 
@@ -369,7 +373,6 @@ With the api project in place, we have server running. With all the added source
 
 Let's implement measurement of test coverage using nyc/istanbul.
 
-
 ```bash
 npm install shx nyc source-map-support @istanbuljs/nyc-config-typescript --save-dev
 ```
@@ -396,19 +399,58 @@ Add new section to package.json:
   },
 ```
 
-(Configuration is based on recommended settings in <https://github.com/istanbuljs/istanbuljs/blob/master/packages/nyc-config-typescript/index.json>, instead of installing the package, just copied the settings here)
+(Configuration is extending recommended nyc TypeScript settings that can be reviewed at <https://github.com/istanbuljs/istanbuljs/blob/master/packages/nyc-config-typescript/index.json>)
 
 We can change "check-coverage" to "true" later, when coverage is improved, so we can keep enforcing good coverage.
 
-Run coverage to see where we are before any more tests are added:
+Let's run coverage to see where we are before any more tests are added:
 
 ```bash
 npm run coverage
 ```
 
-Open <./server/api/coverage/index.html> in a browser to see nicely formatted results.
+Open the report file [server/api/coverage/index.html](./server/api/coverage/index.html) in a browser to see nicely formatted results.
 
-#### Tests
+#### Setup Environment
+
+Let's add proper production, test and development environments.
+
+If not done already, add "dev" and "test" environments to allow data seeding, to do so regenerate the app:
+
+```bash
+feathers-plus generate app
+ ? Which package manager are you using
+   (has to be installed globally)? npm
+ ? What type of API are you making?
+  REST, Realtime via Socket.io
+ ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) (dev,test) dev,testinput:'dev,test'
+ ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) dev,test
+ ? Seed data records on startup when command line includes --seed? Yes
+```
+
+It will change feathers-gen-specs.json:
+
+```json
+  "app": {
+    "environmentsAllowingSeedData": "dev,test",
+    "seedData": true,
+```
+
+Add / modify "scripts" section in package.json:
+
+```json
+    "dev"             : "cross-env NODE_ENV=dev        nodemon src/index.ts",
+    "dev:seed"        : "cross-env NODE_ENV=dev        nodemon src/index.ts --seed",
+    "start"           : "cross-env NODE_ENV=production ts-node --files src/",
+    "start:dev"       : "cross-env NODE_ENV=dev        ts-node --files src/",
+    "start:dev:seed"  : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
+    "start:test"      : "cross-env NODE_ENV=test       ts-node --files src/",
+    "start:test:seed" : "cross-env NODE_ENV=test       ts-node --files src/ --seed",
+```
+
+Make sure all config files exist in server/api/config/: dev.json, test.json, production.json (see their contents on Github).
+
+#### More Tests
 
 Let's implement some additional tests and improve how tests are performed and add data seeder for tests and development.
 
@@ -429,7 +471,7 @@ Use in-memory DB:
 npm install feathers-memory --save-dev
 ```
 
-See its use in: <https://docs.feathersjs.com/guides/chat/testing.html>
+See in-memory DB use in: <https://docs.feathersjs.com/guides/chat/testing.html>
 
 Note: feathers-memory service uses 'id' field name by default, while database-backed services typically use '_id' field name. It creates bugs in tests with in-memory services. Good practice is to force all services to use the same id field, '_id' is preferred in this project.
 
@@ -447,21 +489,6 @@ Add properties to server/api/src/services/todos/todos.schema.ts (see code on Git
 feathers-plus generate fakes
 ```
 
-and look at the fake data now stored in server/api/seeds/fake-data.js
-
-#### Add data seeder for development
-
-// Data seeder. see https://github.com/thosakwe/feathers-seeder
-// Also see possible data patterns: https://github.com/marak/Faker.js
-
-```bash
-npm install --save feathers-seeder
-```
-
-See file server/api/src/index.js on Github for the seeder code.
-
-#### Step 4 Summary
-
-With all the added source code in place, the app fetches some todo items from the server. These items are auto-generated by the seeder, which will be changed in the next sections.
+Look at the fake data now stored in server/api/seeds/fake-data.js
 
 ## END

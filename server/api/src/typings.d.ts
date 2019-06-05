@@ -10,6 +10,9 @@ declare module '*.json';
 // Services.
 declare module 'feathers-nedb';
 
+// Seed.
+declare module '@feathers-plus/test-utils';
+
 // !code: more // !end
 
 // !code: funcs // !end

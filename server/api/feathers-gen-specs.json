@@ -7,8 +7,8 @@
     "ts": true
   },
   "app": {
-    "environmentsAllowingSeedData": "",
-    "seedData": false,
+    "environmentsAllowingSeedData": "dev,test",
+    "seedData": true,
     "name": "api",
     "description": "Feathers api server",
     "src": "src",

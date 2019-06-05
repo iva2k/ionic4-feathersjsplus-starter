@@ -8,7 +8,8 @@
   },
   "tests": {
     "environmentsAllowingSeedData": [
-      ""
+      "dev",
+      "test"
     ]
   },
   "nedb": "../data"

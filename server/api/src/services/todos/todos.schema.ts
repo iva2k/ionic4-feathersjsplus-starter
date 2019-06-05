@@ -9,7 +9,9 @@ let schema = {
   title: 'Todos',
   description: 'Todos database.',
   // !end
-  // !code: schema_definitions // !end
+  // !code: schema_definitions
+  fakeRecords: 3,
+  // !end
 
   // Required fields.
   required: [
@@ -22,7 +24,12 @@ let schema = {
 
   // Fields in the model.
   properties: {
-    // !code: schema_properties // !end
+    // !code: schema_properties
+    id: { type: 'ID' },
+    title: { faker: 'commerce.productName'},
+    // ?notes: { faker: {exp: '"Perform " + company.catchPhrase + ", then " + hacker.verb + "."'} },
+    notes: { faker: 'company.catchPhrase' },
+    // !end
   },
   // !code: schema_more // !end
 };
