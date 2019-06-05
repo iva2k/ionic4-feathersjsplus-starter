@@ -228,7 +228,7 @@ Answer some questions:
 ? What folder should the source files live in? src
 ? Which package manager are you using (has to be installed globally)? npm
 ? What type of API are you making? REST, Realtime via Socket.io
-? Data mutating tests and seeding may run when NODE_ENV is one of (optional) dev,test
+? Data mutating tests and seeding may run when NODE_ENV is one of (optional) development,test
 ? Seed data records on startup when command line includes --seed? Yes
 ```
 
@@ -419,7 +419,7 @@ Open the report file [server/api/coverage/index.html](./server/api/coverage/inde
 
 Let's add proper production, test and development environments.
 
-If not done already, add "dev" and "test" environments to allow data seeding, to do so regenerate the app and enter "dev,test" as environments where data mutating and seeding is allowed, also choose "yes" for --seed:
+If not done already, add "development" and "test" environments to allow data seeding, to do so regenerate the app and enter "development,test" as environments where data mutating and seeding is allowed, also choose "yes" for --seed:
 
 ```bash
 feathers-plus generate app
@@ -427,7 +427,7 @@ feathers-plus generate app
    (has to be installed globally)? npm
  ? What type of API are you making?
   REST, Realtime via Socket.io
- ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) dev,test
+ ? Data mutating tests and seeding may run when NODE_ENV is one of (optional) development,test
  ? Seed data records on startup when command line includes --seed? Yes
 ```
 
@@ -435,23 +435,23 @@ It will change feathers-gen-specs.json and modify relevant files:
 
 ```json
   "app": {
-    "environmentsAllowingSeedData": "dev,test",
+    "environmentsAllowingSeedData": "development,test",
     "seedData": true,
 ```
 
 Add / modify "scripts" section in package.json:
 
 ```json
-    "dev"             : "cross-env NODE_ENV=dev        nodemon src/index.ts",
-    "dev:seed"        : "cross-env NODE_ENV=dev        nodemon src/index.ts --seed",
-    "start"           : "cross-env NODE_ENV=production ts-node --files src/",
-    "start:seed"      : "cross-env NODE_ENV=dev        ts-node --files src/ --seed",
-    "start:dev"       : "cross-env NODE_ENV=dev        ts-node --files src/",
-    "start:test"      : "cross-env NODE_ENV=test       ts-node --files src/",
-    "start:test:seed" : "cross-env NODE_ENV=test       ts-node --files src/ --seed",
+    "dev"             : "cross-env NODE_ENV=development nodemon src/index.ts",
+    "dev:seed"        : "cross-env NODE_ENV=development nodemon src/index.ts --seed",
+    "start"           : "cross-env NODE_ENV=production  ts-node --files src/",
+    "start:seed"      : "cross-env NODE_ENV=development ts-node --files src/ --seed",
+    "start:dev"       : "cross-env NODE_ENV=development ts-node --files src/",
+    "start:test"      : "cross-env NODE_ENV=test        ts-node --files src/",
+    "start:test:seed" : "cross-env NODE_ENV=test        ts-node --files src/ --seed",
 ```
 
-Make sure all config files exist in server/api/config/: dev.json, test.json, production.json (see their contents on Github).
+Make sure all config files exist in server/api/config/: development.json, test.json, production.json (see their contents on Github).
 
 #### More Tests
 

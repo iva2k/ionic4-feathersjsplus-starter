@@ -4,7 +4,7 @@ import { createLogger, format, transports } from 'winston';
 // !code: imports // !end
 // !code: init // !end
 
-// Configure the Winston logger. For the complete documentation see https://github.com/winstonjs/winston
+// Configure the Winston logger. For the complete documentation seee https://github.com/winstonjs/winston
 const moduleExports = createLogger({
   // !code: level
   // To see more detailed errors, change this to debug'
