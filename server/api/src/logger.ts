@@ -4,11 +4,13 @@ import { createLogger, format, transports } from 'winston';
 // !code: imports // !end
 // !code: init // !end
 
-// Configure the Winston logger. For the complete documentation seee https://github.com/winstonjs/winston
+// Configure the Winston logger. For the complete documentation see https://github.com/winstonjs/winston
 const moduleExports = createLogger({
-  // !<DEFAULT> code: level
+  // !code: level
   // To see more detailed errors, change this to debug'
-  level: 'info',
+  level: (process.env.NODE_ENV === 'production')
+    ? 'info' // production
+    : 'debug', // development, staging, test.
   // !end
   // !<DEFAULT> code: format
   format: format.combine(
