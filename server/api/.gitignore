@@ -11,7 +11,8 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+.nyc_output/
+coverage/
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -116,5 +117,4 @@ compiled/
 lib/
 data/
 test/data/
-.nyc_output/
-coverage/
+*.backup
