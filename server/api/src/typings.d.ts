@@ -7,6 +7,9 @@ declare module '*.json';
 
 // Application.
 
+// Authentication.
+declare module 'passport-google-oauth20';
+
 // Services.
 declare module 'feathers-nedb';
 

@@ -2,6 +2,7 @@
 // Configure the Feathers services. (Can be re-generated.)
 import { App } from '../app.interface';
 import todos from './todos/todos.service';
+import users from './users/users.service';
 
 // !code: imports // !end
 // !code: init // !end
@@ -9,6 +10,7 @@ import todos from './todos/todos.service';
 // tslint:disable-next-line:no-unused-variable
 let moduleExports = function (app: App) {
   app.configure(todos);
+  app.configure(users);
   // !code: func_return // !end
 };
 

@@ -28,6 +28,17 @@
       "path": "/todos",
       "isAuthEntity": false,
       "graphql": true
+    },
+    "users": {
+      "name": "users",
+      "nameSingular": "user",
+      "subFolder": "",
+      "fileName": "users",
+      "adapter": "nedb",
+      "path": "/users",
+      "isAuthEntity": true,
+      "requiresAuth": true,
+      "graphql": true
     }
   },
   "hooks": {
@@ -45,5 +56,13 @@
       "adapter": "nedb",
       "connectionString": "nedb://../data"
     }
+  },
+  "authentication": {
+    "strategies": [
+      "local",
+      "google",
+      "facebook"
+    ],
+    "entity": "users"
   }
 }
