@@ -4,37 +4,12 @@
 
 import { Hook } from '@feathersjs/feathers';
 import { checkContext, getItems, replaceItems } from 'feathers-hooks-common';
+import { Todo } from '../todos.interface';
 
-function processRecord(record: any, userId: string) {
-  // Our data model:
-  //  _id: string;
-  //  title: string;
-  //  notes: string;
-  // TODO: implement data-driven approach (based on schema?)
-  // Throw an error if we didn't get all fields
-  if (!record.title) {
-    throw new Error('A todo must have a title');
-  }
-  if (!record.notes) {
-    record.notes = '';
-  }
-  const title = record.title
-    // Titles can't be longer than 400 characters
-    .substring(0, 400);
-  const notes = record.notes
-    // Notes can't be longer than 4096 characters
-    .substring(0, 4096);
-  // Override the original data (so that people can't submit additional stuff)
-  record = {
-    title,
-    notes,
-    // Set the user _id
-    userId: userId,
-    // Add the current date
-    createdAt: new Date().getTime()
-  };
-  return record;
-}
+// function processRecord(record: any, userId: string) {
+//   // Our data model:
+//   return record;
+// }
 
 // tslint:disable-next-line:no-unused-variable
 export default function (options: any = {}): Hook {
@@ -42,15 +17,29 @@ export default function (options: any = {}): Hook {
   // Return the actual hook.
   return async (context) => {
     // Throw if the hook is being called from an unexpected location.
-    checkContext(context, null, ['find', 'get', 'create', 'update', 'patch', 'remove']);
+    // ?checkContext(context, null, ['find', 'get', 'create', 'update', 'patch', 'remove']);
 
+    const { app, method, result, params } = context;
+    const service = app.service('users');
+
+    if (method !== 'remove') {
+      // Make sure that we always have a list of todos either by wrapping
+      // a single todo into an array or by getting the `data` from the `find` method's result
+      const todos = (method === 'find') ? result.data : [result];
+
+      // Asynchronously get user object from each todo's `userId`
+      // and add it to the todo
+      await Promise.all(todos.map(async (todo: Todo) => {
+        // Also pass the original `params` to the service call
+        // so that it has the same information available (e.g. who is requesting it)
+        todo.user = await service.get(todo.userId, params);
+      }));
+    }
+
+/*
     // Get the authenticated user.
     // tslint:disable-next-line:no-unused-variable
     const { user } = context.params!;
-
-    // If no user, it is important for the seeder to pass given userId.
-    const userId: string = user ? user._id : context.data.userId;
-
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
     let records = getItems(context);
@@ -67,6 +56,7 @@ export default function (options: any = {}): Hook {
 
     // Place the modified records back in the context.
     replaceItems(context, records);
+*/
     // Best practice: hooks should always return the context.
     return context;
   };

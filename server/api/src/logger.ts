@@ -4,13 +4,19 @@ import { createLogger, format, transports } from 'winston';
 // !code: imports // !end
 // !code: init // !end
 
+function getLogLevel() {
+  // To see more detailed errors, change this to debug'
+  let level = 'info'; // production, test
+  if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    level = 'debug'; // development, staging.
+  }
+  return level;
+}
+
 // Configure the Winston logger. For the complete documentation seee https://github.com/winstonjs/winston
 const moduleExports = createLogger({
   // !code: level
-  // To see more detailed errors, change this to debug'
-  level: (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test')
-    ? 'info' // production, test
-    : 'debug', // development, staging
+  level: getLogLevel(),
   // !end
   // !<DEFAULT> code: format
   format: format.combine(

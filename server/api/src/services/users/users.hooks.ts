@@ -7,6 +7,8 @@ const { authenticate } = authHooks;
 // tslint:disable-next-line:no-unused-variable
 import { hooks as localAuthHooks } from '@feathersjs/authentication-local';
 const { hashPassword, protect } = localAuthHooks;
+// tslint:disable-next-line:no-unused-variable
+import gravatar from './hooks/gravatar';
 // !code: imports // !end
 
 // !<DEFAULT> code: used
@@ -32,7 +34,7 @@ let moduleExports: HooksObject = {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
-    create: [ hashPassword() ],
+    create: [ hashPassword(), gravatar() ],
     update: [ hashPassword(), authenticate('jwt') ],
     patch: [ hashPassword(), authenticate('jwt') ],
     remove: [ authenticate('jwt') ]

@@ -9,7 +9,9 @@ let schema = {
   title: 'Users',
   description: 'Users database.',
   // !end
-  // !code: schema_definitions // !end
+  // !code: schema_definitions
+  fakeRecords: 3,
+  // !end
 
   // Required fields.
   required: [
@@ -22,7 +24,14 @@ let schema = {
 
   // Fields in the model.
   properties: {
-    // !code: schema_properties // !end
+    // !code: schema_properties
+    email: { faker: 'internet.email' },
+    // username: { faker: 'internet.userName' },
+    // firstName: { faker: 'name.firstName' },
+    // lastName: { faker: 'name.lastName' },
+    password: { faker: 'internet.password' },
+    // TODO: lastLogin: { faker: () => moment().subtract(7, 'days').format() },
+    // !end
   },
   // !code: schema_more // !end
 };

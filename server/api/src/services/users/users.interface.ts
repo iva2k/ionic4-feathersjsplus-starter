@@ -5,7 +5,10 @@
 
 // tslint:disable-next-line:no-empty-interface
 export interface UserBase {
-  // !code: interface // !end
+  // !<DEFAULT> code: interface
+  email: string;
+  password: string;
+  // !end
 }
 
 // tslint:disable-next-line:no-empty-interface

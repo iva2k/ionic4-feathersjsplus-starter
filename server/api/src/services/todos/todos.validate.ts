@@ -17,9 +17,26 @@ let base = merge({},
   {
     title: "Todos",
     description: "Todos database.",
+    fakeRecords: 3,
     required: [],
     uniqueItemProperties: [],
-    properties: {}
+    properties: {
+      id: {
+        type: ID
+      },
+      title: {
+        faker: "commerce.productName",
+        type: "string"
+      },
+      notes: {
+        faker: "company.catchPhrase",
+        type: "string"
+      },
+      userId: {
+        faker: "",
+        type: "string"
+      }
+    }
   },
   // !end
   // !code: base_more // !end

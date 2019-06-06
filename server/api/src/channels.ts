@@ -30,11 +30,11 @@ export default function (app: App) {
       // if(user.isAdmin) { app.channel('admins').join(connection); }
 
       // If the user has joined e.g. chat rooms
-      // if(Array.isArray(user.rooms)) user.rooms.forEach(room => app.channel(`rooms/${room.id}`).join(channel));
+      // if(Array.isArray(user.rooms)) user.rooms.forEach(room => app.channel(`rooms/${room._id}`).join(channel));
 
       // Easily organize users by email and userid for things like messaging
       // app.channel(`emails/${user.email}`).join(channel);
-      // app.channel(`userIds/$(user.id}`).join(channel);
+      // app.channel(`userIds/$(user._id}`).join(channel);
     }
   });
 

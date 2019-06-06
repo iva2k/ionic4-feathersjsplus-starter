@@ -5,34 +5,25 @@
 import { Hook } from '@feathersjs/feathers';
 import { checkContext, getItems, replaceItems } from 'feathers-hooks-common';
 
-function processRecord(record: any, userId: string) {
+// We need this to create the MD5 hash
+import * as crypto from "crypto";
+
+// The Gravatar image service
+const gravatarUrl = 'https://s.gravatar.com/avatar';
+// The size query. Our chat needs 60px images
+const query = 's=60';
+
+function processRecord(record: any) {
   // Our data model:
-  //  _id: string;
-  //  title: string;
-  //  notes: string;
-  // TODO: implement data-driven approach (based on schema?)
-  // Throw an error if we didn't get all fields
-  if (!record.title) {
-    throw new Error('A todo must have a title');
-  }
-  if (!record.notes) {
-    record.notes = '';
-  }
-  const title = record.title
-    // Titles can't be longer than 400 characters
-    .substring(0, 400);
-  const notes = record.notes
-    // Notes can't be longer than 4096 characters
-    .substring(0, 4096);
-  // Override the original data (so that people can't submit additional stuff)
-  record = {
-    title,
-    notes,
-    // Set the user _id
-    userId: userId,
-    // Add the current date
-    createdAt: new Date().getTime()
-  };
+  //  email: string
+
+  // The user email
+  const { email } = record;
+  // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image
+  const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
+
+  record.avatar = `${gravatarUrl}/${hash}?${query}`;
+
   return record;
 }
 
@@ -47,10 +38,6 @@ export default function (options: any = {}): Hook {
     // Get the authenticated user.
     // tslint:disable-next-line:no-unused-variable
     const { user } = context.params!;
-
-    // If no user, it is important for the seeder to pass given userId.
-    const userId: string = user ? user._id : context.data.userId;
-
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
     let records = getItems(context);
@@ -58,11 +45,11 @@ export default function (options: any = {}): Hook {
     // Inspect and Modify records.
     if (Array.isArray(records)) {
       records.forEach((record, index) => {
-        records[index] = processRecord(record, userId);
+        records[index] = processRecord(record);
       });
     } else {
       // throw new Error('getItems() returned non-Array'); // Somehow it is not an Array for single record.
-      records = processRecord(records, userId);
+      records = processRecord(records);
     }
 
     // Place the modified records back in the context.

@@ -15,7 +15,14 @@ const DataTypes = (Sequelize as any).DataTypes as Sequelize.DataTypes;
 //   facebookId: { type: DataTypes.STRING },
 let moduleExports = merge({},
   // !<DEFAULT> code: sequelize_model
-  {} as DefineAttributes,
+  {
+    email: {
+      type: DataTypes.TEXT
+    },
+    password: {
+      type: DataTypes.TEXT
+    }
+  } as DefineAttributes,
   // !end
   // !code: moduleExports // !end
 );

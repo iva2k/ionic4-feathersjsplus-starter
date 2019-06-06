@@ -17,9 +17,19 @@ let base = merge({},
   {
     title: "Users",
     description: "Users database.",
+    fakeRecords: 3,
     required: [],
     uniqueItemProperties: [],
-    properties: {}
+    properties: {
+      email: {
+        faker: "internet.email",
+        type: "string"
+      },
+      password: {
+        faker: "internet.password",
+        type: "string"
+      }
+    }
   },
   // !end
   // !code: base_more // !end

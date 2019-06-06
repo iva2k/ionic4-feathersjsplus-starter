@@ -4,6 +4,8 @@ import * as commonHooks from 'feathers-hooks-common';
 import { hooks } from '@feathersjs/authentication';
 import { HooksObject } from '@feathersjs/feathers';
 // tslint:disable-next-line:no-unused-variable
+import populateUser from './hooks/populate-user';
+// tslint:disable-next-line:no-unused-variable
 import processTodo from './hooks/process-todo';
 // !code: imports // !end
 
@@ -23,7 +25,7 @@ let moduleExports: HooksObject = {
     all: [ hooks.authenticate('jwt') ],
     find: [],
     get: [],
-    create: [processTodo()],
+    create: [ processTodo() ],
     update: [],
     patch: [],
     remove: []
@@ -31,8 +33,8 @@ let moduleExports: HooksObject = {
   },
 
   after: {
-    // !<DEFAULT> code: after
-    all: [],
+    // !code: after
+    all: [ populateUser() ],
     find: [],
     get: [],
     create: [],

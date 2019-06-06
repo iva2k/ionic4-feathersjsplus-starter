@@ -13,6 +13,18 @@ let moduleExports = merge({},
     properties: {
       _id: {
         bsonType: "objectId"
+      },
+      title: {
+        faker: "commerce.productName",
+        bsonType: "string"
+      },
+      notes: {
+        faker: "company.catchPhrase",
+        bsonType: "string"
+      },
+      userId: {
+        faker: "",
+        bsonType: "string"
       }
     }
   },
