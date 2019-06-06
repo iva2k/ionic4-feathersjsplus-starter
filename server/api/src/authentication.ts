@@ -1,5 +1,6 @@
 
 // Configure authentication. (Can be re-generated.)
+import { Service } from '@feathersjs/feathers';
 import authentication from '@feathersjs/authentication';
 import jwt from '@feathersjs/authentication-jwt';
 import local from '@feathersjs/authentication-local';
@@ -38,7 +39,8 @@ let moduleExports = function (app: App) {
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
-  app.service('authentication').hooks({
+  let service: Service<any> = app.service('authentication');
+  service.hooks({
     before: {
       create: [
         // !<DEFAULT> code: before_create

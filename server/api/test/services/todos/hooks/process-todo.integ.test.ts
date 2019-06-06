@@ -28,14 +28,15 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
       }
     });
 
-    app.service('/todos').hooks(hooks);
-    // app.service('/todos').hooks({
+    service = app.service('todos');
+
+    service.hooks(hooks);
+    // app.service('todos').hooks({
     //  before: {
     //    create: processTodo()
     //  }
     // });
 
-    service = app.service('todos');
     params = {
       user, // Provide the user for service method calls
     };

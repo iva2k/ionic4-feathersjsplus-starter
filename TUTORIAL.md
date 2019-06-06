@@ -512,7 +512,7 @@ With all the added source code in place, the app fetches some todo items from th
 
 ### Step 5. Create User Registration and Authentication on the Server Side
 
-_From the Feathers guide https://docs.feathersjs.com/guides/chat/authentication.html ._
+_From the Feathers guide <https://docs.feathersjs.com/guides/chat/authentication.html> ._
 
 Now let's create a backend authentication service using Feathers+ to respond to the client in the Ionic app. Call the command and answer some questions:
 
@@ -527,5 +527,39 @@ $ feathers-plus generate authentication
   ? Which path should the service be registered on? /users
   ? Should this be served by GraphQL? Yes
 ```
+
+Start the server in one terminal:
+
+```bash
+npm run start:dev
+```
+
+If you get a TS2339 error on ```app.service('authentication').hooks({``` in authentication.ts, add an import statement at the top and change the line with the error to:
+
+```js
+import { Service } from '@feathersjs/feathers';
+
+...
+
+  let service: Service<any> = app.service('authentication');
+  service.hooks({
+    ...
+```
+
+(There is an ongoing issue in TypeScript on type refinements, e.g. <https://github.com/Microsoft/TypeScript/issues/12176>, <https://github.com/microsoft/TypeScript/issues/11498>, <https://github.com/microsoft/TypeScript/issues/24445>).
+
+In another terminal create the user:
+
+```bash
+curl "http://localhost:3030/users/" -H "Content-Type: application/json" --data-binary "{ \"email\": \"feathers@example.com\", \"password\": \"secret\" }"
+```
+
+Then get JWT token:
+
+```bash
+curl "http://localhost:3030/authentication/" -H "Content-Type: application/json" --data-binary "{ \"strategy\": \"local\", \"email\": \"feathers@example.com\", \"password\": \"secret\" }"
+```
+
+The server will respond with "accessToken". It is just a demo of how it works.
 
 ## END
