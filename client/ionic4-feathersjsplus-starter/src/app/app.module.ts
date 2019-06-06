@@ -10,16 +10,22 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { TodosService } from './services/todos.service';
+import { FeathersService } from './services/feathers.service';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot({}),
+    AppRoutingModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    TodosService
+    TodosService,
+    FeathersService,
   ],
   bootstrap: [AppComponent]
 })
