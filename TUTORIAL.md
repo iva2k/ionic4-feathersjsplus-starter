@@ -562,4 +562,16 @@ curl "http://localhost:3030/authentication/" -H "Content-Type: application/json"
 
 The server will respond with "accessToken". It is just a demo of how it works.
 
+Now we need to secure existing services (e.g. 'todos'). In server/api/src/services/todos/todos.hooks.js add/change these lines:
+
+```js
+import { hooks } from '@feathersjs/authentication';
+
+module.exports = {
+  before: {
+    all: [ hooks.authenticate('jwt') ],
+```
+
+All source are provided on Github, see below summary of changes at the end of this section.
+ 
 ## END

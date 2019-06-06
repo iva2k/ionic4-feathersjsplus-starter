@@ -1,6 +1,7 @@
 
 // Hooks for service `todos`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
+import { hooks } from '@feathersjs/authentication';
 import { HooksObject } from '@feathersjs/feathers';
 // tslint:disable-next-line:no-unused-variable
 import processTodo from './hooks/process-todo';
@@ -18,8 +19,8 @@ const { create, update, patch, validateCreate, validateUpdate, validatePatch } =
 
 let moduleExports: HooksObject = {
   before: {
-    // !<DEFAULT> code: before
-    all: [],
+    // !code: before
+    all: [ hooks.authenticate('jwt') ],
     find: [],
     get: [],
     create: [processTodo()],
