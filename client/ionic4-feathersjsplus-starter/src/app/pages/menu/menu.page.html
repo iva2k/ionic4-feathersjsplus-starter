@@ -10,11 +10,11 @@
 
     <ion-content>
       <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let p of pages">
-          <ion-item tappable routerLinkActive="active-item" [routerLink]="p.url" [routerDirection]="p.back ? 'forward' : 'root'">
-            <ion-icon [name]="p.icon" slot="start"></ion-icon>
+        <ion-menu-toggle auto-hide="false" *ngFor="let item of menuItems">
+          <ion-item tappable routerLinkActive="active-item"  (click)="onClick(item)">
+            <ion-icon [name]="item.icon" slot="start"></ion-icon>
             <ion-label>
-              {{ p.title }}
+              {{ item.title }}
             </ion-label>
           </ion-item>
         </ion-menu-toggle>

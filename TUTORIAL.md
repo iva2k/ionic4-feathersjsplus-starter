@@ -664,4 +664,9 @@ See code on Github for the edits of generated src/app/services/feathers.service.
  - src/app/app.module.ts (added service / ionic generate does not inject it for us)
  - src/app/services/todo/todo.service.ts (refactored to use FeathersService)
 
+We also need to refactor menu page to allow items with commands (e.g. "logout"), as well as page url's on the menu. See code on Github for the edits.
+
+Next, we will create login/registration page and use Feathers client authentication. 
+We will also add some guards to redirect pages that require auth to the login page.
+
 ## END
