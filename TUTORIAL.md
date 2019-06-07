@@ -669,4 +669,8 @@ We also need to refactor menu page to allow items with commands (e.g. "logout"),
 Next, we will create login/registration page and use Feathers client authentication. 
 We will also add some guards to redirect pages that require auth to the login page.
 
+```bash
+ionic generate page pages/login
+```
+
 ## END
