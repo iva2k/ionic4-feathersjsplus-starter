@@ -11,6 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { TodosService } from './services/todos.service';
 import { FeathersService } from './services/feathers.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { NonauthGuardService } from './services/nonauth-guard.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +28,8 @@ import { FeathersService } from './services/feathers.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     TodosService,
     FeathersService,
+    AuthGuardService,
+    NonauthGuardService,
   ],
   bootstrap: [AppComponent]
 })

@@ -652,7 +652,7 @@ With all the added source code in place, the server now has authentication servi
 
 ### Step 6. Create User Login in the App
 
-Let's refactor todos service - move Feathers client into a new service, so a single service / API connection is used by all various services we will need from Feathers backend.
+Let's refactor todos service - move Feathers client into a new service, so the client has a single service / API connection for all various data services we will need from Feathers backend.
 
 ```bash
 cd client/ionic4-feathersjsplus-starter
@@ -661,16 +661,42 @@ ionic generate service services/Feathers
 
 See code on Github for the edits of generated src/app/services/feathers.service.ts file and changes to existing files:
 
- - src/app/app.module.ts (added service / ionic generate does not inject it for us)
- - src/app/services/todo/todo.service.ts (refactored to use FeathersService)
+- src/app/app.module.ts (added service / ionic generate does not inject it for us)
+- src/app/services/todo/todo.service.ts (refactored to use FeathersService)
+
+Ionic 4 uses Angular routing with route guards, which make the app authentication logic quite simple.
+
+We will need 2 services for route guards:
+
+- AuthGuard - when not logged in, redirect from app pages to a login page
+- NonauthGuard - when logged in, redirect from the login page to app pages
+
+```bash
+ionic generate service services/auth-guard
+ionic generate service services/nonauth-guard
+```
+
+When redirecting to the login page in the AuthGuard the path is saved into query parameter retUrl, which the login page will redirect to after login/registration.
+
+See code on Github for the edits of generated src/app/services/{non}auth-guard.service.ts files.
 
 We also need to refactor menu page to allow items with commands (e.g. "logout"), as well as page url's on the menu. See code on Github for the edits.
 
-Next, we will create login/registration page and use Feathers client authentication. 
+Next, we will create login/registration page and use Feathers client authentication.
 We will also add some guards to redirect pages that require auth to the login page.
 
 ```bash
 ionic generate page pages/login
 ```
+
+See code on Github for the edits of generated src/app/pages/login/ files and changes to existing files:
+
+- src/app/app.module.ts (added guard services / ionic generate does not inject it for us)
+- src/app/app-routing.module.ts (added guards to routes)
+- config.xml (added \<preference name="KeyboardDisplayRequiresUserAction" value="false" /\> to allow keyboard)
+- src/app/pages/menu/menu.ts (logout implementation)
+- src/app/services/feathers.service.ts (login and registration functionality)
+
+#### Step 6 Summary
 
 ## END
