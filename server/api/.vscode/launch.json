@@ -16,10 +16,12 @@
       "internalConsoleOptions": "neverOpen",
       "stopOnEntry": false,
       "env": {
-        "TS_NODE_FILES": "true"
+        "TS_NODE_FILES": "true",
+        "NODE_ENV": "development"
       },
       "args": [
         "${workspaceFolder}/src/index.ts"
+        ,"--", "--seed"
       ]
     },
     {
