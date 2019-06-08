@@ -19,16 +19,6 @@
     ]
   },
   "services": {
-    "todos": {
-      "name": "todos",
-      "nameSingular": "todo",
-      "subFolder": "",
-      "fileName": "todos",
-      "adapter": "nedb",
-      "path": "/todos",
-      "isAuthEntity": false,
-      "graphql": true
-    },
     "users": {
       "name": "users",
       "nameSingular": "user",
@@ -38,6 +28,16 @@
       "path": "/users",
       "isAuthEntity": true,
       "requiresAuth": true,
+      "graphql": true
+    },
+    "todos": {
+      "name": "todos",
+      "nameSingular": "todo",
+      "subFolder": "",
+      "fileName": "todos",
+      "adapter": "nedb",
+      "path": "/todos",
+      "isAuthEntity": false,
       "graphql": true
     }
   },
