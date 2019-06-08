@@ -4,9 +4,9 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { HomePage } from './home.page';
+import { TodosListPage } from './todos-list.page';
 
-import { ComponentsModule } from '../components/components.module';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
@@ -17,10 +17,10 @@ import { ComponentsModule } from '../components/components.module';
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage
+        component: TodosListPage
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [TodosListPage]
 })
-export class HomePageModule {}
+export class TodosListPageModule {}

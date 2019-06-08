@@ -14,11 +14,11 @@ const routes: Routes = [
     children: [
       // tab1
       {
-        path: 'home',
+        path: 'todos',
         children: [
           {
             path: '',
-            loadChildren: '../../home/home.module#HomePageModule'
+            loadChildren: '../todos-list/todos-list.module#TodosListPageModule'
           },
         ]
       },
@@ -29,7 +29,7 @@ const routes: Routes = [
 
       {
         path: '',
-        redirectTo: '/tabs/home',
+        redirectTo: '/tabs/todos',
         pathMatch: 'full',
       }
     ]
@@ -38,7 +38,7 @@ const routes: Routes = [
   // Default:
   {
     path: '',
-    redirectTo: '/tabs/home',
+    redirectTo: '/tabs/todos',
     pathMatch: 'full'
   }
 ];

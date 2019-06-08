@@ -18,7 +18,7 @@ export class NonauthGuardService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
     const retUrl = state.url;
     console.log('NonauthGuardService(%s): checking saved auth token...', retUrl);
-    const redirectUrl = '/menu/app/tabs/home'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
+    const redirectUrl = '/menu/app/tabs/todos'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
 
     return this.feathersService.authenticate()
       .then(() => {

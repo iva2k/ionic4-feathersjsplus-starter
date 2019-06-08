@@ -22,7 +22,7 @@ export interface IMenuItem {
 export class MenuPage implements OnInit {
 
   menuItems: IMenuItem[] = [
-    { title: 'Home'       , icon: 'home'    , url: '/menu/app/tabs/home', },
+    { title: 'Todos'      , icon: 'home'    , url: '/menu/app/tabs/todos', },
     { title: 'Logout'     , icon: 'log-out' , action(that) { that.onLogout(); } },
   ];
 

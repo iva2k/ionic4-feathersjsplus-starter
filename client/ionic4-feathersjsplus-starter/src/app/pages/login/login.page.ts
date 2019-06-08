@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParamMap
       .subscribe(params => {
-        this.retUrl = params.get('retUrl') || '/menu/app/tabs/home'; // TODO: Let the router sort out which page to go to based on authentication.
+        this.retUrl = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: Let the router sort out which page to go to based on authentication.
         console.log('LoginPage/ngOnInit ' + this.retUrl);
       });
   }

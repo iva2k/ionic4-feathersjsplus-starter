@@ -701,4 +701,10 @@ See code on Github for the edits of generated src/app/pages/login/ files and cha
 
 With all the added source code in place, the app is using the backend authentication service - login and registration functions. The app will show all todos by all users. The todos create and edit functions will be added to the app in the next sections.
 
+### Step 7. Create Todo Items from the App and Update Todos List Dynamically
+
+First we will refactor a bit:
+
+ 1. Rename 'HomePage' to 'TodosListPage' class and file names and all related strings in the code.
+
 ## END
