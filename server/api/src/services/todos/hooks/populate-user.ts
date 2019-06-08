@@ -23,10 +23,14 @@ export default function (options: any = {}): Hook {
     const service = app.service('users');
 
     if (method !== 'remove') {
-      // Make sure that we always have a list of todos either by wrapping
-      // a single todo into an array or by getting the `data` from the `find` method's result
-      const todos = (method === 'find') ? result.data : [result];
-
+      // Make sure that we always have an Array of todos by either:
+      // - getting the `result.data` from the `find` method
+      // - getting the `context.data` from `create`/`update`/`patch` methods
+      // - wrapping `result` with a single todo into an array
+      const todos = (method === 'find') ? result.data :
+        (context.data ? context.data :
+          (Array.isArray(result) ? result : [result])
+        );
       // Asynchronously get user object from each todo's `userId`
       // and add it to the todo
       await Promise.all(todos.map(async (todo: Todo) => {
