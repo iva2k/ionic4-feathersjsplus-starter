@@ -19,7 +19,8 @@ function processRecord(record: any, userId: string) {
   if (!record.notes) {
     record.notes = '';
   }
-  if (userId === undefined) {
+  let userIdFinal = record.userId || userId; // Can use userId supplied in the record (by data seeder) // TODO: (soon) is it a security concern?
+  if (userIdFinal === undefined) {
     throw new Error('A todo must have a userId');
   }
   const title = record.title
@@ -32,7 +33,7 @@ function processRecord(record: any, userId: string) {
   record = {
     title,
     notes,
-    userId,
+    userId: userIdFinal,
     createdAt: new Date().getTime() // Add the current date
   };
   return record;
