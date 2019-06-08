@@ -60,23 +60,24 @@ export class TodosService {
 //    this.feathersService.create(data);
 //  }
 
-  public find() {
+  public find(query) {
     this.feathersService.find({
-      query: {}
+      query: query
     })
     .then( (todos: any) => {
       this.dataStore.todos = todos.data;
       this.todosObserver.next(this.dataStore.todos);
     })
     .catch( (err) => {
-       // DEBUG only:
+      // DEBUG only:
       this.dataStore.todos = [
         { id: '1qwe', title: 'Task1', notes: 'Oxo numa lupaer hicka' },
         { id: '2wer', title: 'Task2', notes: 'Didal vensi minaf wisa' },
         { id: '3ert', title: 'Task3', notes: 'Plofer dular mendi fiser' },
       ];
       this.todosObserver.next(this.dataStore.todos);
-      console.error(err);
+
+      console.error('Error in FeathersService find: ', err);
     });
   }
 
