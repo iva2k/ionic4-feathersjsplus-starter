@@ -699,4 +699,6 @@ See code on Github for the edits of generated src/app/pages/login/ files and cha
 
 #### Step 6 Summary
 
+With all the added source code in place, the app is using the backend authentication service - login and registration functions. The app will show all todos by all users. The todos create and edit functions will be added to the app in the next sections.
+
 ## END
