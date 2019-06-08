@@ -10,6 +10,7 @@ function processRecord(record: any, userId: string) {
   //  _id: string;
   //  title: string;
   //  notes: string;
+  // userId: string
   // TODO: implement data-driven approach (based on schema?)
   // Throw an error if we didn't get all fields
   if (!record.title) {
@@ -17,6 +18,9 @@ function processRecord(record: any, userId: string) {
   }
   if (!record.notes) {
     record.notes = '';
+  }
+  if (userId === undefined) {
+    throw new Error('A todo must have a userId');
   }
   const title = record.title
     // Titles can't be longer than 400 characters
@@ -28,10 +32,8 @@ function processRecord(record: any, userId: string) {
   record = {
     title,
     notes,
-    // Set the user _id
-    userId: userId,
-    // Add the current date
-    createdAt: new Date().getTime()
+    userId,
+    createdAt: new Date().getTime() // Add the current date
   };
   return record;
 }

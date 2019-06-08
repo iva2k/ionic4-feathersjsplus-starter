@@ -6,7 +6,7 @@ import { User } from './../users/users.interface';
 
 // tslint:disable-next-line:no-empty-interface
 export interface TodoBase {
-  // !<DEFAULT> code: interface
+  // !code: interface
   title: string;
   notes: string;
   userId: string;

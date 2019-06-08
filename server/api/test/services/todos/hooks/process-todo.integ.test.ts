@@ -59,7 +59,7 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
     user = await app.service('users').create({ email: 'test@example.com' });
 
     params = {
-      user: user, // Provide the user for service method calls
+      user, // Provide the user for service method calls
     };
   });
 

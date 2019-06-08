@@ -29,7 +29,7 @@ let schema = {
     title: { faker: 'commerce.productName'},
     // ?notes: { faker: {exp: '"Perform " + company.catchPhrase + ", then " + hacker.verb + "."'} },
     notes: { faker: 'company.catchPhrase' },
-    userId: { faker: '' }, // TODO: (later) how to mimic ID? // For cases when seed data is used in tests - TBD: does context have user?
+    userId: { type: 'ID', faker: { fk: 'users.random' } }, // Foreign key from `users`
     // !end
   },
   // !code: schema_more // !end
