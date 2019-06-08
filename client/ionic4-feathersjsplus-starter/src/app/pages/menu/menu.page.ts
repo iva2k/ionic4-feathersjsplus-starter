@@ -21,13 +21,14 @@ export interface IMenuItem {
 })
 export class MenuPage implements OnInit {
 
-  pages: IMenuItem[] = [ // TODO (soon) rename pages -> menuItems
-    { title: 'Home', icon: 'home', url: '/menu/app/tabs/home', },
+  menuItems: IMenuItem[] = [
+    { title: 'Home'       , icon: 'home'    , url: '/menu/app/tabs/home', },
+    { title: 'Logout'     , icon: 'log-out' , action(that) { that.onLogout(); } },
   ];
 
   constructor(
     public navCtrl: NavController,
-    feathersService: FeathersService,
+    public feathersService: FeathersService,
   ) { }
 
   ngOnInit() {
@@ -42,15 +43,24 @@ export class MenuPage implements OnInit {
     // [routerLink]="menuItem.url" [routerDirection]="menuItem.back ? 'forward' : 'root'
     if (menuItem.url) {
       if (menuItem.back) {
-        // forward
         this.navCtrl.navigateForward(menuItem.url);
       } else {
-        // root
         this.navCtrl.navigateRoot(menuItem.url);
       }
     }
 
     console.error('Menu Item with no action and no url: %o', menuItem);
+  }
+
+  public onLogout() {
+    this.feathersService.logout(this.navCtrl)
+      .then(() => {
+        this.navCtrl.navigateRoot('/login'); // Let the router sort out which page to go to based on authentication.
+      })
+      .catch(() => {
+        this.navCtrl.navigateRoot('/login');  // Let the router sort out which page to go to based on authentication.
+      })
+    ;
   }
 
 }
