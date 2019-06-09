@@ -100,16 +100,18 @@ export class TodosService {
 
   private onUpdated(todo: Todo) {
     const index = this.getIndex(todo._id);
-
-    this.dataStore.todos[index] = todo;
-    this.todosObserver.next(this.dataStore.todos);
+    if (index >= 0) {
+      this.dataStore.todos[index] = todo;
+      this.todosObserver.next(this.dataStore.todos);
+    }
   }
 
   private onRemoved(todo) {
     const index = this.getIndex(todo._id);
-
-    this.dataStore.todos.splice(index, 1);
-    this.todosObserver.next(this.dataStore.todos);
+    if (index >= 0) {
+      this.dataStore.todos.splice(index, 1);
+      this.todosObserver.next(this.dataStore.todos);
+    }
   }
 
 }

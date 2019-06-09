@@ -5,16 +5,13 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>
-      Todos
+      Todo
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <component-todos-list (edit)="onEdit($event)">
-    <h1>Todo's</h1>
-  </component-todos-list>
-  <ion-button icon-only (click)="onAdd()">
-    <ion-icon name="add"></ion-icon>
-  </ion-button >
+  <component-todo-item [todoId]="todoId">
+    <h1>Todo</h1>
+  </component-todo-item>
 </ion-content>

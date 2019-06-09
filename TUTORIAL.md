@@ -706,6 +706,22 @@ With all the added source code in place, the app is using the backend authentica
 First we will refactor a bit:
 
  1. Rename 'HomePage' to 'TodosListPage' class and file names and all related strings in the code.
- 2. Rename src/app/components/todos/todos.component files and move to src/app/components/todos-list/todos-list (use component-todos-list selector to avoid conflict with app-todos-list selector in TodosListPage).
+ 2. Rename src/app/components/todos/todos.* files and move to src/app/components/todos-list/todos-list.* (use component-todos-list selector to avoid conflict with app-todos-list selector in TodosListPage).
+
+Next we will implement new features to view, edit and add todo items:
+
+```bash
+npm install --save clone-deep deep-object-diff
+ionic generate component components/TodoItem
+ionic generate page pages/TodoDetail
+```
+
+Note: TypeScript definitions for clone-deep exist in '@types/clone-deep', but fail compilation with "has no default export".
+
+See code on Github for the edits of generated src/app/components/todo-item and src/app/pages/todo-detail/ files and changes to existing files:
+
+- src/app/components/todos-list/todos-list.component.html, src/app/components/todos-list/todos-list.component.ts ("Edit" button)
+- src/app/pages/todos-list/todos-list.page.html, src/app/pages/todos-list/todos-list.page.ts ("Add" button and "Edit" button click)
+- src/app/services/feathers/feathers.service.ts (Implemented DataSubscriber)
 
 ## END

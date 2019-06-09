@@ -20,6 +20,10 @@ const routes: Routes = [
             path: '',
             loadChildren: '../todos-list/todos-list.module#TodosListPageModule'
           },
+          {
+            path: 'detail',
+            loadChildren: '../todo-detail/todo-detail.module#TodoDetailPageModule'
+          },
         ]
       },
 
