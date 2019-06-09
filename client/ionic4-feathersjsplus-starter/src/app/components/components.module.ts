@@ -2,18 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
-import { TodosComponent } from './todos/todos.component';
+import { TodosListComponent } from './todos-list/todos-list.component';
 
 @NgModule({
   declarations: [
-    TodosComponent
+    TodosListComponent
   ],
   imports: [
     CommonModule,
     IonicModule
   ],
   exports: [
-    TodosComponent
+    TodosListComponent
   ]
 })
 export class ComponentsModule { }

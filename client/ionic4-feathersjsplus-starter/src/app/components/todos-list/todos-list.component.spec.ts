@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TodosComponent } from './todos.component';
+import { TodosListComponent } from './todos-list.component';
 
-describe('TodosComponent', () => {
-  let component: TodosComponent;
-  let fixture: ComponentFixture<TodosComponent>;
+describe('TodosListComponent', () => {
+  let component: TodosListComponent;
+  let fixture: ComponentFixture<TodosListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TodosComponent ],
+      declarations: [ TodosListComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TodosComponent);
+    fixture = TestBed.createComponent(TodosListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

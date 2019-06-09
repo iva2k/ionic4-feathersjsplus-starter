@@ -706,5 +706,6 @@ With all the added source code in place, the app is using the backend authentica
 First we will refactor a bit:
 
  1. Rename 'HomePage' to 'TodosListPage' class and file names and all related strings in the code.
+ 2. Rename src/app/components/todos/todos.component files and move to src/app/components/todos-list/todos-list (use component-todos-list selector to avoid conflict with app-todos-list selector in TodosListPage).
 
 ## END

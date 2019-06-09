@@ -11,13 +11,13 @@ import { TodosService } from '../../services/todos.service';
 import { Todo } from '../../models/todo';
 
 @Component({
-  selector: 'app-todos',
+  selector: 'component-todos-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './todos.component.html',
-  styleUrls: ['./todos.component.scss'],
+  templateUrl: './todos-list.component.html',
+  styleUrls: ['./todos-list.component.scss'],
 })
-export class TodosComponent implements OnDestroy, OnInit {
-  private todos: Todo[] = [];
+export class TodosListComponent implements OnDestroy, OnInit {
+  protected todos: Todo[] = [];
   private subscription: Subscription;
 
   constructor(
