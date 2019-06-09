@@ -784,4 +784,12 @@ We also utilized "ChangeDetectionStrategy.OnPush" with explicit calls to ChangeD
 
 These performance improvements are cumulative and will be more noticeable as the app grows in size.
 
+#### Wrapping up
+
+We only wired few command buttons so far, but did not complete the worker code. We will wrap up few things, like saving updated and created todo items, and deleting them. See the code on Github for final changes.
+
+#### Step 7 Summary
+
+With all the added source code in place, the app has all functions to create, edit and delete todo items, once the user registers or logs in.
+
 ## END

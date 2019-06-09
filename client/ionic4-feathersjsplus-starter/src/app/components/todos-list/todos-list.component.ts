@@ -32,8 +32,8 @@ export class TodosListComponent implements OnDestroy, OnInit {
         $sort: {createdAt: -1},
         $limit: 25
       },
-      (todos: any) => {
-        this.todos = todos.data;
+      (todos: Todo[]) => {
+        this.todos = todos;
         this.ref.markForCheck();
       },
       err => {

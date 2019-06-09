@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content padding>
-  <component-todo-item [todoId]="todoId">
+  <component-todo-item [todoId]="todoId" (done)="onDone($event)">
     <h1>Todo</h1>
   </component-todo-item>
 </ion-content>

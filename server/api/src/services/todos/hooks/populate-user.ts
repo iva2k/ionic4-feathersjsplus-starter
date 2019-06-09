@@ -28,7 +28,7 @@ export default function (options: any = {}): Hook {
       // - getting the `context.data` from `create`/`update`/`patch` methods
       // - wrapping `result` with a single todo into an array
       const todos = (method === 'find') ? result.data :
-        (context.data ? context.data :
+        (context.data ? (Array.isArray(context.data) ? context.data : [context.data]) :
           (Array.isArray(result) ? result : [result])
         );
       // Asynchronously get user object from each todo's `userId`

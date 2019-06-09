@@ -12,7 +12,7 @@ Demo of Ionic 4 / Angular app with FeathersJS+ backend services.
   - Android native app
   - Windows/MacOS/Linux desktop app (with addition of Electron, not covered here)
 - Uses FeathersJS+ for a NodeJS backend server and a client in the app
-- Uses slick DataSubscriber wrapper on top of Feathers that streamlines views and components code
+- Client Uses slick DataSubscriber wrapper on top of Feathers that streamlines views and components code
 - Debugging in VSCode (both the app and server back-end)
 - Automated tests of the server code
 

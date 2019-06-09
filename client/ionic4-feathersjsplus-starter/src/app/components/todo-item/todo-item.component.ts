@@ -2,9 +2,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 
 import cloneDeep from 'clone-deep';
@@ -22,6 +24,7 @@ import { FeathersService } from '../../services/feathers.service';
 export class TodoItemComponent implements OnDestroy, OnInit {
   @Input() todoId: string;
   protected newItem: boolean; // true if opened without navParams, so it is an "Add" command.
+  @Output() done = new EventEmitter<{action: string, item: Todo}>();
 
   protected todo: Todo = {} as Todo;
   protected oldTodo: Todo; // Saved data for detecting changes
@@ -45,12 +48,16 @@ export class TodoItemComponent implements OnDestroy, OnInit {
           _id: this.todoId,
           $limit: 1
         },
-        (todos: any) => {
-          if (todos.data && todos.data[0]) {
-            this.todo = todos.data[0] as Todo;
+        (todos: Todo[]) => {
+          // This callback will be called every time data is changed on the server.
+          if (todos.length === 1 && todos[0]) { // exact query returned
+            this.todo = todos[0];
             this.oldTodo = cloneDeep(this.todo);
-          } else {
-            console.error('Error, did not find todo item id "%s"', this.todoId);
+          } else if (todos.length === 0) { // 'remove' happened
+            this.todo = new Todo(); // remove record
+            this.oldTodo = null;
+          } else if (todos.length > 1) { // 'create' happened
+          //  console.error('Error, did not find todo item id "%s"', this.todoId); // DEBUG
           }
           this.ref.markForCheck();
         },
@@ -70,6 +77,14 @@ export class TodoItemComponent implements OnDestroy, OnInit {
   // Add button click
   public onAdd() {
     console.log('TodoItemComponent Add button. todo: ', this.todo);
+    this.feathersService.create<Todo>('todos', this.todo)
+      .then(res => {
+        console.log('FeathersService.create result: %o', res); // DEBUG
+        this.done.emit({action: 'added', item: res});
+      })
+      .catch(err => {
+        console.error('Error in FeathersService.create: %o', err);
+      });
   }
 
   // Update button click
@@ -80,11 +95,27 @@ export class TodoItemComponent implements OnDestroy, OnInit {
     if (!!Object.keys(changes).length) {
       // Actual changes were made
       console.log('Changes: %o', changes); // DEBUG
+      this.feathersService.update<Todo>('todos', this.todo)
+        .then(res => {
+          console.log('FeathersService.update result: %o', res); // DEBUG
+          this.done.emit({action: 'updated', item: res});
+        })
+        .catch(err => {
+          console.error('Error in FeathersService.update: %o', err);
+        });
     }
   }
 
   // Delete button click
-  public onDelete() {
+  public onRemove() {
     console.log('TodoItemComponent Delete button. todo: ', this.todo);
+    this.feathersService.remove<Todo>('todos', this.todo)
+      .then(res => {
+        console.log('FeathersService.remove result: %o', res); // DEBUG
+        this.done.emit({action: 'removed', item: res});
+      })
+      .catch(err => {
+        console.error('Error in FeathersService.remove: %o', err);
+      });
   }
 }
