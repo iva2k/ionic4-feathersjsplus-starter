@@ -33,9 +33,9 @@ export class DataSubscriber<T extends Record> {
     cbErr: (err: any) => void
   ) {
     this.feathersService = feathersService;
-    this.feathersService.on('created', record => this.subscribeOnCreated(record));
-    this.feathersService.on('updated', record => this.subscribeOnUpdated(record));
-    this.feathersService.on('removed', record => this.subscribeOnRemoved(record));
+    this.feathersService.on('created', record => this.onCreated(record));
+    this.feathersService.on('updated', record => this.onUpdated(record));
+    this.feathersService.on('removed', record => this.onRemoved(record));
 
     this.records$ = new Observable(observer => (this.observer = observer));
     this.dataStore = { records: [] };
@@ -73,12 +73,12 @@ export class DataSubscriber<T extends Record> {
     return foundIndex;
   }
 
-  private subscribeOnCreated(record: T) {
+  private onCreated(record: T) {
     this.dataStore.records.push(record);
     this.observer.next(this.dataStore.records);
   }
 
-  private subscribeOnUpdated(record: T) {
+  private onUpdated(record: T) {
     const index = this.getIndex(record._id);
     if (index >= 0) {
       this.dataStore.records[index] = record;
@@ -86,7 +86,7 @@ export class DataSubscriber<T extends Record> {
     }
   }
 
-  private subscribeOnRemoved(record: T) {
+  private onRemoved(record: T) {
     const index = this.getIndex(record._id);
     if (index >= 0) {
       this.dataStore.records.splice(index, 1);
