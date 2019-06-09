@@ -14,7 +14,9 @@
   <component-todos-list (edit)="onEdit($event)">
     <h1>Todo's</h1>
   </component-todos-list>
-  <ion-button icon-only (click)="onAdd()">
-    <ion-icon name="add"></ion-icon>
-  </ion-button >
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button icon-only (click)="onAdd()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
