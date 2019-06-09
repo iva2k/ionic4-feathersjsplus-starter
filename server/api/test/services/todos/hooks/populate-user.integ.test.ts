@@ -2,15 +2,15 @@
 /// <reference types="mocha"/>
 import feathers, { Params, Service, Application } from '@feathersjs/feathers';
 import assert from 'assert';
-//import { join } from 'path';
-//import { readJsonFileSync } from '@feathers-plus/test-utils';
+// import { join } from 'path';
+// import { readJsonFileSync } from '@feathers-plus/test-utils';
 import memory from 'feathers-memory';
-//import hooks from '../../../../src/services/todos/todos.hooks';
+// import hooks from '../../../../src/services/todos/todos.hooks';
 import populateUser from '../../../../src/services/todos/hooks/populate-user';
 
 // Get generated fake data
 // tslint:disable-next-line:no-unused-variable
-//const fakeData = readJsonFileSync(join(__dirname, '../../../../seeds/fake-data.json')) || {};
+// const fakeData = readJsonFileSync(join(__dirname, '../../../../seeds/fake-data.json')) || {};
 
 describe('Test todos/hooks/populate-user.integ.test.ts', () => {
   let app: Application, params: Params;
@@ -48,11 +48,11 @@ describe('Test todos/hooks/populate-user.integ.test.ts', () => {
       email: 'test@user.com'
     });
 
-    //params = {
-    //  user: (fakeData['users'] || [])[0] || {
-    //    email: 'test@example.com'
-    //  }
-    //};
+    // params = {
+    //   user: (fakeData['users'] || [])[0] || {
+    //     email: 'test@example.com'
+    //   }
+    // };
   });
 
   it('populates a new todo with the user', async function() {

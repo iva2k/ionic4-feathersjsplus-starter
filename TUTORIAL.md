@@ -757,15 +757,15 @@ Next we will modify TodosListComponent code to look like this:
 
 FeathersService.subscribe() takes:
 
- * data model type, e.g. \<Todo\>,
- * the name of the data service (e.g. 'todos'), and 
- * a query object (anything that Feathers accepts),
+- data model type, e.g. \<Todo\>,
+- the name of the data service (e.g. 'todos'), and
+- a query object (anything that Feathers accepts),
   
 and it creates:
 
- * a service on the fly,
- * subscribes to its observable, and 
- * connects it to our callbacks (cbData and cbErr),
+- a service on the fly,
+- subscribes to its observable, and
+- connects it to our callbacks (cbData and cbErr),
 
 All that is done in few lines of code in ```ngOnInit()```.
 
