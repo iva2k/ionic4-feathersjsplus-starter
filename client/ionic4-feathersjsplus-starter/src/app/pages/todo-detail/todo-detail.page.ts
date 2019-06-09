@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { /* Router, */ ActivatedRoute } from '@angular/router';
-// import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 
 import { FeathersService } from '../../services/feathers.service';
 
@@ -17,7 +17,8 @@ export class TodoDetailPage implements OnInit {
     private feathersService: FeathersService,
     private activatedRoute: ActivatedRoute,
     // private router: Router,
-    // private navCtrl: NavController,
+    private navCtrl: NavController,
+    private toastCtrl: ToastController,
   ) {
   }
 
@@ -28,6 +29,27 @@ export class TodoDetailPage implements OnInit {
         this.newItem = !this.todoId;
         console.log('TodoDetailPage got todoId: %s (newItem: %s)', this.todoId, this.newItem); // DEBUG
       });
+  }
+
+  // Command completed
+  public onDone(event) {
+    console.log('TodoDetailPage command done. event: %o', event);
+    this.toaster(`Task "${event.item.title}" ${event.action}.`);
+
+    // let params = {};
+    // IONIC3: this.navCtrl.pop();
+    this.navCtrl.back(); // IONIC4 // TODO: (soon) Fix navigation back. Sometimes crashes, never actually works.
+    // ? this.router.?
+  }
+
+  private toaster(text: string, time: number = 3000) {
+    this.toastCtrl.create({
+      message: text,
+      duration: time,
+    }).then( toast => {
+      toast.present();
+      // setTimeout(() => toast.dismiss(), time);
+    });
   }
 
 }

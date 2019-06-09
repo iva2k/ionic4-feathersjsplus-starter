@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 
 import { FeathersService } from '../../services/feathers.service';
 
@@ -11,8 +11,9 @@ import { FeathersService } from '../../services/feathers.service';
 export class TodosListPage {
 
   constructor(
-    public feathersService: FeathersService,
-    public navCtrl: NavController
+    private feathersService: FeathersService,
+    private navCtrl: NavController,
+    private toastCtrl: ToastController,
   ) {}
 
   // Edit button click
@@ -34,8 +35,17 @@ export class TodosListPage {
   // Command completed
   public onDone(event) {
     console.log('TodosListPage command done. event: %o', event);
-    console.log(`Task "${event.item.title}" ${event.action}.`);
-    // TODO: Implement Toast e.g. `Item "${event.item.title}" ${event.action}.` => 'Item "Task 1" removed.'
+    this.toaster(`Task "${event.item.title}" ${event.action}.`);
+  }
+
+  private toaster(text: string, time: number = 3000) {
+    this.toastCtrl.create({
+      message: text,
+      duration: time,
+    }).then( toast => {
+      toast.present();
+      // setTimeout(() => toast.dismiss(), time);
+    });
   }
 
 }
