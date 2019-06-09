@@ -62,7 +62,7 @@ export class TodosService {
 
   public find(query) {
     this.feathersService.find({
-      query: query
+      query
     })
     .then( (todos: any) => {
       this.dataStore.todos = todos.data;
@@ -71,9 +71,9 @@ export class TodosService {
     .catch( (err) => {
       // DEBUG only:
       this.dataStore.todos = [
-        { id: '1qwe', title: 'Task1', notes: 'Oxo numa lupaer hicka' },
-        { id: '2wer', title: 'Task2', notes: 'Didal vensi minaf wisa' },
-        { id: '3ert', title: 'Task3', notes: 'Plofer dular mendi fiser' },
+        { _id: '1qwe', title: 'Task1', notes: 'Oxo numa lupaer hicka' },
+        { _id: '2wer', title: 'Task2', notes: 'Didal vensi minaf wisa' },
+        { _id: '3ert', title: 'Task3', notes: 'Plofer dular mendi fiser' },
       ];
       this.todosObserver.next(this.dataStore.todos);
 
@@ -85,7 +85,7 @@ export class TodosService {
     let foundIndex = -1;
 
     for (let i = 0; i < this.dataStore.todos.length; i++) {
-      if (this.dataStore.todos[i].id === id) {
+      if (this.dataStore.todos[i]._id === id) {
         foundIndex = i;
       }
     }
@@ -99,14 +99,14 @@ export class TodosService {
   }
 
   private onUpdated(todo: Todo) {
-    const index = this.getIndex(todo.id);
+    const index = this.getIndex(todo._id);
 
     this.dataStore.todos[index] = todo;
     this.todosObserver.next(this.dataStore.todos);
   }
 
   private onRemoved(todo) {
-    const index = this.getIndex(todo.id);
+    const index = this.getIndex(todo._id);
 
     this.dataStore.todos.splice(index, 1);
     this.todosObserver.next(this.dataStore.todos);
