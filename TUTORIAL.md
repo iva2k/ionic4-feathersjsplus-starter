@@ -792,4 +792,13 @@ We only wired few command buttons so far, but did not complete the worker code. 
 
 With all the added source code in place, the app has all functions to create, edit and delete todo items, once the user registers or logs in.
 
+### Step 8. Improvements
+
+We can make a lot of small and big improvements. Not in any particular order...
+
+(Check Github commits for changesets)
+
+- [UX] Convert "Add" button on TodosListPage to material style FAB (floating action button)
+- [UX] Add "Delete" button to TodosListPage items
+
 ## END

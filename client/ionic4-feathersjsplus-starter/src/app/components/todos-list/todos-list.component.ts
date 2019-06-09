@@ -19,6 +19,8 @@ import { FeathersService } from '../../services/feathers.service';
 })
 export class TodosListComponent implements OnDestroy, OnInit {
   @Output() edit = new EventEmitter<string>();
+  @Output() done = new EventEmitter<{action: string, item: Todo}>();
+
   protected todos: Todo[] = [];
   private subscription: any; //TODO: DataSubscriber<Todo>;
 
@@ -50,7 +52,20 @@ export class TodosListComponent implements OnDestroy, OnInit {
 
   // Edit button click
   onEdit(itemId: string) {
-    console.log('TodosListComponent edit button, itemId: %s', itemId);
+    console.log('TodosListComponent Edit button, itemId: %s', itemId);
     this.edit.emit(itemId);
+  }
+
+  // Delete button click
+  onRemove(itemId) {
+    console.log('TodoListComponent Remove button, itemId: %s', itemId);
+    this.feathersService.remove<Todo>('todos', { _id: itemId } as Todo)
+      .then(res => {
+        console.log('FeathersService.remove result: %o', res); // DEBUG
+        this.done.emit({action: 'removed', item: res});
+      })
+      .catch(err => {
+        console.error('Error in FeathersService.remove: %o', err);
+      });
   }
 }

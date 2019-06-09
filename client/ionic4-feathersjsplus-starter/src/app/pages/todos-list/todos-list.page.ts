@@ -31,4 +31,11 @@ export class TodosListPage {
     this.navCtrl.navigateForward(['menu/app/tabs/todos/detail'], { queryParams: params } );
   }
 
+  // Command completed
+  public onDone(event) {
+    console.log('TodosListPage command done. event: %o', event);
+    console.log(`Task "${event.item.title}" ${event.action}.`);
+    // TODO: Implement Toast e.g. `Item "${event.item.title}" ${event.action}.` => 'Item "Task 1" removed.'
+  }
+
 }

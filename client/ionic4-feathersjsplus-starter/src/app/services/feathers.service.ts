@@ -214,19 +214,19 @@ export class FeathersService {
 
   // Observable Service API
   // Usage:
-  //  import { FeathersProvider, DataSubscriber } from "../../providers/feathers/feathers";
+  //  import { FeathersService, DataSubscriber } from "../../providers/feathers/feathers";
   //  ...
   //  class ... {
   //    private subscription: DataSubscriber;
-  //    constructor(feathersProvider: FeathersProvider) {} ...
+  //    constructor(feathersService: FeathersService) {} ...
   //    ngOninit() {
-  //      this.subscription = this.feathersProvider.subscribe<Todo>('todos', query,
+  //      this.subscription = this.feathersService.subscribe<Todo>('todos', query,
   //        (records: Todo[]) => {
   //          this.records = records;
   //          this.ref.markForCheck();
   //        },
   //        err => {
-  //          console.error('Error in subscribe to feathersProvider.subscribe(): ', err);
+  //          console.error('Error in subscribe to feathersService.subscribe(): ', err);
   //        });
   //    }
   //    ngOnDestroy() {

@@ -11,7 +11,7 @@
 </ion-header>
 
 <ion-content padding>
-  <component-todos-list (edit)="onEdit($event)">
+  <component-todos-list (edit)="onEdit($event)" (done)="onDone($event)">
     <h1>Todo's</h1>
   </component-todos-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
