@@ -7,47 +7,45 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 
-import { TodosService } from '../../services/todos.service';
 import { Todo } from '../../models/todo';
+import { FeathersService } from '../../services/feathers.service';
 
 @Component({
-  selector: 'component-todos-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'component-todos-list',
   templateUrl: './todos-list.component.html',
   styleUrls: ['./todos-list.component.scss'],
 })
 export class TodosListComponent implements OnDestroy, OnInit {
   @Output() edit = new EventEmitter<string>();
   protected todos: Todo[] = [];
-  private subscription: Subscription;
+  private subscription: any; //TODO: DataSubscriber<Todo>;
 
   constructor(
-    private todosService: TodosService,
+    private feathersService: FeathersService,
     private ref: ChangeDetectorRef
-  ) {
-    // console.log('Hello TodosListComponent Component');
-  }
+  ) {}
 
   ngOnInit() {
-    this.subscription = this.todosService.todos$.subscribe(
-      (todos: Todo[]) => {
-        this.todos = todos;
+    this.subscription = this.feathersService.subscribe<Todo>('todos', {
+        $sort: {createdAt: -1},
+        $limit: 25
+      },
+      (todos: any) => {
+        this.todos = todos.data;
         this.ref.markForCheck();
       },
       err => {
-        console.error('Error in subscribe to TodosService: ', err);
-      }
-    );
-    this.todosService.find({
-      $sort: {createdAt: -1},
-      $limit: 25
-    });
+        console.error('Error in FeathersService.subscribe(): ', err);
+      });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
   }
 
   // Edit button click

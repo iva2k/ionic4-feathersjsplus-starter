@@ -724,4 +724,64 @@ See code on Github for the edits of generated src/app/components/todo-item and s
 - src/app/pages/todos-list/todos-list.page.html, src/app/pages/todos-list/todos-list.page.ts ("Add" button and "Edit" button click)
 - src/app/services/feathers/feathers.service.ts (Implemented DataSubscriber)
 
+#### DataSubscriber
+
+DataSubscriber is added to FeathersService - it is a very powerful wrapper on top of Feathers client. It makes a breeze to use Feathers in list and detail components and views.
+
+To showcase DataSubscriber, we will refactor TodosListComponent to use DataSubscriber instead of TodoService. It will illustrate how much simpler the code becomes, mostly due to no need to generate more custom services like TodoService for each data service, instead using in essence a service factory. See the below code snippet and full code of DataSubscriber in src/app/services/feathers.service.ts on Github.
+
+First, we will remove TodoService, and avoid all further individual services that we might need if we continue using the pattern like TodoService.
+
+Next we will modify TodosListComponent code to look like this:
+
+```ts
+  ...
+  public ngOnInit(): void {
+    this.subscription = this.feathersService.subscribe<Todo>('todos', {
+        $sort: {createdAt: -1},
+        $limit: 25
+      },
+      (todos: Todo[]) => { // cbData
+        this.todos = todos;
+        this.ref.markForCheck();
+      },
+      err => { // cbErr
+        console.error('Error in FeathersService.subscribe(): ', err);
+      });
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+```
+
+FeathersService.subscribe() takes:
+
+ * data model type, e.g. \<Todo\>,
+ * the name of the data service (e.g. 'todos'), and 
+ * a query object (anything that Feathers accepts),
+  
+and it creates:
+
+ * a service on the fly,
+ * subscribes to its observable, and 
+ * connects it to our callbacks (cbData and cbErr),
+
+All that is done in few lines of code in ```ngOnInit()```.
+
+And ```ngOnDestroy()``` makes sure that subscription is properly removed.
+
+List views and detail views can both use this simple pattern. Though we still
+have individual components for todos-list and todo-detail, it is possible to
+create two universal components (list and detail) based on this pattern, and
+customize them for any data table / service through their parameters. This is left as an exercise to keep this project small.
+
+#### Performance
+
+We should be always mindful about the app performance. We already use Ionic's lazy loading, so only smaller chunks of the app are downloaded from the server as needed.
+
+We also utilized "ChangeDetectionStrategy.OnPush" with explicit calls to ChangeDetectorRef.markForCheck() in the components, so we instruct Angular engine that it does not need to scan for changes upon every network activity, but instead each component issues data update calls only when necessary.
+
+These performance improvements are cumulative and will be more noticeable as the app grows in size.
+
 ## END

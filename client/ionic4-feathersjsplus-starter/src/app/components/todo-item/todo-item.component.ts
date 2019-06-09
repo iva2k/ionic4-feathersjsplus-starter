@@ -1,4 +1,6 @@
 import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
   Input,
   OnDestroy,
@@ -12,6 +14,7 @@ import { Todo } from '../../models/todo';
 import { FeathersService } from '../../services/feathers.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'component-todo-item',
   templateUrl: './todo-item.component.html',
   styleUrls: ['./todo-item.component.scss'],
@@ -26,7 +29,8 @@ export class TodoItemComponent implements OnDestroy, OnInit {
   protected error: string;
 
   constructor(
-    private feathersService: FeathersService
+    private feathersService: FeathersService,
+    private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -37,7 +41,10 @@ export class TodoItemComponent implements OnDestroy, OnInit {
       this.todo = new Todo();
     } else {
       // Edit existing item
-      this.subscription = this.feathersService.subscribe<Todo>('todos', {_id: this.todoId, $limit: 1},
+      this.subscription = this.feathersService.subscribe<Todo>('todos', {
+          _id: this.todoId,
+          $limit: 1
+        },
         (todos: any) => {
           if (todos.data && todos.data[0]) {
             this.todo = todos.data[0] as Todo;
@@ -45,9 +52,10 @@ export class TodoItemComponent implements OnDestroy, OnInit {
           } else {
             console.error('Error, did not find todo item id "%s"', this.todoId);
           }
+          this.ref.markForCheck();
         },
         err => {
-          console.error('Error in subscribe to feathersService.subscribe(): ', err);
+          console.error('Error in FeathersService.subscribe(): ', err);
         });
     }
   }
