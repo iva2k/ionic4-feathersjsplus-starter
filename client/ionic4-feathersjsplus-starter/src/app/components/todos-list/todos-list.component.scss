@@ -1,5 +1,30 @@
   ion-note {
-    font-size: 13px;
+    margin-left: 0;
+    //padding-top: 8px;
+    max-width: 28%;
+    width: 28%;
+    h2 {
+      margin: 2px 0;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    p {
+      margin: 0 0 2px;
+      font-size: 12px;
+      line-height: 16px;
+      text-overflow: inherit;
+      overflow: inherit;
+    }
+  }
+
+  .todo {
+    p, h1, h2, h3 {
+      // ? white-space: normal;
+    }
+  }
+  
+  img {
+    pointer-events: none;
   }
 
   /* TODO: spinner is dropping classes so we have to use ids: https://github.com/ionic-team/ionic/issues/7087 */
