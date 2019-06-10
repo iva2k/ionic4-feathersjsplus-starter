@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
 
+import { User } from '../../models/user';
 import { FeathersService } from '../../services/feathers.service';
 
 @Component({
@@ -13,14 +14,14 @@ export class LoginPage implements OnInit {
   @ViewChild('email') email: any;
 
   loading: HTMLIonLoadingElement;
-  credentials = { email: '', password: '' };
+  credentials: User = { email: '', password: '' } as User;
   protected error: string;
   retUrl: string;
 
   constructor(
-    public feathersService: FeathersService,
-    public loadingController: LoadingController,
-    public navCtrl: NavController,
+    private feathersService: FeathersService,
+    private loadingController: LoadingController,
+    private navCtrl: NavController,
     private activatedRoute: ActivatedRoute,
   ) {
   }
