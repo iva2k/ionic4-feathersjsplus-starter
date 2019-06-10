@@ -801,5 +801,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [UX] Convert "Add" button on TodosListPage to material style FAB (floating action button)
 - [UX] Add "Delete" button to TodosListPage items
 - [UX] Implement Toast for completed actions/commands
+- [UX] Move buttons on TodosListPage into slide drawers / swipe
 
 ## END
