@@ -804,5 +804,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [UX] Move buttons on TodosListPage into slide drawers / swipe
 - [UX] Show created date/time on TasksListPage
 - [UX] TasksListPage - show avatar, improve layout
+- [UX] TaskDetailPage - show avatar, improve layout
 
 ## END
