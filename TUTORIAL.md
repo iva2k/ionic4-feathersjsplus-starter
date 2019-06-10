@@ -805,5 +805,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [UX] Show created date/time on TasksListPage
 - [UX] TasksListPage - show avatar, improve layout
 - [UX] TaskDetailPage - show avatar, improve layout
+- [UX] Update button on TodoDetailsPage returns to the list if entries are unchanged
 
 ## END
