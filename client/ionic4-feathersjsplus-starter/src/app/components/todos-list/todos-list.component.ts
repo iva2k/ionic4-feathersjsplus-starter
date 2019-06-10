@@ -63,7 +63,10 @@ export class TodosListComponent implements OnDestroy, OnInit {
   // Edit button click
   onEdit(itemId: string, item: IonItemSliding) {
     console.log('TodosListComponent Edit button, itemId: %s', itemId);
-    this.closeAllSliders();
+    setTimeout(() => {
+      // item.close();
+      this.closeAllSliders();
+     }, 0); // Post until after swipe is done with its animation, otherwise item might reopen.
     this.edit.emit(itemId);
   }
 
