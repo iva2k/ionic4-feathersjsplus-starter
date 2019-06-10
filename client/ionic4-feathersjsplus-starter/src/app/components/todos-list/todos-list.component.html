@@ -3,10 +3,12 @@
   <ion-list inset>
     <ion-item-sliding *ngFor="let todo of todos" [class.deleting]="itemsBusyDeleting.indexOf(item) > -1" #item>
       <ion-item>
-        <h2>{{todo.title}}</h2>
-        <p>{{todo.notes}}</p>
-        <p><small>{{todo._id}}</small></p>
-        <ion-note item-end>
+        <ion-label text-wrap>
+          <h2>{{todo.title}}</h2>
+          <p>{{todo.notes}}</p>
+          <p><small>{{todo._id}}</small></p>
+        </ion-label>
+        <ion-note slot="end">
           {{todo.createdAt | date:'short'}}
         </ion-note>
       </ion-item>
