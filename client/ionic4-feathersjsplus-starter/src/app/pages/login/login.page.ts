@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
 
@@ -12,6 +13,7 @@ import { FeathersService } from '../../services/feathers.service';
 })
 export class LoginPage implements OnInit {
   @ViewChild('entryFocus') entryFocus;
+  public loginForm: FormGroup;
 
   loading: HTMLIonLoadingElement;
   credentials: User = { email: '', password: '' } as User;
@@ -23,7 +25,12 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private navCtrl: NavController,
     private activatedRoute: ActivatedRoute,
+    formBuilder: FormBuilder,
   ) {
+    this.loginForm = formBuilder.group({
+      email   : [this.credentials.email, Validators.compose([Validators.required, Validators.minLength(5) ]) ],
+      password: [this.credentials.password, Validators.compose([Validators.required, Validators.pattern('[0-9a-zA-Z*_\-]*') ]) ],
+    });
   }
 
   ngOnInit() {
@@ -43,6 +50,28 @@ export class LoginPage implements OnInit {
 
   ionViewWillLeave() {
     this.hideLoading();
+  }
+
+  public checkForm() {
+    if (this.loginForm.valid) {
+      this.credentials = this.loginForm.value as User;
+      return true;
+    } else {
+      // Not a valid input! TODO: (later) Implement user interaction?
+      this.error = 'Please enter correct information';
+      let sep = ' (';
+      for (const key in this.loginForm.controls) {
+        if (this.loginForm.controls.hasOwnProperty(key)) {
+          const control = this.loginForm.controls[key];
+          if (!control.valid) {
+            this.error += sep + key;
+            sep = ', ';
+          }
+        }
+      }
+      this.error += ').';
+      return false;
+    }
   }
 
   showLoading(): Promise<any> {
@@ -66,6 +95,7 @@ export class LoginPage implements OnInit {
   }
 
   login() {
+    if (!this.checkForm()) { return; }
     this.showLoading().then(() => {
       return this.feathersService.authenticate(this.credentials);
     }).then(() => {
@@ -79,6 +109,7 @@ export class LoginPage implements OnInit {
   }
 
   register() {
+    if (!this.checkForm()) { return; }
     this.showLoading().then(() => {
       return this.feathersService.register(this.credentials);
     }).then(() => {

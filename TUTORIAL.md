@@ -810,5 +810,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [Misc] Create User model, cleanup LoginPage
 - [UX] Focus on first form field upon entry (LoginPage, TodoDetailPage: added #entryFocus)
 - [Misc] Add extended fields to user & todo models
+- [UX] LoginPage validators, styling, field icons
 
 ## END

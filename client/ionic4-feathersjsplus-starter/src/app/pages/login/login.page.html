@@ -1,46 +1,63 @@
 <ion-header>
+
   <ion-toolbar>
     <ion-title>
       Login
     </ion-title>
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content class="login-content" padding>
-  <ion-row class="logo-row">
-    <ion-col></ion-col>
-    <ion-col width-67>
+  <ion-card class="login-box">
+    <ion-card-header class="logo-row">
       <img src="http://placehold.it/300x200"/>
-    </ion-col>
-    <ion-col></ion-col>
-  </ion-row>
-  <div class="login-box">
-    <form #loginForm="ngForm">
+    </ion-card-header>
+    <form [formGroup]="loginForm">
       <ion-row>
         <ion-col>
-          <ion-list inset>
-            <ion-item>
-              <ion-input autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" required [(ngModel)]="credentials.email" #username></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="credentials.password" #password></ion-input>
-            </ion-item>
+          <ion-list no-lines inset>
+
+            <ion-chip [class.invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)">
+              <ion-icon name="person"></ion-icon>
+              <ion-input autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" autocorrect="off" formControlName="email" #username></ion-input>
+            </ion-chip>
+
+            <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)" class="alert-invalid">
+              <div *ngIf="loginForm.controls['email'].hasError('required')">
+                Email is required.
+              </div>
+              <div *ngIf="loginForm.controls['email'].hasError('minlength') && loginForm.controls['email'].touched">
+                Email must be at least 5 characters long.
+              </div>
+            </div>
+
+            <ion-chip [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)">
+              <ion-icon name="lock"></ion-icon>
+              <ion-input placeholder="Password" name="password" id="passwordField" type="password" autocorrect="off" required formControlName="password" #password></ion-input>
+            </ion-chip>
+            <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)" class="alert-invalid">
+              <div *ngIf="loginForm.controls['password'].hasError('required')">
+                Password is required.
+              </div>
+            </div>
+
           </ion-list>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          <div *ngIf="error" class="alert-invalid">{{error}}</div>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col class="login-col">
-          <ion-button class="login-btn" full type="button" [disabled]="!loginForm.form.valid" (click)="login()">Login</ion-button>
+          <ion-button class="login-btn" expand="full" shape="round" type="submit" name="login" [disabled]="loginForm.invalid" (click)="login()">Login</ion-button>
         </ion-col>
         <ion-col class="register-col">
-          <ion-button class="register-btn" block type="button" [disabled]="!loginForm.form.valid" (click)="register()">Register</ion-button>
+          <ion-button class="register-btn" expand="block" shape="round" type="button" name="register" [disabled]="loginForm.invalid" (click)="register()">Register</ion-button>
         </ion-col>
       </ion-row>
     </form>
-  </div>
+  </ion-card>
 </ion-content>
