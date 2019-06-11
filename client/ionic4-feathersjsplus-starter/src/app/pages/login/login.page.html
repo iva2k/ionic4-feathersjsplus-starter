@@ -20,7 +20,7 @@
         <ion-col>
           <ion-list inset>
             <ion-item>
-              <ion-input placeholder="Email" name="username" id="loginField" type="email" required [(ngModel)]="credentials.email" #email></ion-input>
+              <ion-input autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" required [(ngModel)]="credentials.email" #username></ion-input>
             </ion-item>
             <ion-item>
               <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="credentials.password" #password></ion-input>
@@ -34,7 +34,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col class="signup-col">
+        <ion-col class="login-col">
           <ion-button class="login-btn" full type="button" [disabled]="!loginForm.form.valid" (click)="login()">Login</ion-button>
         </ion-col>
         <ion-col class="register-col">

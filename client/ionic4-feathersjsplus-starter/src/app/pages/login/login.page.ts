@@ -11,7 +11,7 @@ import { FeathersService } from '../../services/feathers.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  @ViewChild('email') email: any;
+  @ViewChild('entryFocus') entryFocus;
 
   loading: HTMLIonLoadingElement;
   credentials: User = { email: '', password: '' } as User;
@@ -34,12 +34,11 @@ export class LoginPage implements OnInit {
       });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-    // Good UX: Move cursor to the first form field.
-    setTimeout(() => {
-      this.email.setFocus();
-    }, 500);
+  ionViewDidEnter() { // IONIC4
+    console.log('ionViewDidEnter LoginPage');
+    // Good UX: Move cursor to the first form field (marked by #entryFocus property in template).
+    // Note: IONIC4 <ion-input autofocus ...> does not seem to be working (tested in Cromium browser).
+    this.entryFocus.setFocus();
   }
 
   ionViewWillLeave() {

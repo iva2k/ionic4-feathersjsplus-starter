@@ -12,10 +12,10 @@
         <ion-col>
           <ion-list inset>
             <ion-item>
-              <ion-input placeholder="Title" name="title" id="titleField" type="text" required [(ngModel)]="todo.title" #title></ion-input>
+              <ion-input autofocus #entryFocus placeholder="Title" name="title" id="titleField" type="text" required [(ngModel)]="todo.title" #title></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input placeholder="Notes" name="notes" id="notesField" type="text" required [(ngModel)]="todo.notes" #title></ion-input>
+              <ion-input placeholder="Notes" name="notes" id="notesField" type="text" required [(ngModel)]="todo.notes" #notes></ion-input>
             </ion-item>
           </ion-list>
         </ion-col>

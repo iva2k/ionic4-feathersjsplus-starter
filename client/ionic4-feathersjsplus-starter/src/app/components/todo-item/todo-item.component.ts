@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 
 import cloneDeep from 'clone-deep';
@@ -22,6 +23,7 @@ import { FeathersService } from '../../services/feathers.service';
   styleUrls: ['./todo-item.component.scss'],
 })
 export class TodoItemComponent implements OnDestroy, OnInit {
+  @ViewChild('entryFocus') entryFocus;
   @Input() todoId: string;
   protected newItem: boolean; // true if opened without navParams, so it is an "Add" command.
   @Output() done = new EventEmitter<{action: string, item: Todo}>();
@@ -68,14 +70,23 @@ export class TodoItemComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
+    // console.log('ngOnDestroy TodoItemComponent');
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;
     }
   }
 
+  ionViewDidEnter() { // IONIC4
+    // Note: IONIC4 sends lifecycle events only to pages. Parent page should dispatch Lifecycle events to child components.
+    console.log('ionViewDidEnter TodoItemComponent');
+    // Good UX: Move cursor to the first form field (marked by #entryFocus property in template).
+    // Note: IONIC4 <ion-input autofocus ...> does not seem to be working (tested in Cromium browser).
+    this.entryFocus.setFocus();
+  }
+
   // Add button click
-  public onAdd() {
+  onAdd() {
     console.log('TodoItemComponent Add button. todo: ', this.todo);
     this.feathersService.create<Todo>('todos', this.todo)
       .then(res => {
@@ -88,7 +99,7 @@ export class TodoItemComponent implements OnDestroy, OnInit {
   }
 
   // Update button click
-  public onUpdate() {
+  onUpdate() {
     console.log('TodoItemComponent Update button. todo: ', this.todo);
     const changes = diff(this.oldTodo, this.todo);
     // Don't save if no changes were made
@@ -110,7 +121,7 @@ export class TodoItemComponent implements OnDestroy, OnInit {
   }
 
   // Delete button click
-  public onRemove() {
+  onRemove() {
     console.log('TodoItemComponent Delete button. todo: ', this.todo);
     this.feathersService.remove<Todo>('todos', this.todo)
       .then(res => {

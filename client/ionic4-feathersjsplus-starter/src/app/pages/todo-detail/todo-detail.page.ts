@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { /* Router, */ ActivatedRoute } from '@angular/router';
 import { NavController, ToastController } from '@ionic/angular';
 
 import { FeathersService } from '../../services/feathers.service';
+import { TodoItemComponent } from '../../components/todo-item/todo-item.component';
 
 @Component({
   selector: 'app-todo-detail',
@@ -10,6 +11,8 @@ import { FeathersService } from '../../services/feathers.service';
   styleUrls: ['./todo-detail.page.scss'],
 })
 export class TodoDetailPage implements OnInit {
+  @ViewChild(TodoItemComponent) component: TodoItemComponent;
+
   protected newItem: boolean; // true if opened without navParams, so it is an "Add" command.
   protected todoId: string;
 
@@ -31,8 +34,16 @@ export class TodoDetailPage implements OnInit {
       });
   }
 
+  ionViewDidEnter() { // IONIC4
+    // console.log('ionViewDidEnter TodoDetailPage');
+    // Note: IONIC4 sends lifecycle events only to pages. Lifecycle events have to be dispatched manually to child components.
+    if (this.component) {
+      this.component.ionViewDidEnter();
+    }
+  }
+
   // Command completed
-  public onDone(event) {
+  onDone(event) {
     console.log('TodoDetailPage command done. event: %o', event);
     this.toaster(`Task "${event.item.title}" ${event.action}.`);
 
@@ -46,7 +57,7 @@ export class TodoDetailPage implements OnInit {
     this.toastCtrl.create({
       message: text,
       duration: time,
-    }).then( toast => {
+    }).then(toast => {
       toast.present();
       // setTimeout(() => toast.dismiss(), time);
     });

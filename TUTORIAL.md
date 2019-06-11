@@ -808,5 +808,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [UX] Update button on TodoDetailsPage returns to the list if entries are unchanged
 - [UX] Annotate input fields for keyboard domain (e.g. type="email", "password", "tel", "date", etc.)
 - [Misc] Create User model, cleanup LoginPage
+- [UX] Focus on first form field upon entry (LoginPage, TodoDetailPage: added #entryFocus)
 
 ## END
