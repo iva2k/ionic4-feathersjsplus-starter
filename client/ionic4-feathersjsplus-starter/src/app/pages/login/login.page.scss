@@ -30,7 +30,7 @@
         height: 48px;
         ion-icon {
           font-size: 24px;
-          color: var(--ion-color-medium); // TODO: label-color
+          color: var(--placeholder-color);
           margin-right: -4px; // Tighten space between icon and input (use just input padding)
         }
       }
@@ -66,3 +66,5 @@
     --background:#F4B004;
     --spinner-color:#F94701;
   }
+
+  

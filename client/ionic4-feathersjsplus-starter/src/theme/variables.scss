@@ -75,7 +75,9 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
+  --placeholder-color: var(--ion-color-medium);
   ion-input {
-    --placeholder-color: var(--ion-color-dark);
+    --placeholder-color: var(--ion-color-medium);
   }
+
 }
