@@ -94,7 +94,7 @@ export class LoginPage implements OnInit {
     // or? this.loadingController.dismiss();
   }
 
-  login() {
+  onLogin() {
     if (!this.checkForm()) { return; }
     this.showLoading().then(() => {
       return this.feathersService.authenticate(this.credentials);
@@ -108,7 +108,7 @@ export class LoginPage implements OnInit {
     });
   }
 
-  register() {
+  onRegister() {
     if (!this.checkForm()) { return; }
     this.showLoading().then(() => {
       return this.feathersService.register(this.credentials);

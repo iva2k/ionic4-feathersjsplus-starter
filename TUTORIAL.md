@@ -812,5 +812,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [Misc] Add extended fields to user & todo models
 - [UX] LoginPage validators (FormBuilder example), styling, field icons
 - [UX] TodoDetailPage validators (Template example), styling, form buttons
+- [UX] Form default/submit button on LoginPage, TodoDetailPage (workaround for Ionic4 issue <https://github.com/ionic-team/ionic/issues/15682>)
 
 ## END

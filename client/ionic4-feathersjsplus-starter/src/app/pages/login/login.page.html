@@ -13,7 +13,7 @@
     <ion-card-header class="logo-row">
       <img src="http://placehold.it/300x200"/>
     </ion-card-header>
-    <form [formGroup]="loginForm">
+    <form [formGroup]="loginForm" (keyup.enter)="onLogin()">
       <ion-row>
         <ion-col>
           <ion-list no-lines inset>
@@ -52,10 +52,10 @@
       </ion-row>
       <ion-row>
         <ion-col class="login-col">
-          <ion-button class="login-btn" expand="full" shape="round" type="submit" name="login" [disabled]="loginForm.invalid" (click)="login()">Login</ion-button>
+          <ion-button class="login-btn" expand="full" shape="round" type="submit" name="login" [disabled]="loginForm.invalid" (click)="onLogin()">Login</ion-button>
         </ion-col>
         <ion-col class="register-col">
-          <ion-button class="register-btn" expand="block" shape="round" type="button" name="register" [disabled]="loginForm.invalid" (click)="register()">Register</ion-button>
+          <ion-button class="register-btn" expand="block" shape="round" type="button" name="register" [disabled]="loginForm.invalid" (click)="onRegister()">Register</ion-button>
         </ion-col>
       </ion-row>
     </form>

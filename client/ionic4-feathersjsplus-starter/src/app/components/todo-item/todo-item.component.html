@@ -7,7 +7,7 @@
   </div>
 
   <div class="todo-form">
-    <form #todoForm="ngForm">
+    <form #todoForm="ngForm" (keyup.enter)="onUpdate()">
       <ion-row>
         <ion-col>
           <ion-list inset>
@@ -45,7 +45,7 @@
           <ion-button class="add-btn" expand="full" type="button" name="add" [disabled]="todoForm.invalid" (click)="onAdd()">Add</ion-button>
         </ion-col>
         <ion-col class="update-col" [hidden]="newItem">
-          <ion-button class="update-btn" expand="full" type="submit" name="update" [disabled]="todoForm.invalid" (click)="onUpdate()">Update</ion-button>
+          <ion-button class="update-btn" expand="full" type="button" name="update" [disabled]="todoForm.invalid" (click)="onUpdate()">Update</ion-button>
         </ion-col>
         <ion-col class="delete-col" [hidden]="newItem">
           <ion-button class="delete-btn" expand="full" type="button" name="delete" [disabled]="todoForm.invalid" (click)="onRemove()">Delete</ion-button>
