@@ -885,7 +885,7 @@ import { Service } from '@feathersjs/feathers';
 
 Unfortunately, this fix hampers the generator ability to automatically add more services when re-generating, but keeping the "\<DEFAULT>" tag will remove the edits upon re-generation.
 
-Another type error (mostly due to TypeScript inability to match complex types) is fixed by an edit that adds ``` as any``` at the end of the statements (and removing "\<DEFAULT> tags):
+Another type error (mostly due to TypeScript inability to match complex types) is fixed by an edit that adds ```... as any``` at the end of the statements (and removing "\<DEFAULT> tags):
 
 ```js
   let returns: FGraphQLResolverMap = {

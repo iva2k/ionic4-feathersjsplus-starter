@@ -132,7 +132,7 @@ let moduleExports = function batchLoaderResolvers(app: App, options: Batchloader
 
       // user: [User!]
       // !code: resolver-Todo-user
-      user: getResult('Todo.user', 'userId', true) as any,
+      user: getResult('Todo.user', 'userId', true) as any, // "as any" fixes TypeScript type is not assignable error TS2322
       // !end
     },
 
@@ -140,7 +140,7 @@ let moduleExports = function batchLoaderResolvers(app: App, options: Batchloader
 
       // todos: [Todo!]
       // !code: resolver-User-todos
-      todos: getResult('User.todos', '_id', true) as any,
+      todos: getResult('User.todos', '_id', true) as any, // "as any" fixes TypeScript type is not assignable error TS2322
       // !end
     },
 
