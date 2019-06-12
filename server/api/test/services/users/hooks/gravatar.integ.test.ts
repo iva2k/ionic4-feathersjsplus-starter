@@ -49,7 +49,7 @@ describe('Test users/hooks/gravatar.integ.test.ts', () => {
 
         assert.deepEqual(user, {
           email: 'test@example.com',
-          avatar: 'https://s.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0?s=60'
+          avatar: 'https://s.gravatar.com/avatar/55502f40dc8b7c769880b10874abc9d0.jpg?s=80&d=robohash&r=g'
         });
       });
   });
