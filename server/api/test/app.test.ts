@@ -25,8 +25,10 @@ describe('Feathers application tests', () => {
   });
 
   after(function (done) {
-    server.close();
-    setTimeout(() => done(), 500);
+    server.close( (e) => {
+    setTimeout(() => { done(e) },
+      10);  // TODO: When test intermittently fails, change this number. On Windows, node's server.close() can emit completion callback too early, causing problems. Adjusting the delay can "fix" the timeout.
+    });
   });
 
   it('starts and shows the index page', () => {
