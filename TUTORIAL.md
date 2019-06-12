@@ -816,4 +816,122 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [Server] Reorganize config files, use dotenv to load server/api/config/private.env (copy and customize private.env.template, do not store private.env in git!), see <https://codingsans.com/blog/node-config-best-practices>
 - [Server] Add Gravatar configuration parameters
 
+### Step 9. GraphQL Service
+
+With Feathers+ CLI it is easy to add GraphQL endpoint
+(see <https://medium.com/@mattchewone/graphql-with-feathersjs-4cc67e785bd>).
+
+Some edits in {service}.schema.ts files may be necessary, especially 'add' section should show foreign keys:
+
+```js
+...
+let extensions = {
+  // GraphQL generation.
+  graphql: {
+    ...
+    add: {
+      // !code: graphql_add
+      ...
+      todos: { type: '[Todo!]', args: false, relation: { ourTable: '_id', otherTable: 'userId' } },
+      // !end
+    },
+
+```
+
+After filling in {user|todo}.schema.ts files (see code on Github), run the following command and answer some questions:
+
+```bash
+feathers-plus generate graphql
+ ? How should Queries be completed? Using BatchLoaders.
+ ? Which path should the service be registered on? /graphql
+ ? Does the service require authentication? Yes
+ ? Will you be using only the fgraphql hook, not the service? No
+```
+
+Note: We chose "BatchLoaders" for completing the queries, which speeds up performance significantly over the "Using standalone Feathers service calls." option, though "standalone Feathers service calls" are also possible.
+
+To try it out, start the server:
+
+```bash
+npm start
+```
+
+If you get a TS2339 error on ```service.hooks({...``` in graphql.service.ts, similar to one in Step 5, add an import statement at the top and change the line with the error to:
+
+```js
+// !code: imports
+import { Service } from '@feathersjs/feathers';
+// !end
+
+...
+
+  let service: Service<any> = app.service('/graphql');
+  service.hooks({
+    ...
+```
+
+The above import stays, but the code edit, unfortunately, is removed each time you re-generate graphql or the app, so it has to be re-enetered.
+
+If you get few TS2339 errors in batchloader.resolvers.ts "Property 'find/get' does not exist on type 'never'.", edit the file and add ```: Service<any>``` to the service variables, remove "\<DEFAULT>" tag in the comment:
+
+```js
+import { Service } from '@feathersjs/feathers';
+...
+  // !code: services
+  let todos: Service<any> = app.service('/todos');
+  let users: Service<any> = app.service('/users');
+  // !end
+```
+
+Unfortunately, this fix hampers the generator ability to automatically add more services when re-generating, but keeping the "\<DEFAULT>" tag will remove the edits upon re-generation.
+
+Another type error (mostly due to TypeScript inability to match complex types) is fixed by an edit that adds ``` as any``` at the end of the statements (and removing "\<DEFAULT> tags):
+
+```js
+  let returns: FGraphQLResolverMap = {
+
+    Todo: {
+
+      // user: [User!]
+      // !code: resolver-Todo-user
+      user: getResult('Todo.user', 'userId', true) as any,
+      // !end
+    },
+
+    User: {
+
+      // todos: [Todo!]
+      // !code: resolver-User-todos
+      todos: getResult('User.todos', '_id', true) as any,
+      // !end
+    },
+```
+
+Install and run GraphiQL app <https://github.com/skevy/graphiql-app> to browse the GraphQL endpoint at <http://localhost:3030/graphql>, and enter the query:
+
+```GraphQL
+{
+  getUser(key: "xxx") {
+    _id
+    email
+  }
+}
+```
+
+You should get an error with "No auth token". We won't spend time now to get through the authentication part and leave it as an exercise.
+
+If you get an error "Schema must be an instance of GraphQLSchema. ...", it may be due to mismatched graphql package versions in the dependency tree. Stop the server, run commands:
+
+```bash
+npm install graphql@^0.11.7 --save
+npm dedupe
+npm start
+```
+
+(see the [issue](<https://github.com/feathers-plus/generator-feathers-plus/issues/247>))
+
+#### Step 9 Summary
+
+Though we don't use GraphQL in our client app, we now have a GraphQL endpoint that could be usefull for other implementations.
+
 ## END

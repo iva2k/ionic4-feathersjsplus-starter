@@ -15,7 +15,9 @@ let schema = {
 
   // Required fields.
   required: [
-    // !code: schema_required // !end
+    // !code: schema_required
+    'title',
+    // !end
   ],
   // Fields with unique values.
   uniqueItemProperties: [
@@ -56,8 +58,9 @@ let extensions = {
       // !code: graphql_discard // !end
     ],
     add: {
-      // !<DEFAULT> code: graphql_add
+      // !code: graphql_add
       // __author__: { type: '__User__!', args: false, relation: { ourTable: '__authorId__', otherTable: '_id' } },
+      user: { type: '[User!]', args: false, relation: { ourTable: 'userId', otherTable: '_id' } },
       // !end
     },
     // !code: graphql_more // !end

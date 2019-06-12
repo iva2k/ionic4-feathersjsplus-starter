@@ -13,6 +13,10 @@ declare module 'passport-google-oauth20';
 // Services.
 declare module 'feathers-nedb';
 
+// GraphQL.
+declare module '@feathers-plus/graphql';
+declare module 'merge-graphql-schemas';
+
 // Seed.
 declare module '@feathers-plus/test-utils';
 

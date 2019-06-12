@@ -15,7 +15,9 @@ let schema = {
 
   // Required fields.
   required: [
-    // !code: schema_required // !end
+    // !code: schema_required
+    'email',
+    // !end
   ],
   // Fields with unique values.
   uniqueItemProperties: [
@@ -25,6 +27,7 @@ let schema = {
   // Fields in the model.
   properties: {
     // !code: schema_properties
+    _id: { type: 'ID' },
     email: { faker: 'internet.email' },
     // username: { faker: 'internet.userName' },
     // firstName: { faker: 'name.firstName' },
@@ -54,11 +57,14 @@ let extensions = {
     // },
     // !end
     discard: [
-      // !code: graphql_discard // !end
+      // !code: graphql_discard
+      'password',
+      // !end
     ],
     add: {
-      // !<DEFAULT> code: graphql_add
+      // !code: graphql_add
       // __author__: { type: '__User__!', args: false, relation: { ourTable: '__authorId__', otherTable: '_id' } },
+      todos: { type: '[Todo!]', args: false, relation: { ourTable: '_id', otherTable: 'userId' } },
       // !end
     },
     // !code: graphql_more // !end

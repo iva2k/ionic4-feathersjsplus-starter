@@ -78,5 +78,13 @@
       "facebook"
     ],
     "entity": "users"
+  },
+  "graphql": {
+    "path": "/graphql",
+    "strategy": "batchloaders",
+    "sqlInterface": null,
+    "requiresAuth": true,
+    "doNotConfigure": false,
+    "name": "graphql"
   }
 }

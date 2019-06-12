@@ -61,6 +61,7 @@
     }
   },
   "dependencies": {
+    "@feathers-plus/graphql": "^1.10.0",
     "@feathers-plus/test-utils": "^0.3.6",
     "@feathersjs/authentication": "^2.1.16",
     "@feathersjs/authentication-jwt": "^2.0.10",
@@ -77,8 +78,11 @@
     "cross-env": "^5.2.0",
     "feathers-hooks-common": "^4.20.7",
     "feathers-nedb": "^3.1.0",
+    "graphql": "^0.11.7",
+    "graphql-resolvers-ast": "^1.4.0",
     "helmet": "^3.18.0",
     "lodash.merge": "^4.6.1",
+    "merge-graphql-schemas": "^1.5.8",
     "nedb": "^1.8.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth20": "^1.0.0",
@@ -100,6 +104,7 @@
     "@types/feathersjs__express": "^1.1.6",
     "@types/feathersjs__feathers": "^3.1.5",
     "@types/feathersjs__socketio": "^3.0.5",
+    "@types/graphql": "^0.13.4",
     "@types/helmet": "0.0.40",
     "@types/lodash.merge": "^4.6.6",
     "@types/mocha": "^5.2.7",
