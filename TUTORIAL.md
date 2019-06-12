@@ -813,5 +813,6 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [UX] LoginPage validators (FormBuilder example), styling, field icons
 - [UX] TodoDetailPage validators (Template example), styling, form buttons
 - [UX] Form default/submit button on LoginPage, TodoDetailPage (workaround for Ionic4 issue <https://github.com/ionic-team/ionic/issues/15682>)
+- [Server] Reorganize config files, use dotenv to load server/api/config/private.env (copy and customize private.env.template, do not store private.env in git!), see <https://codingsans.com/blog/node-config-best-practices>
 
 ## END

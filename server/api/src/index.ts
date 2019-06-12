@@ -8,6 +8,12 @@ import seedData from './seed-data';
 // !code: imports // !end
 // !code: init // !end
 
+logger.info('NODE_ENV: %s', process.env.NODE_ENV);
+logger.info('app.get(\'env\'): %s', app.get('env'));
+logger.info('from: %s', app.get('from'));
+logger.info('host: %s', app.get('host'));
+logger.info('port: %s', app.get('port'));
+
 const port = app.get('port');
 const server = app.listen(port);
 // !code: init2 // !end

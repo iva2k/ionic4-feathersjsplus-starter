@@ -11,6 +11,10 @@ import logger from './logger';
 import favicon from 'serve-favicon';
 // !end
 
+// Load local / private config file into process.env using dotenv:
+import { config } from 'dotenv';
+config({path: path.resolve(__dirname, '../config/private.env')});
+
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
