@@ -10,7 +10,7 @@ import * as crypto from "crypto";
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar/'; // Note trailing slash.
 
-function processRecord(app, record: any) {
+function processRecord(app: any, record: any) {
   if (app.get('gravatar_only') || !record.avatar) {
     let ext = app.get('gravatar_ext') || 'jpg'; // Image type
     if (ext) ext = '.' + ext; // Feathers config automatically converts strings starting with dot to absolute paths. As it can't start with dot, insert one.
