@@ -5,7 +5,7 @@ import { Hook } from '@feathersjs/feathers';
 import { checkContext, getItems, replaceItems } from 'feathers-hooks-common';
 
 // We need this to create the MD5 hash
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar/'; // Note trailing slash.
