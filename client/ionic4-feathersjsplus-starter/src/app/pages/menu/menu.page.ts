@@ -47,6 +47,7 @@ export class MenuPage implements OnInit {
       } else {
         this.navCtrl.navigateRoot(menuItem.url);
       }
+      return;
     }
 
     console.error('Menu Item with no action and no url: %o', menuItem);
