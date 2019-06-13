@@ -145,6 +145,7 @@ export class FeathersService {
       console.log('Using default API URL %s', defaultApiUrl);
       return defaultApiUrl;
     }).then((apiUrl) => {
+      // Note: we explicitly set <void> type on promis to avoid issue <https://github.com/Microsoft/TypeScript/issues/8516>.
       return new Promise<void>((resolve) => {
 
         // Add socket.io plugin

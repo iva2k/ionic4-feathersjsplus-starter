@@ -849,7 +849,7 @@ feathers-plus generate graphql
  ? Will you be using only the fgraphql hook, not the service? No
 ```
 
-Note: We chose "BatchLoaders" for completing the queries, which speeds up performance significantly over the "Using standalone Feathers service calls." option, though "standalone Feathers service calls" are also possible.
+Note: We chose "BatchLoaders" for completing the queries, which speeds up performance significantly over the "Using standalone Feathers service calls." option, though "standalone Feathers service calls" are also possible. It is easier to implement standalone service calls and you could start wth that, and later switch to batch loaderrs, or even SQL statements when performance improvements are needed.
 
 To try it out, start the server:
 
