@@ -20,7 +20,8 @@ import { NonauthGuardService } from './services/nonauth-guard.service';
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot({}),
+    IonicModule.forRoot({
+    }),
     AppRoutingModule
   ],
   providers: [

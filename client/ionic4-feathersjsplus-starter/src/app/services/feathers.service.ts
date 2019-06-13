@@ -15,6 +15,8 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Subscription } from 'rxjs/Subscription';
 
+const defaultApiUrl = 'http://localhost:3030'; // TODO: (soon) move to config/env files.
+
 // Base type for all record data types, used by DataSubscriber.
 export interface Record {
     _id: string;
@@ -99,8 +101,6 @@ export class DataSubscriber<T extends Record> {
   }
 
 }
-
-const defaultApiUrl = 'http://localhost:3030';
 
 @Injectable({
   providedIn: 'root'

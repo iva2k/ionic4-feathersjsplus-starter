@@ -5,7 +5,7 @@ import { createLogger, format, transports } from 'winston';
 // !code: init // !end
 
 function getLogLevel() {
-  // To see more detailed errors, change this to debug'
+  // To see more detailed errors, change this to 'debug' // TODO: (soon) move to config/env.
   let level = 'info'; // production, dev, test
   if (process.env.NODE_ENV === 'staging') {
     level = 'debug'; // staging.
