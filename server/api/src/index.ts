@@ -5,7 +5,11 @@
 import logger from './logger';
 import app from './app';
 import seedData from './seed-data';
-// !code: imports // !end
+// !code: imports
+import * as internalIp from 'internal-ip';
+import path from 'path';
+import fs from 'fs';
+// !end
 // !code: init // !end
 
 logger.info('NODE_ENV: %s', process.env.NODE_ENV);
@@ -31,8 +35,47 @@ server.on('listening', async () => {
   // !end
   // !code: listening // !end
   await seedData(app);
-  // !code: listening1 // !end
+  // !code: listening1
+  serverJson();
+  // !end
 });
 
-// !code: funcs // !end
+// !code: funcs
+function serverJson() {
+  if (process.env.NODE_ENV === 'development') {
+    // Save local IP address and port to JSON file that client app can read. Simplify development config a bit.
+    // const outfile = path.join(app.get('www'), 'server.json');
+    let targets = app.get('www') || [];
+    if (!Array.isArray(targets)) targets = [targets];
+
+    let ip4: string, ip6: string;
+    internalIp.v6().then((ip: string) => {
+      ip6 = ip;
+      return internalIp.v4();
+    }).then((ip: string) => {
+      ip4 = ip;
+      console.log('Internal IP ipv4: ' + ip4 + ' ipv6: ' + ip6);
+      let data = {
+        ip4,
+        ip6,
+        port
+      };
+      for (let target of targets) {
+        let outfile = path.join(target, 'server.json');
+        fs.readdir(path.dirname(outfile), {}, (err, files) => {
+          if (err) console.log(err);
+          else {
+            fs.writeFile(outfile, JSON.stringify(data), function(err) {
+              if (err) console.log(err);
+              else console.log('Saved file %s', outfile);
+            });
+          }
+        });
+      }
+    }).catch((reason: any) => {
+      console.log('Error saving IP address for client: %o', reason);
+    });
+  }
+}
+// !end
 // !code: end // !end

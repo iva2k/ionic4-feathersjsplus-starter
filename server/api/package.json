@@ -81,6 +81,7 @@
     "graphql": "^0.11.7",
     "graphql-resolvers-ast": "^1.4.0",
     "helmet": "^3.18.0",
+    "internal-ip": "^4.3.0",
     "lodash.merge": "^4.6.1",
     "merge-graphql-schemas": "^1.5.8",
     "nedb": "^1.8.0",

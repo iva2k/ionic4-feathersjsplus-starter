@@ -3,11 +3,18 @@
 // This configuration file has `.js` suffix, and must provide a `module.exports` containing the configuration properties.
 
 module.exports = {
-  from: 'default.js',
-
+  from             : 'default.js',
   host             : 'localhost',
   port             : 3030,
   public           : '../public/',
+  www              : [
+    // Folder(s) to where copy server.json file (from which the client app can read it).
+    // IONIC4 uses Angular 7, and since Angular 6 the /www directory is not used for 'ionic serve'
+    // Copy server.json to src/assets, so it is available for the app running via 'ionic serve'
+    '../../../client/ionic4-feathersjsplus-starter/www/assets', // ionic build
+    '../../../client/ionic4-feathersjsplus-starter/src/assets', // ionic serve
+    '../../../client/ionic4-feathersjsplus-starter/platforms/browser/www/assets', // ionic build --cordova --platform=browser
+  ],
   paginate: {
     default: 10,
     max: 50
