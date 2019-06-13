@@ -28,7 +28,7 @@ export class AuthGuardService implements CanActivate {
       })
       .catch((err) => {
         // Force auth guard
-        const urlTree = this.router.createUrlTree([redirectUrl], { queryParams: { retUrl: retUrl } });
+        const urlTree = this.router.createUrlTree([redirectUrl], { queryParams: { retUrl } });
         console.log('AuthGuardService(%s): no valid saved auth token, redirecting to %s.', retUrl, urlTree.toString());
         return urlTree; // Angular >= 7.1 router
       })

@@ -12,6 +12,7 @@ log.*
 *.sublime-workspace
 .vscode/
 npm-debug.log*
+src/assets/server.json
 
 .idea/
 .ionic/
