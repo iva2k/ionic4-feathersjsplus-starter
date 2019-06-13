@@ -126,6 +126,15 @@ ionic cordova platform add ios
 
 See <https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/>
 
+##### Browser / PWA App
+
+Install cordova browser platform, it will let run many cordova plugins on the browser, and in Electron app.
+
+```bash
+ionic cordova platform add browser
+ionic build --cordova --platform=browser
+```
+
 #### Add side menu / tabs navigation
 
 Ionic 4 starter "sidemenu" does not have tabs, and starter "tabs" does not have side menu. Both these patterns are needed for good UX, so we will do that.
