@@ -825,6 +825,7 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [Server] Reorganize config files, use dotenv to load server/api/config/private.env (copy and customize private.env.template, do not store private.env in git!), see <https://codingsans.com/blog/node-config-best-practices>
 - [Server] Add Gravatar configuration parameters
 - [Server] Server writes local IP address to client/.../www/assets/server.json file, and client app reads it for finding server on local netowrk.
+- [Client] routerLink fixes and improvements
 
 ### Step 9. GraphQL Service
 

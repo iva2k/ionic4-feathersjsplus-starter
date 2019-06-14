@@ -11,7 +11,7 @@
     <ion-content>
       <ion-list>
         <ion-menu-toggle auto-hide="false" *ngFor="let item of menuItems">
-          <ion-item tappable [routerLinkActive]="item.action ? '' : 'active-item'" [routerLink]="item.url" (click)="onClick(item)">
+          <ion-item tappable [routerLinkActive]="item.action ? '' : 'active-item'" [routerLink]="item.url" [routerLinkActiveOptions]="{ exact: !!item.exact, __change_detection_hack__: [ id, mode ] }" (click)="onClick(item)">
             <ion-icon [name]="item.icon" slot="start"></ion-icon>
             <ion-label>
               {{ item.title }}
