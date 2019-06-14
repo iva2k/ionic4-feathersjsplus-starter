@@ -16,14 +16,8 @@ const routes: Routes = [
       {
         path: 'todos',
         children: [
-          {
-            path: '',
-            loadChildren: '../todos-list/todos-list.module#TodosListPageModule'
-          },
-          {
-            path: 'detail',
-            loadChildren: '../todo-detail/todo-detail.module#TodoDetailPageModule'
-          },
+          { path: '', loadChildren: '../todos-list/todos-list.module#TodosListPageModule' },
+          { path: 'detail', loadChildren: '../todo-detail/todo-detail.module#TodoDetailPageModule' },
         ]
       },
 
@@ -31,20 +25,13 @@ const routes: Routes = [
 
       // tab3
 
-      {
-        path: '',
-        redirectTo: '/tabs/todos',
-        pathMatch: 'full',
-      }
+      // Catch-all for non-existing routes (must be last):
+      { path: '**', redirectTo: 'todos', pathMatch: 'full', }
     ]
   },
 
-  // Default:
-  {
-    path: '',
-    redirectTo: '/tabs/todos',
-    pathMatch: 'full'
-  }
+  // Catch-all for non-existing routes (must be last):
+  { path: '**', redirectTo: 'todos', pathMatch: 'full', }
 ];
 
 @NgModule({

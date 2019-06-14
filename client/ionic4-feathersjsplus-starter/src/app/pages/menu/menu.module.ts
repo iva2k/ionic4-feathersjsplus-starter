@@ -12,10 +12,10 @@ const routes: Routes = [
     path: '',
     component: MenuPage,
     children: [
-      {
-        path: 'app',
-        loadChildren: '../tabs/tabs.module#TabsPageModule'
-      },
+      { path: 'app', loadChildren: '../tabs/tabs.module#TabsPageModule' },
+
+      // Catch-all for non-existing routes (must be last):
+      { path: '**', redirectTo: 'todos', pathMatch: 'full', }
     ]
   }
 ];
