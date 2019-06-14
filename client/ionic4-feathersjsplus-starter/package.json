@@ -28,6 +28,7 @@
     "clone-deep": "^4.0.1",
     "cordova-android": "8.0.0",
     "cordova-browser": "6.0.0",
+    "cordova-electron": "^1.0.2",
     "cordova-ios": "5.0.1",
     "core-js": "^2.5.4",
     "deep-object-diff": "^1.1.0",
@@ -85,8 +86,9 @@
     },
     "platforms": [
       "android",
-      "ios",
-      "browser"
+      "browser",
+      "electron",
+      "ios"
     ]
   }
 }

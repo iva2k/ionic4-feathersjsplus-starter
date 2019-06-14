@@ -90,9 +90,10 @@ Install Android Studio, download SDKs and make sure to install:
 
 ```bash
 ionic cordova platform add android
+npm i -g native-run
 ```
 
-To avoid issues in Cordova plugins (e.g. <https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/478),>
+To avoid issues in Cordova plugins (e.g. <https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/478>),
 patch file node_modules/cordova-android/bin/templates/project/build.gradle with code
 (required since [11.2.0](https://developers.google.com/android/guides/releases#august_2017_-_version_1120)
 see also [this link](https://developer.android.com/studio/build/dependencies#google-maven)):
@@ -121,6 +122,7 @@ Use  "Run android on device" configuration (in launch.json file) for debugging i
 ##### IOS Device
 
 ```bash
+npm i -g cordova-res
 ionic cordova platform add ios
 ```
 
@@ -128,12 +130,29 @@ See <https://moduscreate.com/blog/ionic-cordova-debug-device-visual-studio-code/
 
 ##### Browser / PWA App
 
-Install cordova browser platform, it will let run many cordova plugins on the browser, and in Electron app.
+Install cordova browser platform, it will let run many cordova plugins on the browser.
 
 ```bash
 ionic cordova platform add browser
 ionic build --cordova --platform=browser
 ```
+
+#### Desktop App
+
+Electron supports Desktop platforms (Windows, MacOS, Linux), and can be added as a wrapper to Ionic/Cordova apps.
+
+Before Cordova v8.x Electron had to be added on top of cordova browser platform. Cordova 8.x includes Electron platform, which does all necessary integration.
+
+Notice: If using Cordova CLI prior to version 9.x, you will need to use the "cordova-electron" argument instead of "electron" for any command that requires the platform's name.
+
+```bash
+ionic cordova platform add electron
+ionic cordova build electron
+```
+
+The resulting executable and installer is at ./platforms/electron/build/.
+
+For more details see <https://github.com/apache/cordova-electron/blob/master/DOCUMENTATION.md>.
 
 #### Add side menu / tabs navigation
 
