@@ -17,7 +17,7 @@
               <ion-input autofocus #entryFocus name="title" id="titleField" type="text" required [(ngModel)]="todo.title" #title="ngModel"></ion-input>
             </ion-item>
             <div *ngIf="title.invalid && (title.dirty && title.touched)" class="alert-invalid">
-              <div *ngIf="title.errors?.required">
+              <div *ngIf="title.errors['required']">
                 Title is required.
               </div>
             </div>
@@ -27,7 +27,7 @@
               <ion-input name="notes" id="notesField" type="text" [(ngModel)]="todo.notes" #notes="ngModel"></ion-input>
             </ion-item>
             <div *ngIf="notes.invalid && (notes.dirty && notes.touched)" class="alert-invalid">
-              <div *ngIf="notes.errors?.required">
+              <div *ngIf="notes.errors['required']">
                 Notes are required.
               </div>
             </div>
