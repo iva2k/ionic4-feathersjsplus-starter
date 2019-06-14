@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run android on device (no-native-run)",
+      "type": "cordova",
+      "request": "launch",
+      "platform": "android",
+      "target": "device",
+      "sourceMaps": true,
+      "cwd": "${workspaceFolder}",
+      "runArguments": ["--no-native-run"]
+    },
+    {
       "name": "Run android on device",
       "type": "cordova",
       "request": "launch",

@@ -119,6 +119,37 @@ ionic cordova run android
 
 Use  "Run android on device" configuration (in launch.json file) for debugging in VSCode.
 
+Note: Recent Ionic uses native-run, which on Windows had problem detecting that a phone plugged into USB port was actually hardware (see issue <https://github.com/ionic-team/ionic-cli/issues/4022>). To work around that, add to the configuration "Run android on device" in launch.json:
+
+```json
+      ...
+      "runArguments": [ "--no-native-run" ]
+```
+
+Once the server is working (done in the ubsequent steps), you will notice that the app running on Android 9 won't connect to the server running on another host (which is most likely will be the case). The error is net::ERR_CLEARTEXT_NOT_PERMITTED, which means that http:// is not allowed, must use https://.
+
+Though it is possible to move Feathers server to https (see later sections), for debugging we need something simpler.
+
+Edit the file "./resources/android/xml/network_security_config.xml" and change it to:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
+
+```
+
+Which will be setting security very low, like it was prior to Android 9.
+
+Note that this edit is intended only for develeopment / debugging and should be reverted for production.
+
+(see <https://developer.android.com/training/articles/security-config> for more details)
+
 ##### IOS Device
 
 ```bash
@@ -137,13 +168,13 @@ ionic cordova platform add browser
 ionic build --cordova --platform=browser
 ```
 
-#### Desktop App
+#### Desktop App (Electron)
 
 Electron supports Desktop platforms (Windows, MacOS, Linux), and can be added as a wrapper to Ionic/Cordova apps.
 
 Before Cordova v8.x Electron had to be added on top of cordova browser platform. Cordova 8.x includes Electron platform, which does all necessary integration.
 
-Notice: If using Cordova CLI prior to version 9.x, you will need to use the "cordova-electron" argument instead of "electron" for any command that requires the platform's name.
+Notice: If using Cordova CLI prior to version 9.x, you will need to use the "cordova-electron" argument instead of "electron" for any command that requires the platform's name. Conversely, for Cordova CLI version 9.x and later, use "electron" platform instead of "cordova-electron".
 
 ```bash
 ionic cordova platform add electron
