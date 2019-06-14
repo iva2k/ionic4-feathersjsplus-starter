@@ -21,6 +21,12 @@ import { NonauthGuardService } from './services/nonauth-guard.service';
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot({
+      // menuType: 'overlay',
+        // 'push' - slide out pushing the page
+        // 'reveal' - slide out pushing the page (iOS)
+        // 'overlay' - slide out covering the page (MD and Windows)
+        // No more platforms! (see https://github.com/ionic-team/ionic/issues/16272 https://ionicframework.com/docs/utilities/config)
+      // (!) platforms: { ios: { menuType: 'reveal', } }
     }),
     AppRoutingModule
   ],
