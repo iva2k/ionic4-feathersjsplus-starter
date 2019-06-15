@@ -26,6 +26,7 @@ module.exports = {
     ]
   },
   nedb             : '../data',
+  autocompaction   : 10 * (60 * 1000), // Perisitent DB autocompaction interval (in ms, min 5s for NeDB)
   gravatar_only    : true,
   gravatar_ext     : 'jpg',
   gravatar_size    : 60,

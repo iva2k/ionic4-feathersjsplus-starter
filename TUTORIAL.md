@@ -877,6 +877,7 @@ We can make a lot of small and big improvements. Not in any particular order...
 - [Server] Server writes local IP address to client/.../www/assets/server.json file, and client app reads it for finding server on local netowrk.
 - [Client] routerLink fixes and improvements
 - [Client] Catch-all default routes
+- [Server] Compact NeDB (periodic - autocompaction setting in config or startup only).
 
 ### Step 9. GraphQL Service
 
