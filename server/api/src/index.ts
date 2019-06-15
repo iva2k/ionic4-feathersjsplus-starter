@@ -54,7 +54,7 @@ function serverJson() {
       return internalIp.v4();
     }).then((ip: string) => {
       ip4 = ip;
-      console.log('Internal IP ipv4: ' + ip4 + ' ipv6: ' + ip6);
+      logger.info('Internal IP ipv4: ' + ip4 + ' ipv6: ' + ip6);
       let data = {
         ip4,
         ip6,
@@ -63,17 +63,17 @@ function serverJson() {
       for (let target of targets) {
         let outfile = path.join(target, 'server.json');
         fs.readdir(path.dirname(outfile), {}, (err, files) => {
-          if (err) console.log(err);
+          if (err) logger.error(err);
           else {
             fs.writeFile(outfile, JSON.stringify(data), function(err) {
-              if (err) console.log(err);
-              else console.log('Saved file %s', outfile);
+              if (err) logger.error(err);
+              else logger.info('Saved file %s', outfile);
             });
           }
         });
       }
     }).catch((reason: any) => {
-      console.log('Error saving IP address for client: %o', reason);
+      logger.error('Error saving IP address for client: %o', reason);
     });
   }
 }
