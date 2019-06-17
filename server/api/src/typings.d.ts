@@ -11,6 +11,7 @@ declare module '*.json';
 declare module 'passport-google-oauth20';
 
 // Services.
+declare module 'feathers-generic';
 declare module 'feathers-nedb';
 
 // GraphQL.

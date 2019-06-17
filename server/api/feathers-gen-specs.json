@@ -39,6 +39,17 @@
       "path": "/todos",
       "isAuthEntity": false,
       "graphql": true
+    },
+    "emails": {
+      "name": "emails",
+      "nameSingular": "email",
+      "subFolder": "",
+      "fileName": "emails",
+      "adapter": "generic",
+      "path": "/emails",
+      "isAuthEntity": false,
+      "requiresAuth": false,
+      "graphql": false
     }
   },
   "hooks": {

@@ -1,6 +1,7 @@
 
 // Application interface. (Can be re-generated.)
 import { Application } from '@feathersjs/express';
+import { Email } from './services/emails/emails.interface';
 import { Todo } from './services/todos/todos.interface';
 import { User } from './services/users/users.interface';
 // !code: imports // !end
@@ -19,6 +20,7 @@ import { User } from './services/users/users.interface';
   });
  */
 export type App = Application<{
+  'emails': Email,
   'todos': Todo,
   'users': User,
   // !code: moduleExports // !end
