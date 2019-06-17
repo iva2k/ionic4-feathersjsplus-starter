@@ -126,7 +126,7 @@ Note: Recent Ionic uses native-run, which on Windows had problem detecting that 
       "runArguments": [ "--no-native-run" ]
 ```
 
-Once the server is working (done in the ubsequent steps), you will notice that the app running on Android 9 won't connect to the server running on another host (which is most likely will be the case). The error is net::ERR_CLEARTEXT_NOT_PERMITTED, which means that http:// is not allowed, must use https://.
+Once the server is working (done in the ubsequent steps), you will notice that the app running on Android 9 won't connect to the server running on another host (which is most likely will be the case). The error is net::ERR_CLEARTEXT_NOT_PERMITTED, which means that <http://> is not allowed, must use <https://>.
 
 Though it is possible to move Feathers server to https (see later sections), for debugging we need something simpler.
 
@@ -996,5 +996,65 @@ npm start
 #### Step 9 Summary
 
 Though we don't use GraphQL in our client app, we now have a GraphQL endpoint that could be usefull for other implementations.
+
+### Step 10. Authentication Management
+
+_Based on <https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744>._
+
+Modern apps and services require management of user authentication. Some of the necessary features:
+
+- Confirm email
+- Reset forgotten password
+- Change account information
+- Two-factor authentication (2FA)
+
+Just sending emails requires some of the biggest items for any app:
+
+- Email service
+- Email sender
+- Email formatter
+- Email templates system
+- Email styling
+- Dealing with security restrictions and serious HTML/CSS limitations of all email clients
+
+We will use as much of existing solutions as possible, simplifying the massive job:
+
+- SMTP service (relying on standard protocol to allow widest variety of email services, with Gmail as default)
+- Feathers-mailer (Nodemailer based) email sender with SMTP transport
+- Pug email template files with pug engine (former Jade)
+- Juice for converting CSS to inline (to support variety of email clients)
+- Optionally we could use something like ```npm install postcss-css-variables --save-dev``` and setting up build process to convert modern CSS to more compatible older versions
+
+First we will setup a feathers service for SMTP email transport on the backend:
+
+```bash
+cd server/api/
+npm install --save feathers-mailer nodemailer-smtp-transport feathers-hooks-common
+feathers-plus generate service
+  ? What is the name of the service? emails
+  ? What would you call one row in the emails database? email
+  ? What kind of service is it? A custom service
+  ? Place service code in which nested folder, e.g. `v1/blog`? (optional)
+  ? Which path should the service be registered on? /emails
+  ? Does the service require authentication? No
+  ? Should this be served by GraphQL? No
+```
+
+Edit the generated files (see code on Github).
+
+Get app password, e.g. for Gmail see <https://myaccount.google.com/apppasswords>
+
+Enter Gmail login info into server/api/config/private.env file:
+
+```bash
+DEV_EMAIL_SERVICE="gmail"
+DEV_EMAIL_LOGIN="<youraccount>@gmail.com"
+DEV_EMAIL_PASSWORD="<yourapppassword>"
+DEV_EMAIL_REPORTS="<youraccount>@gmail.com"
+```
+
+(Do the same for PROD_ and TEST_, note that it allows using different accounts while developing and testing)
+
+When the server is started with NODE_ENV=development, server will send an email to DEV_EMAIL_REPORTS, helping to verify email transport, so we won't do any other tests.
 
 ## END

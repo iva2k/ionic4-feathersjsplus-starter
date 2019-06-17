@@ -1,3 +1,4 @@
+// import { hooks } from '@feathersjs/authentication';
 
 // Hooks for service `emails`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
@@ -16,8 +17,8 @@ const { create, update, patch, validateCreate, validateUpdate, validatePatch } =
 
 let moduleExports: HooksObject = {
   before: {
-    // !<DEFAULT> code: before
-    all: [],
+    // !code: before
+    all: [commonHooks.disallow('external')], // disable any outside access to our transport.
     find: [],
     get: [],
     create: [],
