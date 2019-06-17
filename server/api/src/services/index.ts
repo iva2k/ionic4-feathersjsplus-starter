@@ -1,6 +1,7 @@
 
 // Configure the Feathers services. (Can be re-generated.)
 import { App } from '../app.interface';
+import authManagement from './auth-management/auth-management.service';
 import emails from './emails/emails.service';
 import todos from './todos/todos.service';
 import users from './users/users.service';
@@ -11,6 +12,7 @@ import graphql from './graphql/graphql.service';
 
 // tslint:disable-next-line:no-unused-variable
 let moduleExports = function (app: App) {
+  app.configure(authManagement);
   app.configure(emails);
   app.configure(todos);
   app.configure(users);
