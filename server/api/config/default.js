@@ -4,6 +4,7 @@
 
 module.exports = {
   from             : 'default.js',
+  protocol         : 'https',
   host             : 'localhost',
   port             : 3030,
   public           : '../public/',
@@ -15,6 +16,8 @@ module.exports = {
     '../../../client/ionic4-feathersjsplus-starter/src/assets', // ionic serve
     '../../../client/ionic4-feathersjsplus-starter/platforms/browser/www/assets', // ionic build --cordova --platform=browser
   ],
+  logo             : process.env.LOGO              || 'logo-white.png', // File in public folder
+
   paginate: {
     default: 10,
     max: 50

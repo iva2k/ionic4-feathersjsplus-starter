@@ -6,6 +6,7 @@ import createService from './auth-management.class';
 import hooks from './auth-management.hooks';
 // !code: imports
 import authManagement from 'feathers-authentication-management';
+import notifier from './notifier';
 // !end
 // !code: init // !end
 
@@ -20,6 +21,7 @@ let moduleExports = function (app: App) {
     service: '/users', // default: '/users'
     path: 'authManagement', // The path to associate with this service. Default authManagement.
     // Note: Client lib is hardcoded to 'authManagement'.
+    notifier: notifier(app).notifier,
     //  notifier: function(type, user, notifierOptions) /* : Promise => */ { return Promise.resolve(user); }
     //  type: type of notification:
     //    - 'resendVerifySignup' From resendVerifySignup API call
@@ -49,7 +51,9 @@ let moduleExports = function (app: App) {
 
     // !end
   };
-  // !code: options_change // !end
+  // !code: options_change
+  options.paginate = undefined;
+  // !end
 
   // Initialize our service with any options it requires
   // !code: extend

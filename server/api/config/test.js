@@ -1,6 +1,7 @@
 
 module.exports = {
   from             : 'test.js',
+  protocol         :             process.env.TEST_APP_PROTOCOL   || 'https',
   host             :             process.env.TEST_APP_HOST       || 'localhost',
   port             :    parseInt(process.env.TEST_APP_PORT)      || 3030,
   // ? public           :             process.env.TEST_PUBLIC         || '../public/',

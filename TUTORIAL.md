@@ -1075,4 +1075,20 @@ Note: path "/authManagement" is hardcoded in feathers-authentication-management 
 
 Modify auth-management code to load feathers-authentication-management (note that its loading is done in app.ts, not in services/services.ts, see full code on Github).
 
+Next, let's implement email templating solution for feathers-authentication-management:
+
+We will add pug email templates and a separate styling CSS file (to keep pug templates clean of styling) in server/api/src/email-templates/account/,
+and server/api/src/serviices/auth-management/notifier.js which ties email sending part to auth-management service.
+
+Layout in emails by CSS is very bad, each client has unique limitations, so the main recommendation is to use HTML tables for layout and CSS only for spacing, colors and fonts. See <https://www.campaignmonitor.com/dev-resources/guides/coding/>
+
+Also, modern CSS (e.g. with variables) won't work in most email clients. We could use CSS processing, but leave it out of this app for now.
+
+```bash
+npm install --save pug juice
+npm install --save-dev @types/pug
+```
+
+See added code on Github.
+
 ## END
