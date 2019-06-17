@@ -50,6 +50,17 @@
       "isAuthEntity": false,
       "requiresAuth": false,
       "graphql": false
+    },
+    "authManagement": {
+      "name": "authManagement",
+      "nameSingular": "authManagement",
+      "subFolder": "",
+      "fileName": "auth-management",
+      "adapter": "generic",
+      "path": "/auth-management",
+      "isAuthEntity": false,
+      "requiresAuth": true,
+      "graphql": false
     }
   },
   "hooks": {

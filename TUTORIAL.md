@@ -1057,4 +1057,20 @@ DEV_EMAIL_REPORTS="<youraccount>@gmail.com"
 
 When the server is started with NODE_ENV=development, server will send an email to DEV_EMAIL_REPORTS, helping to verify email transport, so we won't do any other tests.
 
+Next, let's install and configure backend authentication management:
+
+```bash
+npm install --save feathers-authentication-management
+feathers-plus generate service
+  ? What is the name of the service? authManagement
+  ? What would you call one row in the authManagement database? authManagement
+  ? What kind of service is it? A custom service
+  ? Place service code in which nested folder, e.g. `v1/blog`? (optional)
+  ? Which path should the service be registered on? /auth-management
+  ? Does the service require authentication? Yes
+  ? Should this be served by GraphQL? No
+```
+
+Note: path "/authManagement" is hardcoded in feathers-authentication-management client, so we can't use feathers's proposed "/auth-managaement" or any other path.
+
 ## END

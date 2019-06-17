@@ -21,7 +21,9 @@ declare module 'merge-graphql-schemas';
 // Seed.
 declare module '@feathers-plus/test-utils';
 
-// !code: more // !end
+// !code: more
+declare module 'feathers-authentication-management';
+// !end
 
 // !code: funcs // !end
 // !code: end // !end
