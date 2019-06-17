@@ -46,8 +46,11 @@ let moduleExports = function (app: App) {
       logger.info('Model of uses has no event emitter on(), compaction won\'t be reported.');
     }
 
-    if (autocompaction) { if (model.persistence.setAutocompactionInterval) model.persistence.setAutocompactionInterval(autocompaction); }
-    else                { if (model.persistence.compactDatafile          ) model.persistence.compactDatafile(); }
+    if (autocompaction && model.persistence.setAutocompactionInterval) {
+      model.persistence.setAutocompactionInterval(autocompaction);
+    } else if (model.persistence.compactDatafile) {
+      model.persistence.compactDatafile();
+    }
   }
 
   service.hooks(hooks);
