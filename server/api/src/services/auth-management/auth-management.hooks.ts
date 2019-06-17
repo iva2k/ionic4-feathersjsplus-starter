@@ -4,7 +4,9 @@ import * as commonHooks from 'feathers-hooks-common';
 import { HooksObject } from '@feathersjs/feathers';
 import { hooks as authHooks } from '@feathersjs/authentication';
 const { authenticate } = authHooks;
-// !code: imports // !end
+// !code: imports
+// TODO: const isEnabled = require('../../hooks/is-enabled');
+// !end
 
 // !<DEFAULT> code: used
 // tslint:disable-next-line:no-unused-variable
@@ -14,17 +16,28 @@ import validate from './auth-management.validate';
 const { create, update, patch, validateCreate, validateUpdate, validatePatch } = validate;
 // !end
 
-// !code: init // !end
+// !code: init
+const isAction = (...actions: string[]) => {
+  let args = Array.from(actions);
+  return (hook: any) => args.includes(hook.data.action);
+};
+// !end
 
 let moduleExports: HooksObject = {
   before: {
     // Your hooks should include:
     //   all   : authenticate('jwt')
-    // !<DEFAULT> code: before
-    all: [ authenticate('jwt') ],
+    // !code: before
+    all: [],
     find: [],
     get: [],
-    create: [],
+    create: [
+      iff(
+        isAction('passwordChange', 'identityChange'),
+        authenticate('jwt'),
+        // TODO: implement: isEnabled()
+      ),
+    ],
     update: [],
     patch: [],
     remove: []

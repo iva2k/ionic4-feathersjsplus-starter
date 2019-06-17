@@ -31,6 +31,8 @@ module.exports = {
   email_login      : '',
   email_pass       : '',
   email_reports    : '',
+  email_support    : '',
+  email_from_auth  : '',
   gravatar_only    : true,
   gravatar_ext     : 'jpg',
   gravatar_size    : 60,

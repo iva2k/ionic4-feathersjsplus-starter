@@ -21,7 +21,7 @@ import { User } from './services/users/users.interface';
   });
  */
 export type App = Application<{
-  'auth-management': AuthManagement,
+  'authManagement': AuthManagement,
   'emails': Email,
   'todos': Todo,
   'users': User,

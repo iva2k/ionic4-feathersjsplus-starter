@@ -57,7 +57,7 @@
       "subFolder": "",
       "fileName": "auth-management",
       "adapter": "generic",
-      "path": "/auth-management",
+      "path": "/authManagement",
       "isAuthEntity": false,
       "requiresAuth": true,
       "graphql": false

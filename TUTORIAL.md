@@ -1073,4 +1073,6 @@ feathers-plus generate service
 
 Note: path "/authManagement" is hardcoded in feathers-authentication-management client, so we can't use feathers's proposed "/auth-managaement" or any other path.
 
+Modify auth-management code to load feathers-authentication-management (note that its loading is done in app.ts, not in services/services.ts, see full code on Github).
+
 ## END
