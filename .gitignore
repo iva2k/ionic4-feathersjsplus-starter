@@ -2,3 +2,4 @@
 TUTORIAL.*.md
 /server/api.*
 *.backup
+server/api/public/logo-*.png
