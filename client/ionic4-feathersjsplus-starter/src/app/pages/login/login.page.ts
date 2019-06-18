@@ -74,10 +74,10 @@ export class LoginPage implements OnInit {
     }
   }
 
-  showLoading(): Promise<any> {
+  showLoading(activity: string): Promise<any> { // TODO: (soon) chaining the display of loading spinner actually delays the command. Change it to async / non-waiting - do the command faster, UX is better.
     this.error = '';
     return this.loadingController.create({
-      message: 'Please wait...',
+      message: activity + ', Please wait...',
       // ?dismissOnPageChange: true,
       // spinner: 'lines' | 'lines-small' | 'bubbles' | 'circles' | 'crescent' | 'dots' | null,
       cssClass: 'loading',
@@ -96,30 +96,48 @@ export class LoginPage implements OnInit {
 
   onLogin() {
     if (!this.checkForm()) { return; }
-    this.showLoading().then(() => {
+    this.showLoading('Signing in').then(() => {
       return this.feathersService.authenticate(this.credentials);
     }).then(() => {
       // this.hideLoading();
       this.navCtrl.navigateRoot(this.retUrl, {animated: false});
     }).catch((error) => {
-      this.hideLoading();
-      console.error('User login error: ', error);
-      this.error = error.message;
+      this.presentServerError(error, 'Signing in', 'authenticate');
     });
   }
 
   onRegister() {
     if (!this.checkForm()) { return; }
-    this.showLoading().then(() => {
+    this.showLoading('Registering').then(() => {
+      return this.feathersService.checkUnique({ email: this.credentials.email })
+    }).then(() => { // Email is unique
       return this.feathersService.register(this.credentials);
     }).then(() => {
       // this.hideLoading();
       console.log('User created.');
       this.navCtrl.navigateRoot(this.retUrl, {animated: false});
     }).catch(error => {
-      this.hideLoading();
-      console.error('User registration error: ', error);
-      this.error = error.message;
+      this.presentServerError(error, 'Registering', 'register');
     });
+  }
+
+  private presentServerError(error, activity: string, command: string) {
+      this.hideLoading();
+
+    // By default pass through unknown errors
+    let message = error.message;
+
+    // Translate cryptic/technical messages like 'socket timeout' to messages understandable by users, e.g. 'cannot reach server'.
+
+    if (command == 'checkEmailUnique' && error.message === 'Values already taken.') {
+      message = 'Email "' + this.credentials.email + '" is already registered. Please enter your password and click "Login", or click "Forgot" to recover your password.';
+    }
+
+    if (error.name === 'Timeout' || error.message === 'Socket connection timed out') {
+      message = 'Cannot reach the server. Check your connection and try again.';
+    }
+
+    console.log('translateServerMessageToHuman() result: "%s", activity: \'%s\', command: \'%s\', error: %o', message, activity, command, error);
+    this.error = message;
   }
 }

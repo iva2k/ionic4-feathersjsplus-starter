@@ -1091,4 +1091,19 @@ npm install --save-dev @types/pug
 
 See added code on Github.
 
+Finally, let's add client side features to use authentication management.
+
+In client app directory install feathers-authentication-management in order to use its lib/client for client side:
+
+```bash
+cd client/ionic4-feathersjsplus-starter
+npm install --save feathers-authentication-management
+```
+
+First use of authentication management is to check if email is already registered.
+
+Though it is possible to just try to create a new account every time a user clicks "Register", and rely on server returning an error, we will explicitly do a check just to demonstrate authentication management client. Also this feature will be useful on client-side in password recovery.
+
+See code on Github for few edits to src/app/services/feathers/feathers.ts and src/pages/login/login.ts.
+
 ## END

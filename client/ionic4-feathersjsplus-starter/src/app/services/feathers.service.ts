@@ -10,6 +10,7 @@ import * as io from 'socket.io-client';
 // import socketio from '@feathersjs/socketio-client';
 // ?import feathersAuthClient from '@feathersjs/authentication-client';
 import feathers from '@feathersjs/client';
+import AuthManagement from 'feathers-authentication-management/lib/client';
 
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
@@ -111,6 +112,7 @@ export class FeathersService {
   private socket: SocketIOClient.Socket; // opened socket
   private feathersInit: Promise<void>; // Promise that resolves after this.fc is fully initialized and configured.
   public apiUrl = ''; // endpoint url in use
+  private authManagement;
 
   private reauth; // Stored login credentials for reauth if session fails.
   private errorHandler = (error) => {
@@ -167,6 +169,8 @@ export class FeathersService {
         // Add feathers-reactive plugin
         // ?this._feathers.configure(feathersRx({ idField: '_id' }));
 
+        this.authManagement = new AuthManagement(this.fc);
+
         console.log('Done initializing feathers client at %s.', apiUrl);
         resolve();
       });
@@ -189,6 +193,11 @@ export class FeathersService {
   // Expose services
   public service(name: string) {
     return this.fc.service(name);
+  }
+
+  // Expose authentication management - check if credentials.email is not registered
+  public checkUnique(credentials): Promise<any> {
+    return this.authManagement.checkUnique(credentials);
   }
 
   // Expose authentication
