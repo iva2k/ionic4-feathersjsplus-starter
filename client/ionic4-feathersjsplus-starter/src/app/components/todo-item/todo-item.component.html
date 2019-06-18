@@ -7,7 +7,7 @@
   </div>
 
   <div class="todo-form">
-    <form #todoForm="ngForm" (keyup.enter)="onUpdate()">
+    <form #todoForm="ngForm" (keyup.enter)="newItem ? onAdd() : onUpdate()">
       <ion-row>
         <ion-col>
           <ion-list inset>
