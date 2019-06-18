@@ -85,7 +85,7 @@ let moduleExports = function(app: App) {
      * @param {Object} notifierOptions
      * @returns {Promise}
      */
-    // tslint-disable-next-line no-unused-vars
+    // tslint:disable next-line no-unused-vars
     notifier(type: string, user: User, notifierOptions: any) {
       console.log(`-- Preparing ${type} email to ${user.email}`);
       const userName = user.name || user.email; // TODO: Implement user.name
