@@ -13,7 +13,7 @@ describe('\'todos\' service', () => {
   it('creates and processes todo, adds user information', () => {
     // Create a new user we can use for testing
     // ?Promise.resolve({ _id: 'test' }) // A user stub with just an `_id`
-    app.service('users').create({
+    return app.service('users').create({
       email: 'todotest@example.com',
       password: 'supersecret'
     })
