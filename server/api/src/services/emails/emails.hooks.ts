@@ -1,4 +1,3 @@
-// import { hooks } from '@feathersjs/authentication';
 
 // Hooks for service `emails`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
