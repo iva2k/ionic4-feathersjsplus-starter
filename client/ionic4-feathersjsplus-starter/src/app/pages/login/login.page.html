@@ -13,35 +13,90 @@
     <ion-card-header class="logo-row">
       <img src="http://placehold.it/300x200"/>
     </ion-card-header>
-    <form [formGroup]="loginForm" (keyup.enter)="onLogin()">
+    <form [formGroup]="loginForm" (keyup.enter)="onFormEnterKey()">
+
       <ion-row>
         <ion-col>
-          <ion-list no-lines inset>
+          <ion-segment [(ngModel)]="mode" [ngModelOptions]="{standalone: true}" (ionChange)="onModeChanged($event)">
+            <ion-segment-button id="mode-register"value="register">
+              Sign Up
+            </ion-segment-button>
+            <ion-segment-button id="mode-login" value="login">
+              Sign In
+            </ion-segment-button>
+            <ion-segment-button id="mode-reset" value="reset">
+              Reset
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
 
-            <ion-chip [class.invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)">
-              <ion-icon name="person"></ion-icon>
-              <ion-input autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" autocorrect="off" formControlName="email" #username></ion-input>
-            </ion-chip>
+      <ion-row>
+        <ion-col id="wrapper">
 
-            <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)" class="alert-invalid">
-              <div *ngIf="loginForm.controls['email'].hasError('required')">
-                Email is required.
-              </div>
-              <div *ngIf="loginForm.controls['email'].hasError('minlength') && loginForm.controls['email'].touched">
-                Email must be at least 5 characters long.
+          <div id="arrow-contwrap">
+            <div id="arrow-container">
+              <div id="arrow" [ngClass]="mode"></div>
+            </div>
+          </div>
+
+          <ion-list no-lines>
+            <div class="reveal top" [@revealY]="'in'">
+
+              <ion-chip [class.invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)">
+                <ion-icon name="mail"></ion-icon>
+                <ion-input class="required" autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" autocorrect="off" formControlName="email" #username></ion-input>
+              </ion-chip>
+
+              <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)" class="alert-invalid">
+                <div *ngIf="loginForm.controls['email'].hasError('required')">
+                  Email is required.
+                </div>
+                <div *ngIf="loginForm.controls['email'].hasError('minlength') && loginForm.controls['email'].touched">
+                  Email must be at least 5 characters long.
+                </div>
               </div>
             </div>
 
-            <ion-chip [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)">
-              <ion-icon name="lock"></ion-icon>
-              <ion-input placeholder="Password" name="password" id="passwordField" type="password" autocorrect="off" required formControlName="password" #password></ion-input>
-            </ion-chip>
-            <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)" class="alert-invalid">
-              <div *ngIf="loginForm.controls['password'].hasError('required')">
-                Password is required.
+            <div class="reveal" [@revealY]="'in'" *ngIf="mode !== 'reset'">
+              <ion-chip [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)">
+                <ion-icon name="lock"></ion-icon>
+                <ion-input class="required" placeholder="Password" name="password" id="passwordField" type="password" autocorrect="off" formControlName="password" #password></ion-input>
+                <ion-button class="showHidePass" color="light" type="button" fill="clear" (click)="onShowHidePass()">
+                  <ion-icon slot="icon-only" name="eye"></ion-icon>
+                </ion-button>
+              </ion-chip>
+              <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)" class="alert-invalid">
+                <div *ngIf="loginForm.controls['password'].hasError('required')">
+                  Password is required.
+                </div>
               </div>
             </div>
 
+            <div class="reveal" [@revealY1]="'in'" *ngIf="mode === 'register'">
+              <ion-chip [class.invalid]="loginForm.controls['firstName'].invalid && (loginForm.controls['firstName'].dirty && loginForm.controls['firstName'].touched)">
+                <ion-icon name="person"></ion-icon>
+                <ion-input class="required" placeholder="First Name" name="firstName" id="firstNameField" type="text" autocorrect="off" formControlName="firstName" #firstname></ion-input>
+              </ion-chip>
+              <div *ngIf="loginForm.controls['firstName'].invalid && (loginForm.controls['firstName'].dirty && loginForm.controls['firstName'].touched)" class="alert-invalid">
+                <div *ngIf="loginForm.controls['firstName'].hasError('required')">
+                  First Name is required.
+                </div>
+              </div>
+            </div>
+  
+            <div class="reveal" [@revealY2]="'in'" *ngIf="mode === 'register'">
+              <ion-chip [class.invalid]="loginForm.controls['lastName'].invalid && (loginForm.controls['lastName'].dirty && loginForm.controls['lastName'].touched)">
+                <ion-icon name="person"></ion-icon>
+                <ion-input class="required" placeholder="Last Name" name="lastName" id="lastNameField" type="text" autocorrect="off" formControlName="lastName" #lastname></ion-input>
+              </ion-chip>
+              <div *ngIf="loginForm.controls['lastName'].invalid && (loginForm.controls['lastName'].dirty && loginForm.controls['lastName'].touched)" class="alert-invalid">
+                <div *ngIf="loginForm.controls['lastName'].hasError('required')">
+                  Last Name is required.
+                </div>
+              </div>
+            </div>
+  
           </ion-list>
         </ion-col>
       </ion-row>
@@ -50,14 +105,47 @@
           <div *ngIf="error" class="alert-invalid">{{error}}</div>
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-col class="login-col">
-          <ion-button class="login-btn" expand="full" shape="round" type="submit" name="login" [disabled]="loginForm.invalid" (click)="onLogin()">Login</ion-button>
-        </ion-col>
-        <ion-col class="register-col">
-          <ion-button class="register-btn" expand="block" shape="round" type="button" name="register" [disabled]="loginForm.invalid" (click)="onRegister()">Register</ion-button>
-        </ion-col>
+
+      <ion-row class="buttons">
+        <ion-slides [options]="slideOpts">
+          <ion-slide>
+            <ion-col class="reset-col">
+              <ion-button class="reset-btn" expand="block" shape="round" type="button" [disabled]="loginForm.invalid || (mode !== 'reset')" (click)="onReset()">Reset</ion-button>
+            </ion-col>
+          </ion-slide>
+
+          <ion-slide>
+            <ion-col class="login-col">
+              <ion-button class="login-btn" expand="block" shape="round" type="submit" [disabled]="loginForm.invalid || (mode !== 'login')" (click)="onLogin()">Login</ion-button>
+            </ion-col>
+          </ion-slide>
+
+          <ion-slide>
+            <ion-col class="register-col">
+              <ion-button class="register-btn" expand="block" shape="round" type="button" [disabled]="loginForm.invalid || (mode !== 'register')" (click)="onRegister()">Register</ion-button>
+            </ion-col>
+          </ion-slide>
+        </ion-slides>
       </ion-row>
+
+      <div [@revealY]="'in'" *ngIf="(mode === 'login' || mode === 'register') && logins.length">
+        <ion-row>
+          <ion-col>
+            or login with
+          </ion-col>
+        </ion-row>
+      
+        <ion-row>
+          <ion-col *ngFor="let login of logins" [ngClass]="['login-with-col', login.name]">
+            <ion-button [ngClass]="['btn-' + login.name, 'btn-login-with']" expand="block" shape="round" type="button" (click)="onLoginWith(login)">
+              <ion-icon name="{{login.icon}}"></ion-icon>
+              {{login.title}}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+
+
     </form>
   </ion-card>
 </ion-content>

@@ -16,6 +16,7 @@ logger.info('app.get(\'env\'): %s', app.get('env'));
 logger.info('from: %s', app.get('from'));
 logger.info('host: %s', app.get('host'));
 logger.info('port: %s', app.get('port'));
+logger.info('protocol: %s', app.get('protocol'));
 // !end
 
 const port = app.get('port');
@@ -112,7 +113,7 @@ async function sendStartedEmail(ips: Ips): Promise<void> {
   const emailTail = '' + crlf
     + '  </body>' + crlf
     + '</html>';
-  const url = 'http://' + app.get('host') + ':' + app.get('port') + '/';
+  const url = app.get('protocol') + '://' + app.get('host') + ':' + app.get('port') + '/';
   const appName = app.get('appName') || 'ionic4-feathers+';
   const email = {
     from:    app.get('email_login'),

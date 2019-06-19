@@ -32,7 +32,9 @@ import authentication from './authentication';
 // !code: init // !end
 
 const app = express(feathers());
-// !code: use_start // !end
+// !code: use_start
+app.set('src', __dirname);
+// !end
 
 // Load app configuration
 app.configure(configuration());

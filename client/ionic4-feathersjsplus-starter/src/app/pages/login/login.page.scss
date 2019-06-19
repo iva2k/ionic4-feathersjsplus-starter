@@ -7,7 +7,19 @@
 
     .login-box {
       background: #399F8B;
+      color: #fff;
       padding: 20px 20px 20px 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+
+      ion-segment {
+        background-color: #399F8B;
+        ion-segment-button {
+          color: #fff;
+        }
+      }
+
       ion-list {
         background: #399F8B;
       }
@@ -17,11 +29,25 @@
         text-align: center;
       }
 
+      ion-row.buttons {
+        width: 100%;
+      }
+      ion-slides {
+        width: 100%;
+      }
+      ion-slide {
+        width: 100%;
+      }
+
+      div.reveal {
+        width: 100%;
+      }
+
       ion-chip {
         --background: #fff;
         width: 100%;
-        margin: 10px 5px 3px 0;
-         padding-left: 12px !important; // squeeze icon into left side
+        margin: 10px 0 3px 0;
+        padding-left: 12px !important; // squeeze icon into left side
         border: 5px solid #ffffff !important;
         border-radius: 30px;
         box-shadow: none !important;
@@ -33,14 +59,75 @@
           color: var(--placeholder-color);
           margin-right: -4px; // Tighten space between icon and input (use just input padding)
         }
+        .showHidePass {
+          padding: 0;
+          --padding-start: 0;
+          --padding-end: 0;
+          margin-right: -4px; // Tighten space from icon to ion-chip
+          margin-left: -4px; // Tighten space between icon and input (use just input padding)
+          ion-icon {
+            margin-right: 0;
+          }
+        }
       }
       ion-chip.invalid {
         border: 5px solid #f53d3d !important;
         background: #ff8;
       }
 
-      .login-col, .register-col {
+      // Idea from https://codemyui.com/sign-inup-forgot-password-transition/
+      #wrapper, ion-segment, #arrow, button span { transition: all .5s cubic-bezier(.6,0,.4,1); }
+    
+      //#wrapper { overflow: hidden; }
+      #arrow-contwrap {
+        position: relative; /* this ensures #arrow-container will get width 100% of enclosing ion-col*/
+        left: -10px; /* this shift left compensates for the width of #arrow */
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        margin-top: -5px; /* pull the arrow tip almost to the ion-segment-button */
+      }
+      #arrow-container {
+        position: static;
+        width: 100%;
+        padding: 0;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+
+      #arrow.register { left: 16.66%; }
+      #arrow.login    { left: 50%; }
+      #arrow.reset    { left: 83.33%; }
+
+      #arrow {
+        position: relative;
+        left: 16.66%;
+        height: 0;
+        width: 0;
+        /* create a triangle pointing up for arrow effect: */
+        border-bottom: 10px solid #fff;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+      }
+
+      /* squeeze #arrow and first input field together */
+      ion-list {
+        padding-top: 0;
+      }
+      div.reveal.top {
+        ion-chip {
+          margin-top: 0;
+        }
+      }
+ 
+      .login-col, .register-col, .reset-col, .login-with-col {
         margin: 0px 16px 0px 16px;
+      }
+      .login-col, .register-col, .reset-col {
+        width: 100%;
+        ion-button {
+          width: 100%;
+        }
       }
  
     }
@@ -50,14 +137,53 @@
     }
         
     .login-btn {
+      --background: #51CFB1;
       border-radius: 30px !important;
       border: 2px solid #ffffff; // Default button
     }
  
     .register-btn {
+      --background: #51CFB1;
       border-radius: 30px !important;
+      border: 2px solid #ffffff; // Default button
       //color: #ffffff;
       //font-size: 0.8em;
+    }
+
+    .reset-btn {
+      --background: #51CFB1;
+      border-radius: 30px !important;
+      border: 2px solid #ffffff; // Default button
+      //color: #ffffff;
+      //font-size: 0.8em;
+    }
+
+    .btn-login-with {
+      ion-icon {
+        margin-right: 6px;
+      }
+    }
+
+    .btn-facebook {
+      color: #fff !important;
+      --background: #3b5998;
+      --background-focused: #294786;
+      border-radius: 30px !important;
+      border: 1px solid #335190;
+      &:hover, &:focus, &:active {
+        --background: #294786;
+      }
+    }
+
+    .btn-google {
+      color: #fff !important;
+      --background: #dd4b39;
+      --background-focused: #cb3927;
+      border-radius: 30px !important;
+      border: 1px solid #d54331;
+      &:hover, &:focus, &:active {
+        --background: #cb3927;
+      }
     }
   }
 

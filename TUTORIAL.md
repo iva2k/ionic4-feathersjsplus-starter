@@ -1106,4 +1106,31 @@ Though it is possible to just try to create a new account every time a user clic
 
 See code on Github for few edits to src/app/services/feathers/feathers.ts and src/pages/login/login.ts.
 
+Next we will implement a "reset password" button on the LoginPage in the app.
+
+The page will be modified to have tabs (using Ionic segments) for Sign Up / Sign In / Reset modes, and a bit of animation to transition from one mode to another.
+
+For the submit buttons, we will use ion-slides, to have slide-in animations for buttons when form changes modes. There's code-driven change of form builder model behind mode changes to allow validators on fields that are not used in all modes.
+
+Form will have non-standard styling with rounded inputs and buttons, using .invalid class and custom css instead of .ion-invalid.
+
+Animation of submit buttons slide-in is done using Ionic slides. An arrow pointing to the mode is animated using CSS. All fields transition animations are done using Angular, delays are staged to sequence the appearance and disappearance of the fields. It is simple with desired effect, however the resulting card/box height change is a bit jerky due to jumps between the fields, and the delay in the reverse direction is noticeable.
+
+We added a "show / hide" password button and styled it, but not connected yet.
+
+Reset code will only send request for password reset email, but no hookup to actually reset the password yet (it will need a separate page and a new route).
+
+We will also add code for displaying buttons for external login, so we can style the page, but no implementation yet.
+
+```bash
+npm i -s @angular/animations
+```
+
+See the code on Github for few edits:
+
+- src/pages/login/login.* files (Sign Up / Sign In / Reset, Login with ...)
+- src/app/services/feathers.service.ts (using feathers-authentication-management client)
+- app.module.ts (use Angular animations)
+- src/models/user.ts (couple fields added to the user model)
+
 ## END

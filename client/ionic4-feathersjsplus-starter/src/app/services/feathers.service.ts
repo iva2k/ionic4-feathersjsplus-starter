@@ -200,6 +200,23 @@ export class FeathersService {
     return this.authManagement.checkUnique(credentials);
   }
 
+  // Expose authentication management - request password reset for credentials.email
+  public resetPasswordRequest(credentials): Promise<any> {
+    const options = { preferredComm: 'email' }; // passed to options.notifier, e.g. {preferredComm: 'email'}
+    return this.authManagement.sendResetPwd(credentials, options);
+  }
+
+  // Expose authentication management - reset password to credentials.password using resetToken, received following resetPasswordRequest()
+  public resetPassword(resetToken, credentials): Promise<any> {
+    return this.authManagement.resetPwdLong(resetToken, credentials.password);
+  }
+
+  // Expose authentication management
+  // Reset password to credentials.password using short resetToken, received following TODO: resetPasswordRequest()??
+  public resetPasswordShort(resetToken, credentials): Promise<any> {
+    return this.authManagement.resetPwdShort(resetToken, { email: credentials.email}, credentials.password);
+  }
+
   // Expose authentication
   public authenticate(credentials?): Promise<any> {
     // ? if (this.feathersInit === undefined) {

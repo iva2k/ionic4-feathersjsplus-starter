@@ -35,10 +35,11 @@ let moduleExports = function(app: App) {
    * @returns {string}
    */
   function getLink(type: string, token: any): string {
-    const protocol = (app.get('protocol') || 'http') + '://';
-    const  host = app.get('host') || 'localhost';
-    const port = ':' + app.get('port');
-    return `${protocol}${host}${port}/#!/${type}/${token}`;
+    const protocol = (app.get('clientapp_protocol') || 'http') + '://';
+    const host = app.get('clientapp_host') || 'localhost';
+    const port = ':' + app.get('clientapp_port');
+    const fragment = ''; // On hash-style links should be: '#!/';
+    return `${protocol}${host}${port}/${fragment}${type}/${token}`;
   }
 
   /**
