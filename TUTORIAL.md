@@ -1133,4 +1133,13 @@ See the code on Github for few edits:
 - app.module.ts (use Angular animations)
 - src/models/user.ts (couple fields added to the user model)
 
+Let's implement show/hide button directive in the password field.
+
+```bash
+ionic generate directive directives/showHidePass
+ionic generate module directives
+```
+
+Code is copied from <https://medium.com/@junaidahmed/show-hide-password-in-ionic-8233e43db3e6>.
+
 ## END

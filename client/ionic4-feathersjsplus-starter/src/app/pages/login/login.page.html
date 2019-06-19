@@ -62,7 +62,7 @@
               <ion-chip [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)">
                 <ion-icon name="lock"></ion-icon>
                 <ion-input class="required" required placeholder="Password (required)" name="password" id="passwordField" type="password" autocorrect="off" formControlName="password" #password></ion-input>
-                <ion-button class="showHidePass" color="light" type="button" fill="clear" (click)="onShowHidePass()">
+                <ion-button class="showHidePass" color="light" type="button" fill="clear" [appShowHidePass]="password">
                   <ion-icon slot="icon-only" name="eye"></ion-icon>
                 </ion-button>
               </ion-chip>
