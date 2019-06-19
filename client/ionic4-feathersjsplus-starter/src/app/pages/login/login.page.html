@@ -45,7 +45,7 @@
 
               <ion-chip [class.invalid]="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)">
                 <ion-icon name="mail"></ion-icon>
-                <ion-input class="required" autofocus #entryFocus placeholder="Email" name="username" id="usernameField" type="email" autocorrect="off" formControlName="email" #username></ion-input>
+                <ion-input class="required" required autofocus #entryFocus placeholder="Email (required)" name="username" id="usernameField" type="email" autocorrect="off" formControlName="email" #username></ion-input>
               </ion-chip>
 
               <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty && loginForm.controls['email'].touched)" class="alert-invalid">
@@ -61,7 +61,7 @@
             <div class="reveal" [@revealY]="'in'" *ngIf="mode !== 'reset'">
               <ion-chip [class.invalid]="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty && loginForm.controls['password'].touched)">
                 <ion-icon name="lock"></ion-icon>
-                <ion-input class="required" placeholder="Password" name="password" id="passwordField" type="password" autocorrect="off" formControlName="password" #password></ion-input>
+                <ion-input class="required" required placeholder="Password (required)" name="password" id="passwordField" type="password" autocorrect="off" formControlName="password" #password></ion-input>
                 <ion-button class="showHidePass" color="light" type="button" fill="clear" (click)="onShowHidePass()">
                   <ion-icon slot="icon-only" name="eye"></ion-icon>
                 </ion-button>
@@ -76,7 +76,7 @@
             <div class="reveal" [@revealY1]="'in'" *ngIf="mode === 'register'">
               <ion-chip [class.invalid]="loginForm.controls['firstName'].invalid && (loginForm.controls['firstName'].dirty && loginForm.controls['firstName'].touched)">
                 <ion-icon name="person"></ion-icon>
-                <ion-input class="required" placeholder="First Name" name="firstName" id="firstNameField" type="text" autocorrect="off" formControlName="firstName" #firstname></ion-input>
+                <ion-input class="required" required placeholder="First Name (required)" name="firstName" id="firstNameField" type="text" autocorrect="off" formControlName="firstName" #firstname></ion-input>
               </ion-chip>
               <div *ngIf="loginForm.controls['firstName'].invalid && (loginForm.controls['firstName'].dirty && loginForm.controls['firstName'].touched)" class="alert-invalid">
                 <div *ngIf="loginForm.controls['firstName'].hasError('required')">
@@ -88,7 +88,7 @@
             <div class="reveal" [@revealY2]="'in'" *ngIf="mode === 'register'">
               <ion-chip [class.invalid]="loginForm.controls['lastName'].invalid && (loginForm.controls['lastName'].dirty && loginForm.controls['lastName'].touched)">
                 <ion-icon name="person"></ion-icon>
-                <ion-input class="required" placeholder="Last Name" name="lastName" id="lastNameField" type="text" autocorrect="off" formControlName="lastName" #lastname></ion-input>
+                <ion-input class="required" required placeholder="Last Name (required)" name="lastName" id="lastNameField" type="text" autocorrect="off" formControlName="lastName" #lastname></ion-input>
               </ion-chip>
               <div *ngIf="loginForm.controls['lastName'].invalid && (loginForm.controls['lastName'].dirty && loginForm.controls['lastName'].touched)" class="alert-invalid">
                 <div *ngIf="loginForm.controls['lastName'].hasError('required')">
