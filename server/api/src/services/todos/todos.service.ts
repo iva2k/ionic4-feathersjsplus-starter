@@ -35,12 +35,13 @@ let moduleExports = function (app: App) {
   // NeDB-specific:
   let model = (service as any).getModel();
   if (model.persistence) {
-    const startTime = process.hrtime();
+    let startTime = process.hrtime();
     if (model.on) {
       model.on('compaction.done', function () {
         const hrtime = process.hrtime(startTime);
         const elapsedSeconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
         logger.info('Compaction of todos done, elapsed time: ' + elapsedSeconds + 's');
+        startTime = process.hrtime(); // Reset timer. Next report will be of the interval
       });
     } else {
       logger.info('Model of todos has no event emitter on(), compaction won\'t be reported.');
