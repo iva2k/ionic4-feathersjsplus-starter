@@ -2,8 +2,7 @@
 // Logger. (Can be re-generated.)
 import { createLogger, format, transports } from 'winston';
 // !code: imports // !end
-// !code: init // !end
-
+// !code: init
 function getLogLevel() {
   // To see more detailed errors, change this to 'debug' // TODO: (soon) move to config/env.
   let level = 'info'; // production, dev, test
@@ -12,6 +11,7 @@ function getLogLevel() {
   }
   return level;
 }
+// !end
 
 // Configure the Winston logger. For the complete documentation seee https://github.com/winstonjs/winston
 const moduleExports = createLogger({

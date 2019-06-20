@@ -5,8 +5,8 @@ import { App } from '../../app.interface';
 import createService from './emails.class';
 import hooks from './emails.hooks';
 // !code: imports
-const mailer = require('feathers-mailer');
-const smtpTransport = require('nodemailer-smtp-transport');
+import mailer from 'feathers-mailer';
+import smtpTransport from 'nodemailer-smtp-transport';
 // !end
 // !code: init // !end
 

@@ -59,7 +59,7 @@
       "adapter": "generic",
       "path": "/authManagement",
       "isAuthEntity": false,
-      "requiresAuth": true,
+      "requiresAuth": false,
       "graphql": false
     }
   },

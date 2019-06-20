@@ -23,6 +23,7 @@ declare module '@feathers-plus/test-utils';
 
 // !code: more
 declare module 'feathers-authentication-management';
+declare module 'feathers-mailer';
 // !end
 
 // !code: funcs // !end

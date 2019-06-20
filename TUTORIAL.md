@@ -1030,6 +1030,7 @@ First we will setup a feathers service for SMTP email transport on the backend:
 ```bash
 cd server/api/
 npm install --save feathers-mailer nodemailer-smtp-transport feathers-hooks-common
+npm install --save-dev @types/nodemailer-smtp-transport
 feathers-plus generate service
   ? What is the name of the service? emails
   ? What would you call one row in the emails database? email
@@ -1140,6 +1141,6 @@ ionic generate directive directives/showHidePass
 ionic generate module directives
 ```
 
-Code is copied from <https://medium.com/@junaidahmed/show-hide-password-in-ionic-8233e43db3e6>.
+See the code on Github for directive and edits of LoginPage.
 
 ## END

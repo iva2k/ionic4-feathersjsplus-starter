@@ -7,13 +7,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import logger from './logger';
 
-// !<DEFAULT> code: favicon_import
+// !code: favicon_import
 import favicon from 'serve-favicon';
-// !end
 
-// Load local / private config file into process.env using dotenv:
+// Load local / private config file into process.env using dotenv.
+// Placed here so it survives re-generation and it's after path and before configuration.
 import { config } from 'dotenv';
 config({path: path.resolve(__dirname, '../config/private.env')});
+// !end
 
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';

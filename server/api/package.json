@@ -115,6 +115,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/mocha": "^5.2.7",
     "@types/nedb": "^1.8.7",
+    "@types/nodemailer-smtp-transport": "^2.7.4",
     "@types/passport-facebook": "^2.1.9",
     "@types/pug": "^2.0.4",
     "@types/request-promise": "^4.1.44",
