@@ -1183,4 +1183,14 @@ In the process, we added some refinements to the LoginPage.
 
 See the code on Github for the edits of generated src/pages/reset-password/ files.
 
+#### Step 10 Summary
+
+With all the added source code in place, the app has all functions, including minimal account management.
+
+Some thoughts on the features developed in this step:
+
+- Error handling on ResetPasswordPage could be smoother for UX, e.g. navigating to login/reset if verification code was rejected.
+- It is tempting to make ResetPasswordPage a part of LoginPage under a separate segment/mode from code perspective, but good UX is against it.
+- Typically there's a separate "change password" form elsewhere, which uses old password and takes new password. This feature is easily replaced by "reset" request followed by emai with "reset password" link, which does additional protection using email confirmation, so is much more secure against compromised passwords. Current design however, blocks access to the LoginPage unless user logs out, so another method will be needed.
+
 ## END
