@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ResetPasswordPage } from './reset-password.page';
+import { DirectivesModule } from '../../directives/directives.module';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    DirectivesModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

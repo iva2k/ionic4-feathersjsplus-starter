@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+// import { NgZone } from '@angular/core';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -65,8 +66,8 @@ export class LoginPage implements OnInit {
   protected mode = 'login';
   public loginForm: FormGroup;
 
-  loading: HTMLIonLoadingElement;
-  credentials: User = { email: '', password: '' } as User;
+  private loading: Promise<HTMLIonLoadingElement> | null;
+  private credentials: User = { email: '', password: '' } as User;
   protected error: string;
   retUrl: string;
 
@@ -85,6 +86,7 @@ export class LoginPage implements OnInit {
     private navCtrl: NavController,
     private activatedRoute: ActivatedRoute,
     formBuilder: FormBuilder,
+    // private ngZone: NgZone,
     private toastCtrl: ToastController
   ) {
     const required    = Validators.required;
@@ -157,34 +159,51 @@ export class LoginPage implements OnInit {
     }
   }
 
-  showLoading(activity: string): Promise<any> {
-    // Chaining the display of loading spinner actually delays the command.
-    // TODO: (soon) Change it to async / non-waiting - do the command faster, UX is better.
+  showLoading(activity: string) {
+    // Wrapper to manage LoadingController async nature
     this.error = '';
-    return this.loadingController.create({
-      message: activity + ', Please wait...',
+    const message = 'Please wait,<br/>' + activity + '...';
+    if (this.loading) {
+      this.loading.then(l => {
+        // this.ngZone.run(() => { // Update message in the existing box
+        l.message = message;
+        // });
+      }).catch(e => { // Discard past errors
+        this.loading = null;
+        this.showLoading(activity); // Open new box in case of error
+      });
+      return;
+    } // else ... // Create new
+    this.loading = this.loadingController.create({
+      message,
       // ?dismissOnPageChange: true,
       // spinner: 'lines' | 'lines-small' | 'bubbles' | 'circles' | 'crescent' | 'dots' | null,
       cssClass: 'loading',
-    }).then(l => {
-      this.loading = l;
-      this.loading.present();
     });
+    this.loading.then(l => {
+      l.present();
+    })
   }
 
   hideLoading() {
-    if (this.loading) {
-      this.loading.dismiss();
-    }
-    // or? this.loadingController.dismiss();
+    if (!this.loading) return;
+    this.loading.then(l => {
+      setTimeout(() => {
+        l.dismiss();
+        this.loading = null;
+      }, 0);
+    }).catch(e => { // Discard past errors
+      this.loading = null;
+    });
   }
 
   onLogin() {
     if (!this.checkForm()) { return; }
-    this.showLoading('Signing in').then(() => {
-      return this.feathersService.authenticate(this.credentials);
-    }).then(() => {
+    this.showLoading('Signing in');
+    this.feathersService.authenticate(this.credentials).then(() => {
       // this.hideLoading();
+      let message = 'Successfully signed in as ' + this.credentials.email;
+      this.toaster(message);
       this.navCtrl.navigateRoot(this.retUrl, {animated: false});
     }).catch((error) => {
       this.presentServerError(error, 'Signing in', 'authenticate');
@@ -193,9 +212,8 @@ export class LoginPage implements OnInit {
 
   onRegister() {
     if (!this.checkForm()) { return; }
-    this.showLoading('Registering').then(() => {
-      return this.feathersService.checkUnique({ email: this.credentials.email });
-    }).then(() => { // Email is unique
+    this.showLoading('Registering');
+    this.feathersService.checkUnique({ email: this.credentials.email }).then(() => { // Email is unique
       return this.feathersService.register(this.credentials);
     }).then(() => {
       // this.hideLoading();
@@ -208,16 +226,16 @@ export class LoginPage implements OnInit {
 
   onReset() {
     if (!this.checkForm()) { return; }
-    this.showLoading('Resetting Password').then(() => {
-      return this.feathersService.resetPasswordRequest({ email: this.credentials.email });
-    }).then((user) => { // sanitized user {_id, email, avatar}
-        this.hideLoading();
-        console.log('Password reset request sent to %s', user.email);
-        this.toaster('Password reset request sent to ' + user.email);
-      })
-      .catch((err) => {
-        this.presentServerError(err, 'Resetting Password', 'reset');
-      });
+    this.showLoading('Resetting Password');
+    this.feathersService.resetPasswordRequest({ email: this.credentials.email }).then((user) => {
+      // sanitized user {_id, email, avatar}
+      this.hideLoading();
+      console.log('Password reset request sent to %s', user.email);
+      this.toaster('Password reset request sent to ' + user.email);
+    })
+    .catch((err) => {
+      this.presentServerError(err, 'Resetting Password', 'reset');
+    });
   }
 
   onFormEnterKey() {

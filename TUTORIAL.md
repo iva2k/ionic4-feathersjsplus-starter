@@ -1025,6 +1025,8 @@ We will use as much of existing solutions as possible, simplifying the massive j
 - Juice for converting CSS to inline (to support variety of email clients)
 - Optionally we could use something like ```npm install postcss-css-variables --save-dev``` and setting up build process to convert modern CSS to more compatible older versions
 
+#### Email Transport
+
 First we will setup a feathers service for SMTP email transport on the backend:
 
 ```bash
@@ -1058,6 +1060,8 @@ DEV_EMAIL_REPORTS="<youraccount>@gmail.com"
 
 When the server is started with NODE_ENV=development, server will send an email to DEV_EMAIL_REPORTS, helping to verify email transport, so we won't do any other tests.
 
+#### Backend Authentication Management
+
 Next, let's install and configure backend authentication management:
 
 ```bash
@@ -1074,12 +1078,14 @@ feathers-plus generate service
 
 Note: path "/authManagement" is hardcoded in feathers-authentication-management client, so we can't use feathers's proposed "/auth-managaement" or any other path.
 
-Modify auth-management code to load feathers-authentication-management (note that its loading is done in app.ts, not in services/services.ts, see full code on Github).
+Modify auth-management code to load feathers-authentication-management, see the code edits on Github, note that user hooks have to be modified to avoid double-hashing of password by authentication-management and existing user hooks.
+
+#### Backend Email Templates
 
 Next, let's implement email templating solution for feathers-authentication-management:
 
 We will add pug email templates and a separate styling CSS file (to keep pug templates clean of styling) in server/api/src/email-templates/account/,
-and server/api/src/serviices/auth-management/notifier.js which ties email sending part to auth-management service.
+and server/api/src/services/auth-management/notifier.js which ties email sending part to auth-management service.
 
 Layout in emails by CSS is very bad, each client has unique limitations, so the main recommendation is to use HTML tables for layout and CSS only for spacing, colors and fonts. See <https://www.campaignmonitor.com/dev-resources/guides/coding/>
 
@@ -1092,7 +1098,9 @@ npm install --save-dev @types/pug
 
 See added code on Github.
 
-Finally, let's add client side features to use authentication management.
+#### Client Authentication Management
+
+Let's add client side features to use authentication management.
 
 In client app directory install feathers-authentication-management in order to use its lib/client for client side:
 
@@ -1107,9 +1115,13 @@ Though it is possible to just try to create a new account every time a user clic
 
 See code on Github for few edits to src/app/services/feathers/feathers.ts and src/pages/login/login.ts.
 
-Next we will implement a "reset password" button on the LoginPage in the app.
+#### Signup / Login / Reset Password
 
-The page will be modified to have tabs (using Ionic segments) for Sign Up / Sign In / Reset modes, and a bit of animation to transition from one mode to another.
+Next we will implement a "reset password" button on the LoginPage in the app for users who forgot password.
+
+The LoginPage will be modified to have tabs (using Ionic segments) for Sign Up / Sign In / Reset modes, and a bit of animation to transition from one mode to another. We will keep it named "LoginPage" though it gets Signup and Reset features.
+
+Since it is the first page all users will encounter in the app, we will spend a lot of design effort on UX of that page.
 
 For the submit buttons, we will use ion-slides, to have slide-in animations for buttons when form changes modes. There's code-driven change of form builder model behind mode changes to allow validators on fields that are not used in all modes.
 
@@ -1117,7 +1129,7 @@ Form will have non-standard styling with rounded inputs and buttons, using .inva
 
 Animation of submit buttons slide-in is done using Ionic slides. An arrow pointing to the mode is animated using CSS. All fields transition animations are done using Angular, delays are staged to sequence the appearance and disappearance of the fields. It is simple with desired effect, however the resulting card/box height change is a bit jerky due to jumps between the fields, and the delay in the reverse direction is noticeable.
 
-We added a "show / hide" password button and styled it, but not connected yet.
+We will add a "show / hide" password button and style it, but won't connect it yet.
 
 Reset code will only send request for password reset email, but no hookup to actually reset the password yet (it will need a separate page and a new route).
 
@@ -1134,7 +1146,9 @@ See the code on Github for few edits:
 - app.module.ts (use Angular animations)
 - src/models/user.ts (couple fields added to the user model)
 
-Let's implement show/hide button directive in the password field.
+#### Show Password
+
+Let's implement a show/hide button for the password field. It is much better UX than a second password field that forses users to re-enter the password, which is very annoying way in the age of password managers and fingerprint logins. We will use a directive.
 
 ```bash
 ionic generate directive directives/showHidePass
@@ -1142,5 +1156,31 @@ ionic generate module directives
 ```
 
 See the code on Github for directive and edits of LoginPage.
+
+#### Set New Password Page
+
+To complete the password reset, we need one last piece - a deep-linked page that
+will take the token from email URL and provide a form to enter a new password.
+
+We will start with a separate page, so it can be deep-linked from email URL.
+
+```bash
+ionic generate page pages/ResetPassword
+```
+
+Though name "New Password" seem better, for URL links "reset-password" sounds more clear. We strive for user trust to click on the link in reset password email.
+
+The ResetPasswordPage is very similar to the LoginPage, though it does not
+need ion-segments to select different modes and animations to transition between
+modes, and the fields are slightly different (no Email but Verification Code).
+
+We will use Angular router parameter to deliver the token to the page in the app
+from URL link in an email. There is no other way to navigate to that page in
+the app, which may be needed to deal with situations when links are not
+working.
+
+In the process, we added some refinements to the LoginPage.
+
+See the code on Github for the edits of generated src/pages/reset-password/ files.
 
 ## END

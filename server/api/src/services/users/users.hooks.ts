@@ -19,7 +19,28 @@ import validate from './users.validate';
 const { create, update, patch, validateCreate, validateUpdate, validatePatch } = validate;
 // !end
 
-// !code: init // !end
+// !code: init
+
+// How to add email verification
+// From https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744
+
+// TODO: const verifyHooks = require('feathers-authentication-management').hooks;
+
+// TODO: const globalHooks = require ...
+/*
+import accountService from '../services/authManagement/notifier'
+exports.sendVerificationEmail = options => hook => {
+  if (!hook.params.provider) { return hook; }
+  const user = hook.result
+  if (process.env.GMAIL && hook.data && hook.data.email && user) {
+    accountService(hook.app).notifier('resendVerifySignup', user)
+    return hook
+  }
+  return hook
+}
+*/
+
+// !end
 
 let moduleExports: HooksObject = {
   before: {
@@ -30,13 +51,41 @@ let moduleExports: HooksObject = {
     //   update: hashPassword(), authenticate('jwt')
     //   patch : hashPassword(), authenticate('jwt')
     //   remove: authenticate('jwt')
-    // !<DEFAULT> code: before
+    // !code: before
     all: [],
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
-    create: [ hashPassword(), gravatar() ],
-    update: [ hashPassword(), authenticate('jwt') ],
-    patch: [ hashPassword(), authenticate('jwt') ],
+    create: [
+      // TODO: verifyHooks.addVerification(), // email verification
+      // TODO: customizeOauthProfile(),
+      hashPassword(), gravatar() ],
+    update: [
+      commonHooks.disallow('external') // disallow any external modifications
+      // TODO: customizeOauthProfile(),
+      // removed: hashPassword(), authenticate('jwt')
+    ],
+    patch: [
+      commonHooks.iff(
+        // feathers-authentication-management does its own hash, add only for external,
+        // see https://github.com/feathers-plus/feathers-authentication-management/issues/96
+        // https://hackernoon.com/setting-up-email-verification-in-feathersjs-ce764907e4f2
+        commonHooks.isProvider('external'),
+        commonHooks.preventChanges(
+          true,
+          'email',
+          'isVerified',
+          'verifyToken',
+          'verifyShortToken',
+          'verifyExpires',
+          'verifyChanges',
+          'resetToken',
+          'resetShortToken',
+          'resetExpires'
+        ),
+        hashPassword(),
+        authenticate('jwt')
+      )
+    ],
     remove: [ authenticate('jwt') ]
     // !end
   },
@@ -44,11 +93,17 @@ let moduleExports: HooksObject = {
   after: {
     // Your hooks should include:
     //   all   : protect('password') /* Must always be the last hook */
-    // !<DEFAULT> code: after
+    // !code: after
     all: [ protect('password') /* Must always be the last hook */ ],
     find: [],
     get: [],
-    create: [],
+    create: [
+
+      // TODO: globalHooks.sendVerificationEmail(),
+      // // removes verification/reset fields other than .isVerified
+      // verifyHooks.removeVerification(),
+
+    ],
     update: [],
     patch: [],
     remove: []
