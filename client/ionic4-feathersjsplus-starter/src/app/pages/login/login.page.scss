@@ -69,6 +69,9 @@
             margin-right: 0;
           }
         }
+        ion-button.toggle-text ion-icon {
+          color: var(--ion-color-warning);
+        }
       }
       ion-chip.invalid {
         border: 5px solid #f53d3d !important;
