@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: 'menu' , loadChildren: './pages/menu/menu.module#MenuPageModule'   , canActivate: [AuthGuardService   ] },
 
   // Catch-all for non-existing routes (must be last):
-  { path: '**', redirectTo: '/login', pathMatch: 'full', }
+  { path: '**', redirectTo: '/login', pathMatch: 'full', },
+  { path: 'reset-password', loadChildren: './pages/reset-password/reset-password.module#ResetPasswordPageModule' }
 ];
 
 @NgModule({
