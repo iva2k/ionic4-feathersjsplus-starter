@@ -234,9 +234,6 @@ export class LoginPage implements OnInit {
     console.log('log in with ' + social.name);
   }
 
-  onShowHidePass() {
-  }
-
   private presentServerError(error, activity: string, command: string) {
     this.hideLoading();
 
