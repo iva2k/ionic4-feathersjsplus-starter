@@ -75,20 +75,19 @@ export class LoginPage implements OnInit {
     allowTouchMove: false, // Slides moved programmatically only
   };
 
-  protected logins: any[] = [
-    {title: 'Facebook', name: 'facebook', click: this.onLoginWith, icon: 'logo-facebook'},
-    {title: 'Google', name: 'google', click: this.onLoginWith, icon: 'logo-google'},
-  ];
+  protected logins = [];
 
   constructor(
     private feathersService: FeathersService,
     private loadingController: LoadingController,
     private navCtrl: NavController,
     private activatedRoute: ActivatedRoute,
-    formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     // private ngZone: NgZone,
     private toastCtrl: ToastController
   ) {
+    this.logins = this.feathersService.getSocialLogins();
+
     const required    = Validators.required;
     const passSymbols = Validators.pattern('[0-9a-zA-Z*_\-]*');
     this.loginForm = formBuilder.group({
@@ -101,8 +100,18 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe(params => {
-      this.retUrl = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: Let the router sort out which page to go to based on authentication.
-      console.log('LoginPage/ngOnInit ' + this.retUrl);
+      this.retUrl  = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: Let the router sort out which page to go to based on authentication.
+      if (this.retUrl) {
+// TODO: (now) let app know of this.retUrl so it can navigate properly
+      }
+      let error    = params.get('error'); // If past login attempt failed, we will get an error.
+      let activity = params.get('activity') || '';
+      let command  = params.get('command')  || '';
+      if (error) {
+        this.presentServerError(error, activity, command);
+      }
+
+      console.log('LoginPage/ngOnInit retUrl: %s, error: %s, activity: %s, command: %s', this.retUrl, error, activity, command);
     });
     this.onModeChanged({});
   }
@@ -159,7 +168,17 @@ export class LoginPage implements OnInit {
     }
   }
 
-  showLoading(activity: string) {
+  private onLoginSuccess(user) {
+    let message = 'Successfully signed in as ' + user.email;
+    this.toaster(message);
+    console.log('User %s loggeed in.', user.email);
+    this.hideLoading();
+    // The app will switch pages via Events from service.
+    // e.g. this.navCtrl.setRoot('MenuPage', {}, {animate: false});
+    // this.navCtrl.navigateRoot(this.retUrl, {animated: false});
+  }
+
+  private showLoading(activity: string) {
     // Wrapper to manage LoadingController async nature
     this.error = '';
     const message = 'Please wait,<br/>' + activity + '...';
@@ -185,7 +204,7 @@ export class LoginPage implements OnInit {
     })
   }
 
-  hideLoading() {
+  private hideLoading() {
     if (!this.loading) return;
     this.loading.then(l => {
       setTimeout(() => {
@@ -200,11 +219,8 @@ export class LoginPage implements OnInit {
   onLogin() {
     if (!this.checkForm()) { return; }
     this.showLoading('Signing in');
-    this.feathersService.authenticate(this.credentials).then(() => {
-      // this.hideLoading();
-      let message = 'Successfully signed in as ' + this.credentials.email;
-      this.toaster(message);
-      this.navCtrl.navigateRoot(this.retUrl, {animated: false});
+    this.feathersService.authenticate(this.credentials).then((user) => {
+      this.onLoginSuccess(user);
     }).catch((error) => {
       this.presentServerError(error, 'Signing in', 'authenticate');
     });
@@ -214,13 +230,14 @@ export class LoginPage implements OnInit {
     if (!this.checkForm()) { return; }
     this.showLoading('Registering');
     this.feathersService.checkUnique({ email: this.credentials.email }).then(() => { // Email is unique
-      return this.feathersService.register(this.credentials);
-    }).then(() => {
-      // this.hideLoading();
-      console.log('User created.');
-      this.navCtrl.navigateRoot(this.retUrl, {animated: false});
-    }).catch(error => {
-      this.presentServerError(error, 'Registering', 'register');
+      this.feathersService.register(this.credentials).then((user) => {
+        console.log('User created.');
+        this.onLoginSuccess(user);
+      }).catch(error => {
+        this.presentServerError(error, 'Registering', 'register');
+      });
+    }).catch((err) => { // Email is already registered, or all other errors
+      this.presentServerError(err, 'Registering', 'checkEmailUnique');
     });
   }
 
@@ -232,8 +249,7 @@ export class LoginPage implements OnInit {
       this.hideLoading();
       console.log('Password reset request sent to %s', user.email);
       this.toaster('Password reset request sent to ' + user.email);
-    })
-    .catch((err) => {
+    }).catch((err) => {
       this.presentServerError(err, 'Resetting Password', 'reset');
     });
   }
@@ -249,9 +265,22 @@ export class LoginPage implements OnInit {
   }
 
   onLoginWith(social) {
-    console.log('log in with ' + social.name);
+    this.showLoading('Signing in with ' + social.title);
+    console.log('log in with ' + social.title);
+    this.feathersService.loginWith(social).then(() => {
+      this.showLoading('Registering app with ' + social.title);
+      // Login will complete in a callback, possibly even with app reload. Event will be delivered to the app, which will switch pages or open us with an error info.
+    }).catch((error) => {
+      this.presentServerError(error, 'Signing in with ' + social.title, 'authenticate');
+    });
   }
 
+  /**
+   * Post error message on UI
+   * @param error Error object
+   * @param activity 'Signing in ...' and similar text, suitable for showing in UI.
+   * @param command 'authenticate', 'validate', 'register', 'reset', 'checkEmailUnique'
+   */
   private presentServerError(error, activity: string, command: string) {
     this.hideLoading();
 
@@ -262,7 +291,7 @@ export class LoginPage implements OnInit {
 
     if (command === 'checkEmailUnique' && error.message === 'Values already taken.') {
       message = 'Email "' + this.credentials.email + '" is already registered.'
-       + ' Please enter your password and click "Login", or click "Forgot" to recover your password.';
+        + ' Please enter your password and click "Login", or click "Forgot" to recover your password.';
     }
 
     if (error.name === 'Timeout' || error.message === 'Socket connection timed out') {

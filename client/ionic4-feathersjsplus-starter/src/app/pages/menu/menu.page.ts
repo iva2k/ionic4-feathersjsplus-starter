@@ -73,12 +73,14 @@ export class MenuPage implements OnInit, OnDestroy {
   }
 
   public onLogout() {
-    this.feathersService.logout(this.navCtrl)
+    this.feathersService.logout()
       .then(() => {
-        this.navCtrl.navigateRoot('/login'); // Let the router sort out which page to go to based on authentication.
+        // app will get 'user:logout' event and return to '/'
+        // this.navCtrl.navigateRoot('/login'); // Let the router sort out which page to go to based on authentication.
       })
       .catch(() => {
-        this.navCtrl.navigateRoot('/login');  // Let the router sort out which page to go to based on authentication.
+        // app will get 'user:logout' event and return to '/'
+        // this.navCtrl.navigateRoot('/login');  // Let the router sort out which page to go to based on authentication.
       })
     ;
   }

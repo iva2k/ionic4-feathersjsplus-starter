@@ -1193,4 +1193,94 @@ Some thoughts on the features developed in this step:
 - It is tempting to make ResetPasswordPage a part of LoginPage under a separate segment/mode from code perspective, but good UX is against it.
 - Typically there's a separate "change password" form elsewhere, which uses old password and takes new password. This feature is easily replaced by "reset" request followed by emai with "reset password" link, which does additional protection using email confirmation, so is much more secure against compromised passwords. Current design however, blocks access to the LoginPage unless user logs out, so another method will be needed.
 
+### Step 11. Login With X
+
+"Login With X" (a.k.a. "Social login") is a must of modern apps. Setting aside invasive tracking and data collection practices done by the Auth providers, even in cases when other login is used, many users prefer to have single login with one password to remember, and use it across many websites and apps.
+
+See this link for a good general overview of the process: <https://github.com/feathersjs/docs/blob/master/guides/auth/recipe.oauth-basic.md>
+(as well as for steps to implement method #1 below).
+
+There are few methods to implement login with OAuth providers:
+
+ 1. Use FeathersJS backend support (need a plugin for each login provider, opens in Webview and limited to currently implemented Google, Facebook, Github)
+ 2. Use custom clients, like @ionic-native/google-plus (limited to what is implemented, but more smooth native UI)
+ 3. Use client library like Hello.js (unlimited OAuth2 providers, even can do OAuth1)
+
+Each method has its own pluses and minuses.
+
+Methods 1 and 3 use Webview, and recently Google stopped allowing OAuth login on mobile devices (it insists on using native methods).
+
+We will use Hello.js in web browser versions, as it works well and gives us most flexibility. On mobile, we have to use native, so we will have to mix both methods as needed.
+
+In the end, we will want to have server-side list of providers, so app does not have to be re-released when adding providers. Hello.js supports that goal well (we can implement loading it from CDN, to always have recent updates).
+
+#### Hello.js Method
+
+_From <https://medium.com/@jacobgoh101/social-login-with-feathersjs-back-end-f834e5017230>._
+
+```bash
+cd client/ionic4-feathersjsplus-starter
+npm install --save hellojs
+npm install --save-dev @types/hellojs
+cd ../../server/api
+npm install --save feathers-authentication-custom passport-custom axios feathers-errors
+npm install --save-dev @types/axios
+```
+
+For using HelloJS (module without default import) add ```"allowSyntheticDefaultImports": true;``` to compilerOptions section of client/ionic4-feathersjsplus-starter/tsconfig.json.
+
+On the server side we will create new auth strategy 'social_token'.
+
+On the client side we expand src/app/services/feathers.service.ts, add buttons and click handlers to the LoginPage, add Events to feathers.service.ts and app.component.ts for the app to react to login/logout by navigating to appropriate page.
+
+You will need to get CLIENT_ID for each social login provider, see section "Providers" below to get them.
+
+Copy your CLIENT_ID and CLIENT_SECRET into server/api/config/private.env for server side and into relevant files on client side:
+
+```bash
+DEV_GOOGLE_OAUTH_CLIENT_ID="987654321012-1234adf1234adf1234adf1234adf1234.apps.googleusercontent.com"
+DEV_GOOGLE_OAUTH_CLIENT_SECRET="abcdefghijk-lmnopqrstuvw"
+```
+
+See the code on Github for few edits:
+
+- server/api/src/utility/verifySocialToken.js
+- server/api/src/authentication.js
+- src/pages/login/login.* files
+- src/app/app.component.ts (Events use for login/logout and guards)
+- src/app/services/feathers/feathers.ts
+
+#### Providers
+
+##### Google
+
+See <https://developers.google.com/identity/sign-in/web/sign-in>
+
+Short summary:
+
+With google developer account, visit <https://console.developers.google.com/> and create a project, name it ionic4-feathersjsplus-starter (or any name you plan to use it as), optionally give it custom project id.
+Then open credentials page and create OAuth client ID, and follow instructions. Choose "Website" application type.
+
+Copy your web client id and client secret into relevant configuration files.
+
+Add domain names for the app (both request and redirect) into allowed lists.
+
+Add Android app, use bundle from config.xml (note that no hyphens in bundle id)
+
+For debug or production app, run keystore command, on linux:
+
+```bash
+keytool -exportcert -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore
+keytool -exportcert -list -v -alias <your-key-name> -keystore <path-to-production-keystore>
+```
+
+on Windows:
+
+```bash
+keytool -exportcert -list -v -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+keytool -exportcert -list -v -alias <your-key-name> -keystore <path-to-production-keystore>
+```
+
+Enter the password, by default for "debug.keystore is "android". Copy SHA1 value and paste into Android app field.
+
 ## END

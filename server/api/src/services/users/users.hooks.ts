@@ -58,7 +58,9 @@ let moduleExports: HooksObject = {
     create: [
       // TODO: verifyHooks.addVerification(), // email verification
       // TODO: customizeOauthProfile(),
-      hashPassword(), gravatar() ],
+      hashPassword(),
+      gravatar()
+    ],
     update: [
       commonHooks.disallow('external') // disallow any external modifications
       // TODO: customizeOauthProfile(),
@@ -71,7 +73,7 @@ let moduleExports: HooksObject = {
         // https://hackernoon.com/setting-up-email-verification-in-feathersjs-ce764907e4f2
         commonHooks.isProvider('external'),
         commonHooks.preventChanges(
-          true,
+          true, // to throw if fields are modified (use false to delete changed fields)
           'email',
           'isVerified',
           'verifyToken',

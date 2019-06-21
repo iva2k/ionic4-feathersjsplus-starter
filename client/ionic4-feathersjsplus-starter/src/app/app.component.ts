@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Events, NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -9,10 +9,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+  urlLoginDestination = '/menu/app/tabs/todos';
+  urlLogoutDestination = '/login';
+
   constructor(
+    public events: Events,
+    private navCtrl: NavController,
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
   ) {
     this.initializeApp();
   }
@@ -24,5 +29,33 @@ export class AppComponent {
         this.splashScreen.hide();
       }
     });
+    this.listenLoginEvents();
   }
+
+  private gotoPage(url: string, params: any = {}, root: boolean = true ) {
+    if (root) {
+      this.navCtrl.navigateRoot([url], {queryParams: params, animated: false});
+    } else {
+      this.navCtrl.navigateForward([url], { queryParams: params, animated: false } );
+    }
+  }
+
+  private listenLoginEvents() {
+    this.events.subscribe('user:login', (user) => {
+      console.log('app got user:login');
+      this.gotoPage(this.urlLoginDestination);
+    });
+
+    this.events.subscribe('user:logout', () => {
+      console.log('app got user:logout');
+      this.gotoPage(this.urlLogoutDestination);
+    });
+
+    this.events.subscribe('user:failed', (error, activity, command) => {
+      console.log('app got user:failed');
+      // TODO: (now) error is an object... need to stringify it? Use not queryParams?
+      this.gotoPage(this.urlLogoutDestination, { error, activity, command });
+    });
+  }
+
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // For fetching server.json file in dev mode.
 import 'rxjs/add/operator/toPromise';
+import { Events } from '@ionic/angular';
 
-// ?import * as feathersRx from 'feathers-reactive';
 import * as io from 'socket.io-client';
 
 // import feathers from '@feathersjs/rest-client';
@@ -15,6 +15,10 @@ import AuthManagement from 'feathers-authentication-management/lib/client';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Subscription } from 'rxjs/Subscription';
+
+import hello from 'hellojs';
+
+import { User } from '../models/user';
 
 const defaultApiUrl = 'http://localhost:3030'; // TODO: (soon) move to config/env files.
 
@@ -56,9 +60,8 @@ export class DataSubscriber<T extends Record> {
         this.observer.next(this.dataStore.records);
       })
       .catch( (err) => {
-        console.error('Error in FeathersService find: %o query: %o', err, query);
-      })
-    ;
+        console.error('[FeathersService] Error in find: %o query: %o', err, query);
+      });
   }
 
   public unsubscribe() {
@@ -114,19 +117,29 @@ export class FeathersService {
   public apiUrl = ''; // endpoint url in use
   private authManagement;
 
+  // TODO: (soon) Provide socialLogins from server (single point of authority), including client_id.
+  private socialLogins = [
+    // tslint:disable-next-line: max-line-length
+    {title: 'Google Hello', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
+  ];
+
+  private loginState: boolean; // undefined=initial, true=loggedin, false=loggedout
   private reauth; // Stored login credentials for reauth if session fails.
   private errorHandler = (error) => {
     if (this.reauth) {
-      console.log('Feathers reauthentication-error, re-authenticating...');
-      this.authenticate(this.reauth);
-    // } else {
-    //   this.reauth = null;
-    //   this._feathers.removeListener('reauthentication-error', this.errorHandler);
-    //   console.log('DEBUG: Feathers reauthentication-error, but no credentials saved.');
+      console.log('[FeathersService] authentication error, re-authenticating...');
+      this._authenticate(this.reauth)
+        // .then( (user) => {})
+        ;
+    } else {
+      // this.reauth = null;
+      // this.fc.removeListener('reauthentication-error', this.errorHandler);
+      console.log('[FeathersService] authentication error, but no credentials saved.');
     }
   }
 
   constructor(
+    public events: Events,
     public http: HttpClient,
   ) {
     this.feathersInit = this.initFeathers();
@@ -136,15 +149,15 @@ export class FeathersService {
     // Featch server.json
     const url = 'assets/server.json';
     return this.getJsonData(url).then(data => {
-      console.log('Loaded "%s", data: %o', url, data);
+      console.log('[FeathersService] Loaded "%s", data: %o', url, data);
       if (!data.port || !(data.ip4 || data.ip6)) {
         throw new Error('Invalid data in "' + url + '"');
       }
       return 'http://' + (data.ip4 || data.ip6) + ':' + data.port;
     }).catch((error) => {
       // Ignore fetch error, use default
-      console.log('Failed reading "%s": %o', url, error);
-      console.log('Using default API URL %s', defaultApiUrl);
+      console.log('[FeathersService] Failed reading "%s": %o', url, error);
+      console.log('[FeathersService] Using default API URL %s', defaultApiUrl);
       return defaultApiUrl;
     }).then((apiUrl) => {
       // Note: we explicitly set <void> type on promis to avoid issue <https://github.com/Microsoft/TypeScript/issues/8516>.
@@ -157,21 +170,25 @@ export class FeathersService {
         });
         this.apiUrl = apiUrl;
 
-        // this._feathers.configure(feathersSocketIOClient(this._socket));
+        // this.fc.configure(feathersSocketIOClient(this.socket));
         this.fc.configure(feathers.socketio(this.socket));
 
         // Add authentication plugin
-        // ?this._feathers.configure(feathersAuthClient({
+        // ?this.fc.configure(feathersAuthClient({
         this.fc.configure(feathers.authentication({
           storage: window.localStorage
         }));
 
         // Add feathers-reactive plugin
-        // ?this._feathers.configure(feathersRx({ idField: '_id' }));
+        // ?this.fc.configure(feathersRx({ idField: '_id' }));
 
         this.authManagement = new AuthManagement(this.fc);
 
-        console.log('Done initializing feathers client at %s.', apiUrl);
+        this.initHello();
+
+        this.loginState = false;
+
+        console.log('[FeathersService] Done initializing feathers client at %s.', apiUrl);
         resolve();
       });
     });
@@ -180,11 +197,11 @@ export class FeathersService {
   private getJsonData(url: string): Promise<any> {
     return this.http.get(url).toPromise()
       // .then((data: any) => {
-      //   // console.log('getJsonData(%s) success data:', url, data);
+      //   // console.log('[FeathersService] getJsonData(%s) success data:', url, data);
       //   return data;
       // })
       // .catch(err => {
-      //   // console.log('Failed reading "%s", error: %o', url, err);
+      //   // console.log('[FeathersService] Failed reading "%s", error: %o', url, err);
       //   throw err;
       // })
     ;
@@ -217,17 +234,8 @@ export class FeathersService {
     return this.authManagement.resetPwdShort(resetToken, { email: credentials.email}, credentials.password);
   }
 
-  // Expose authentication
-  public authenticate(credentials?): Promise<any> {
-    // ? if (this.feathersInit === undefined) {
-    //     return this._authenticate(credentials);
-    //   }
-    // .then is called even if this.feathersInit has already been resolved.
-    return this.feathersInit.then(() => {
-      return this._authenticate(credentials);
-    });
-  }
-  private _authenticate(credentials?): Promise<any> {
+  // Internal authentication implementation. Does not track this.loginState, caller must do it.
+  private _authenticate(credentials?): Promise<any|User> {
     this.reauth = null; // Remove stored credentials
     this.fc.removeListener('reauthentication-error', this.errorHandler);
     if (credentials && credentials.email) {
@@ -236,7 +244,7 @@ export class FeathersService {
     let reauth;
     return this.fc.authenticate(credentials)
       .then(response => {
-        console.log('Authenticated: ', response);
+        console.log('[FeathersService] _authenticate() - authenticate response: ', response);
         // TODO:
         // Can response.accessToken live across server restarts? Its the purpose of JWT. How can we verify that?
         // What about accessToken limited lifetime? Does feathers client keep the tabs on storing login and
@@ -247,7 +255,7 @@ export class FeathersService {
         return this.fc.passport.verifyJWT(response.accessToken);
       })
       .then(payload => {
-        console.log('JWT Payload: ', payload);
+        console.log('[FeathersService] _authenticate() - JWT payload: ', payload);
         if (reauth) {
           this.reauth = reauth;
           this.fc.on('reauthentication-error', this.errorHandler);
@@ -256,40 +264,233 @@ export class FeathersService {
       })
       .then(user => {
         this.fc.set('user', user);
-        console.log('User: ', this.fc.get('user'));
+        console.log('[FeathersService] _authenticate() - User: ', this.fc.get('user'));
+        return Promise.resolve(user);
       })
     ;
   }
 
+  // Expose authentication
+  public authenticate(credentials?): Promise<any|User> {
+    if (this.loginState) {
+      return Promise.resolve(this.fc.get('user'));
+    }
+    return this.feathersInit.then(() => {
+      return this._authenticate(credentials)
+        .then( (user) => {
+          // if (!this.loginState) {
+          this.events.publish('user:login', user);
+          this.loginState = true;
+          // }
+          return Promise.resolve(user);
+        });
+    });
+  }
+
   // Expose registration
-  public register(credentials): Promise<any> {
+  public register(credentials): Promise<any|User> {
+    if (this.loginState) {
+      return Promise.reject(new Error('Already logged in'));
+    }
     if (!credentials || !credentials.email || !credentials.password) {
       return Promise.reject(new Error('No credentials'));
     }
     this.reauth = null;
     this.fc.removeListener('reauthentication-error', this.errorHandler);
     return this.fc.service('users').create(credentials)
-      .then(() => this.authenticate(credentials))
+      .then(() => {
+        return this._authenticate(credentials)
+          .then((user) => {
+            this.events.publish('user:login', user);
+            this.loginState = true;
+            return Promise.resolve(user);
+          });
+      })
     ;
+  }
+
+  // UNUSED
+  // public hasValidIdToken(): Promise<any> {
+  //   console.log('[FeathersService] hasValidIdToken(): checking saved auth token...');
+  //   return this._authenticate()
+  //     .then((user) => {
+  //       console.log('[FeathersService] hasValidIdToken(): has valid saved auth token.');
+  //       // this.events.publish('user:login', user); // caller is responsible to post proper events
+  //       return true;
+  //     })
+  //     .catch((err) => {
+  //       console.log('[FeathersService] hasValidIdToken(): no valid saved auth token.');
+  //       return Promise.reject(err);
+  //     })
+  //   ;
+  //   // Use as:
+  //   // feathersService.hasValidIdToken().then(() => {
+  //   //   // show application page
+  //   //   ...
+  //   // }).catch(() => {
+  //   //   // show login page
+  //   //   ...
+  //   // })
+  // }
+
+  public getSocialLogins(): any[] {
+    return this.socialLogins;
+  }
+
+  // Hello.js Integration
+  private initHello() {
+    // let loc = window.location.href.split('#')[0];
+    const socials = this.getSocialLogins();
+    const clientIds = {};
+    for (const social of socials) {
+      if (social.client_id) {
+        clientIds[social.name] = social.client_id;
+      }
+    }
+    hello.init(clientIds, {
+      // redirect_uri: loc, // 'http://localhost:8000', // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
+    });
+    hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
+    hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
+  }
+  private onHelloLogin(auth) {
+    console.log('[FeathersService] onHelloLogin() auth: ', auth);
+    // get social token, user's social id and user's email
+    const socialToken = auth.authResponse.access_token;
+    // TODO: (later) For OAuth1 (twitter,dropbox,yahoo), it could be socialToken = auth.authResponse.oauth_token; let secret = auth.authResponse.oauth_token_secret;
+
+    // To get some info (synchronous):
+    // let session = hello(auth.network).getAuthResponse(); let { access_token, expires } = session;
+    return hello(auth.network).api('me').then(userInfo => {
+      console.log('[FeathersService] onHelloLogin() userInfo: ', userInfo);
+
+      // Avoid repeating login
+      if (this.loginState) {
+        console.log('[FeathersService] onHelloLogin() already logged in, skipping re-authentication');
+        return; // TODO: (now) what shall we return from onHelloLogin()? return Promise.resolve();
+      }
+
+      // Send the info to the backend for authentication
+      const userId = userInfo.id;
+      const userEmail = userInfo.email;
+      return this._authenticate({
+        strategy    : 'social_token',
+        network     : auth.network,
+        email       : userEmail,
+        socialId    : userId,
+        socialToken
+      }).then( (user) => {
+        // This completes the login - server got validation and issued us JWT.
+        console.log('[FeathersService] onHelloLogin() auth user=%o', user);
+        if (!this.loginState) {
+          this.events.publish('user:login', user);
+          this.loginState = true;
+        }
+        this.loginHelloDispose( { name: auth.network } ).catch(() => {});
+      }).catch(error => {
+        console.log('[FeathersService] onHelloLogin() auth error=%o', error);
+        this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + auth.network /*TODO: (later) find social(.name == auth.network), use social.title */, /* command: */ 'validate');
+        this.loginState = false;
+      });
+    }, error => {
+      console.log('[FeathersService] onHelloLogin() api error=%o', error);
+      this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + auth.network /*TODO: (later) find social(.name == auth.network), use social.title */, /* command: */ 'authenticate');
+      this.loginState = false;
+  });
+  }
+  private onHelloLogout(data) {
+    console.log('[FeathersService] onHelloLogout() data: ', data);
+  }
+
+  private loginHello(social, display: hello.HelloJSDisplayType = 'popup'): Promise<any> {
+    return new Promise((resolve, reject) => {
+      hello(social.name).login({
+        scope: 'email',
+        display, // 'popup' (default), 'page' or 'none' ('none' to refresh access_token in background, useful for reauth)
+        // redirect_uri: 'http://localhost:8000', // Can customize app integration here. Hello.js adds its state to the query and will retrieve its data from query part from the redirect_uri upon reentry.
+        // - it is fixed (set in oauth2 provider), and only variable part can be passed via state param.
+        // TODO: (now) Google gets redirect_uri that it barks on:
+        // https://accounts.google.com/o/oauth2/v2/auth
+        //  ?client_id=411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com
+        //  &response_type=token
+        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate
+        //  &state=%7B%22client_id%22%3A%22411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com%22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_3e2aqrxw%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
+        //  &scope=openid%20profile%20email
+        // Sends to oauth2 provider, e.g.:
+        // https://accounts.google.com/o/oauth2/auth
+        //  ?client_id=<YOUR_CLIENT_ID>
+        //  &response_type=token
+        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&amp;state=%7B%22client_id%22%3A%22<YOUR_CLIENT_ID>%22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
+        //  &scope=https://www.googleapis.com/auth/plus.me%20profile%20email
+    }).then(() => {
+        console.log('[FeathersService] loginHello() callback');
+        // We are not done yet, this.onHelloLogin() will be called from Hello.js upon receipt of server confirmation (possible app reload)
+        // this.events.publish('user:login', user); // (if successful) will be called from this.onHelloLogin().
+        resolve();
+      }, (details) => {
+        console.log('[FeathersService] loginHello() error, details: %o', details);
+        this.events.publish('user:failed', details.error, 'Signing in with ' + social.title, 'authenticate');
+        this.loginState = false;
+        reject(details.error);
+      });
+    });
+  }
+  private loginHelloDispose(social): Promise<any> {
+    // Remove session (but keep logged in with provider).
+    return new Promise((resolve, reject) => {
+      hello(social.name).logout().then(() => {
+        console.log('[FeathersService] loginHelloDispose() callback');
+        resolve();
+      }, (details) => {
+        console.log('[FeathersService] loginHelloDispose() error, details: %o', details);
+        reject(details.error);
+      });
+    });
+  }
+
+  public loginWith(social): Promise<any> {
+    console.log('[FeathersService] loginWith() social: %o', social);
+    if (social.client_id) {
+      return this.loginHello(social);
+    }
+    if (social.login) {
+      return social.login.call(this, social);
+    }
+    if (social.url) {
+      // TODO: (soon) return this.openWebpage(social.url);
+    }
+    return Promise.reject(new Error('Bad argument'));
   }
 
   public getUserInfo() {
     return this.fc.get('user');
   }
 
-  // Expose logout
-  public logout(nav: any): Promise<any> {
-    this.reauth = null;
-    this.fc.removeListener('reauthentication-error', this.errorHandler);
+  // Internal logout worker
+  private _logout(): Promise<any> {
+    console.log('[FeathersService] _logout()');
+    // this.reauth = null;
+    // this.fc.removeListener('reauthentication-error', this.errorHandler);
     return this.fc.logout()
       .then((result) => {
+        this.events.publish('user:logout');
+        this.loginState = false;
         return result;
       })
       .catch((error) => {
-        console.log(error);
-        // return error; // Nobody cares about logout error.
-      })
-    ;
+        console.log('[FeathersService] _logout() error: %o', error);
+        this.events.publish('user:logout'); // We even report logout to the app. most likely server did not respond, but we wiped out our tokens.
+        this.loginState = false;
+        // return error; // Nobody cares about logout error. Consider being logged out.
+      });
+  }
+
+  // Expose logout
+  public logout(): Promise<any> {
+    console.log('[FeathersService] logout()');
+    this.reauth = null;
+    this.fc.removeListener('reauthentication-error', this.errorHandler);
+    return this._logout();
   }
 
   // Observable Service API
@@ -306,7 +507,7 @@ export class FeathersService {
   //          this.ref.markForCheck();
   //        },
   //        err => {
-  //          console.error('Error in subscribe to feathersService.subscribe(): ', err);
+  //          console.error('[FeathersService] Error in subscribe(): ', err);
   //        });
   //    }
   //    ngOnDestroy() {
@@ -332,14 +533,14 @@ export class FeathersService {
   }
 
   public update<T extends Record>(service: string, record: T): Promise<T> {
-    if (!record._id) { return Promise.reject('_id must be set'); }
+    if (!record._id) { return Promise.reject(new Error('_id must be set')); }
     return this.service(service)
       .update(record._id, record)
     ;
   }
 
   public remove<T extends Record>(service: string, record: T): Promise<T> {
-    if (!record._id) { return Promise.reject('_id must be set'); }
+    if (!record._id) { return Promise.reject(new Error('_id must be set')); }
     return this.service(service)
       .remove(record._id)
     ;

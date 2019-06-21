@@ -22,6 +22,7 @@ declare module 'merge-graphql-schemas';
 declare module '@feathers-plus/test-utils';
 
 // !code: more
+declare module 'feathers-authentication-custom';
 declare module 'feathers-authentication-management';
 declare module 'feathers-mailer';
 // !end
