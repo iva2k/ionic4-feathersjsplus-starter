@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // For fetching server.json file in dev mode.
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
 import { Events } from '@ionic/angular';
 
@@ -141,6 +142,7 @@ export class FeathersService {
   constructor(
     public events: Events,
     public http: HttpClient,
+    private router: Router,
   ) {
     this.feathersInit = this.initFeathers();
   }
@@ -280,6 +282,21 @@ export class FeathersService {
         .then( (user) => {
           // if (!this.loginState) {
           this.events.publish('user:login', user);
+          this.loginState = true;
+          // }
+          return Promise.resolve(user);
+        });
+    });
+  }
+  private authenticateNoEvents(credentials?): Promise<any|User> {
+    if (this.loginState) {
+      return Promise.resolve(this.fc.get('user'));
+    }
+    return this.feathersInit.then(() => {
+      return this._authenticate(credentials)
+        .then( (user) => {
+          // if (!this.loginState) {
+          // this.events.publish('user:login', user);
           this.loginState = true;
           // }
           return Promise.resolve(user);
@@ -473,6 +490,60 @@ export class FeathersService {
       // TODO: (soon) return this.openWebpage(social.url);
     }
     return Promise.reject(new Error('Bad argument'));
+  }
+
+  // Guard method for views that must be logged in (e.g. user and data)
+  public authGuard(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> { // enforceValidIdToken
+    const pageUrl = state.url;
+    console.log('[FeathersService] authGuard(%s): checking saved auth token...', pageUrl);
+    // const redirectUrl = '/login'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
+
+    return this.authenticateNoEvents()
+      .then((user) => {
+        // Ok
+        console.log('[FeathersService] authGuard(%s): has valid saved auth token, ok.', pageUrl);
+        return true;
+      })
+      .catch((err) => {
+        // Force auth guard
+        // const urlTree = this.router.createUrlTree([redirectUrl], { queryParams: { retUrl: pageUrl } });
+        // console.log('[FeathersService] authGuard(%s): no valid saved auth token, redirecting to %s.', pageUrl, urlTree.toString());
+        // return urlTree; // Angular >= 7.1 router
+        console.log('[FeathersService] authGuard(%s): no valid saved auth token, calling guard:login.', pageUrl);
+        this.events.publish('guard:login', pageUrl); // must login, then can go to page
+        return Promise.reject(err);
+      })
+    ;
+  }
+
+  // Guard method for views that must be logged out (e.g. login/register)
+  public nonauthGuard(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> { // enforceInvalidIdToken
+    const pageUrl = state.url;
+    console.log('[FeathersService] nonauthGuard(%s): checking saved auth token...', pageUrl);
+    // const redirectUrl = '/menu/app/tabs/todos'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
+
+    let guard = false; // Track if guard was triggered for last .catch
+    return this.authenticateNoEvents()
+      .then((user) => {
+        // Force login guard
+        // console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, redirecting to %s.', pageUrl, redirectUrl);
+        // return this.router.parseUrl(redirectUrl); // Angular >= 7.1 router
+        guard = true;
+        console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, calling guard:logout.', pageUrl);
+        this.events.publish('guard:logout', pageUrl); // must logout, then can go to page
+        return Promise.reject(new Error('Already logged in'));
+      })
+      .catch((err) => {
+        // Only Reject/Error in this._authenticate() should return true.
+        // Make sure errors in .then() will not return true.
+        if (guard) {
+          return err;
+        }
+        // Ok
+        console.log('[FeathersService] nonauthGuard(%s): no valid saved auth token, ok.', pageUrl);
+        return true;
+      })
+    ;
   }
 
   public getUserInfo() {

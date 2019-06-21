@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { TabsPage } from './tabs.page';
+import { AuthGuardService } from '../../services/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -16,8 +17,8 @@ const routes: Routes = [
       {
         path: 'todos',
         children: [
-          { path: '', loadChildren: '../todos-list/todos-list.module#TodosListPageModule' },
-          { path: 'detail', loadChildren: '../todo-detail/todo-detail.module#TodoDetailPageModule' },
+          { path: ''      , loadChildren: '../todos-list/todos-list.module#TodosListPageModule'   , canActivate: [AuthGuardService   ] },
+          { path: 'detail', loadChildren: '../todo-detail/todo-detail.module#TodoDetailPageModule', canActivate: [AuthGuardService   ] },
         ]
       },
 
@@ -31,7 +32,7 @@ const routes: Routes = [
   },
 
   // Catch-all for non-existing routes (must be last):
-  { path: '**', redirectTo: 'todos', pathMatch: 'full', }
+  { path: '**', redirectTo: 'tabs', pathMatch: 'full', }
 ];
 
 @NgModule({

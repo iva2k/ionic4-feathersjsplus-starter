@@ -15,22 +15,8 @@ export class NonauthGuardService implements CanActivate {
   }
 
   // Guard method for views that must be logged out (e.g. login/register)
+  // Simple wrapper over FeathersService.nonauthGuard()
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
-    const retUrl = state.url;
-    console.log('NonauthGuardService(%s): checking saved auth token...', retUrl);
-    const redirectUrl = '/menu/app/tabs/todos'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
-
-    return this.feathersService.authenticate()
-      .then(() => {
-        // Force login guard
-        console.log('NonauthGuardService(%s): has valid saved auth token, redirecting to %s.', retUrl, redirectUrl);
-        return this.router.parseUrl(redirectUrl); // Angular >= 7.1 router
-      })
-      .catch((err) => {
-        // Ok
-        console.log('NonauthGuardService(%s): no valid saved auth token, ok.', retUrl);
-        return true;
-      })
-    ;
+    return this.feathersService.nonauthGuard(route, state);
   }
 }

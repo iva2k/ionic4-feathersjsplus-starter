@@ -6,16 +6,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { MenuPage } from './menu.page';
+import { AuthGuardService } from '../../services/auth-guard.service';
 
 const routes: Routes = [
   {
     path: '',
     component: MenuPage,
     children: [
-      { path: 'app', loadChildren: '../tabs/tabs.module#TabsPageModule' },
+      { path: 'app', loadChildren: '../tabs/tabs.module#TabsPageModule', canActivate: [AuthGuardService   ] },
 
       // Catch-all for non-existing routes (must be last):
-      { path: '**', redirectTo: 'todos', pathMatch: 'full', }
+      { path: '**', redirectTo: 'app', pathMatch: 'full', }
     ]
   }
 ];
