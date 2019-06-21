@@ -5,7 +5,7 @@ import { HooksObject } from '@feathersjs/feathers';
 import { hooks as authHooks } from '@feathersjs/authentication';
 const { authenticate } = authHooks;
 // !code: imports
-// TODO: const isEnabled = require('../../hooks/is-enabled');
+// TODO: (when needed) const isEnabled = require('../../hooks/is-enabled');
 // !end
 
 // !<DEFAULT> code: used
@@ -34,8 +34,13 @@ let moduleExports: HooksObject = {
     create: [
       iff(
         isAction('passwordChange', 'identityChange'),
+        // TODO: (when needed) per https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744
+        // ? authHooks.verifyToken(),
+        // ? authHooks.populateUser(),
+        // ? authHooks.restrictToAuthenticated(),
+
         authenticate('jwt'),
-        // TODO: implement: isEnabled()
+        // TODO: (when needed) implement: isEnabled()
       ),
     ],
     update: [],

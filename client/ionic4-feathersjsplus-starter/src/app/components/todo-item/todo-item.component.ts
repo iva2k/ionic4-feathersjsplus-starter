@@ -30,7 +30,7 @@ export class TodoItemComponent implements OnDestroy, OnInit {
 
   protected todo: Todo = {} as Todo;
   protected oldTodo: Todo; // Saved data for detecting changes
-  private subscription: any; // TODO: DataSubscriber<Todo>;
+  private subscription: any; // TODO: (later) Use type : DataSubscriber<Todo>;
   protected error: string;
 
   constructor(

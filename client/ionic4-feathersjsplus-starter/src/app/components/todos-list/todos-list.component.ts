@@ -26,7 +26,7 @@ export class TodosListComponent implements OnDestroy, OnInit {
   @ViewChildren(IonItemSliding) private slidingItems: QueryList<IonItemSliding>;
 
   protected todos: Todo[] = [];
-  private subscription: any; // TODO: DataSubscriber<Todo>;
+  private subscription: any; // TODO: (later) Use type : DataSubscriber<Todo>;
 
   public itemsBusyDeleting: IonItemSliding[] = [];
 

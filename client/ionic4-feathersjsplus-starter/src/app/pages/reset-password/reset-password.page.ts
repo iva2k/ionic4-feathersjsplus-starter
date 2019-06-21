@@ -19,8 +19,8 @@ export class ResetPasswordPage implements OnInit {
   private credentials: User = { email: '', password: '' } as User;
   protected verificationToken: string = null;
   protected error: string;
-  // protected showLogin = false; // TODO: Implement link to a login page
-  protected showReset = false; // TODO: Implement link to a reset page, login page
+  // protected showLogin = false; // TODO: (later) Implement link to a login page
+  protected showReset = false; // TODO: (later) Implement link to a reset page, login page
 
   constructor(
     private feathersService: FeathersService,
