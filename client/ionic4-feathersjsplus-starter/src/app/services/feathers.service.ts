@@ -348,7 +348,8 @@ export class FeathersService {
       }
     }
     hello.init(clientIds, {
-      // redirect_uri: loc, // 'http://localhost:8000', // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
+      // redirect_uri: loc, // 'http://localhost:8000',
+      // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
     });
     hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
     hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
@@ -357,7 +358,8 @@ export class FeathersService {
     console.log('[FeathersService] onHelloLogin() auth: ', auth);
     // get social token, user's social id and user's email
     const socialToken = auth.authResponse.access_token;
-    // TODO: (later) For OAuth1 (twitter,dropbox,yahoo), it could be socialToken = auth.authResponse.oauth_token; let secret = auth.authResponse.oauth_token_secret;
+    // TODO: (later) For OAuth1 (twitter,dropbox,yahoo), it could be:
+    // socialToken = auth.authResponse.oauth_token; let secret = auth.authResponse.oauth_token_secret;
 
     // To get some info (synchronous):
     // let session = hello(auth.network).getAuthResponse(); let { access_token, expires } = session;
@@ -389,12 +391,18 @@ export class FeathersService {
         this.loginHelloDispose( { name: auth.network } ).catch(() => {});
       }).catch(error => {
         console.log('[FeathersService] onHelloLogin() auth error=%o', error);
-        this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + auth.network /*TODO: (later) find social(.name == auth.network), use social.title */, /* command: */ 'validate');
+        this.events.publish('user:failed', error,
+          /* activity: */ 'Signing in with ' + auth.network
+          /* TODO: (later) find social(.name == auth.network), use social.title */,
+          /* command: */ 'validate');
         this.loginState = false;
       });
     }, error => {
       console.log('[FeathersService] onHelloLogin() api error=%o', error);
-      this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + auth.network /*TODO: (later) find social(.name == auth.network), use social.title */, /* command: */ 'authenticate');
+      this.events.publish('user:failed', error,
+        /* activity: */ 'Signing in with ' + auth.network
+        /* TODO: (later) find social(.name == auth.network), use social.title */,
+        /* command: */ 'authenticate');
       this.loginState = false;
   });
   }
@@ -402,25 +410,30 @@ export class FeathersService {
     console.log('[FeathersService] onHelloLogout() data: ', data);
   }
 
-  private loginHello(social, display: hello.HelloJSDisplayType = 'popup'): Promise<any> {
+  private loginHello(social, display: hello.HelloJSDisplayType = 'page'): Promise<any> {
     return new Promise((resolve, reject) => {
       hello(social.name).login({
         scope: 'email',
         display, // 'popup' (default), 'page' or 'none' ('none' to refresh access_token in background, useful for reauth)
-        // redirect_uri: 'http://localhost:8000', // Can customize app integration here. Hello.js adds its state to the query and will retrieve its data from query part from the redirect_uri upon reentry.
+        // redirect_uri: 'http://localhost:8000',
+        // Can customize app integration here. Hello.js adds its state to the query and will retrieve its data
+        // from query part from the redirect_uri upon reentry.
         // - it is fixed (set in oauth2 provider), and only variable part can be passed via state param.
         // TODO: (now) Google gets redirect_uri that it barks on:
         // https://accounts.google.com/o/oauth2/v2/auth
-        //  ?client_id=411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com
+        //  ?client_id=<YOUR_CLIENT_ID>
         //  &response_type=token
-        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate
-        //  &state=%7B%22client_id%22%3A%22411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com%22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_3e2aqrxw%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
+        // BAD: &redirect_uri=http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate
+        //  &state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
+        //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_3e2aqrxw%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
         //  &scope=openid%20profile%20email
         // Sends to oauth2 provider, e.g.:
         // https://accounts.google.com/o/oauth2/auth
         //  ?client_id=<YOUR_CLIENT_ID>
         //  &response_type=token
-        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&amp;state=%7B%22client_id%22%3A%22<YOUR_CLIENT_ID>%22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
+        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F
+        //  &amp; state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
+        //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
         //  &scope=https://www.googleapis.com/auth/plus.me%20profile%20email
     }).then(() => {
         console.log('[FeathersService] loginHello() callback');
@@ -479,7 +492,8 @@ export class FeathersService {
       })
       .catch((error) => {
         console.log('[FeathersService] _logout() error: %o', error);
-        this.events.publish('user:logout'); // We even report logout to the app. most likely server did not respond, but we wiped out our tokens.
+        this.events.publish('user:logout');
+        // We report logout to the app. Most likely server did not respond, but we wiped out our tokens.
         this.loginState = false;
         // return error; // Nobody cares about logout error. Consider being logged out.
       });
