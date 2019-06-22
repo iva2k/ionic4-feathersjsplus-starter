@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 
 import { Events, NavController, Platform } from '@ionic/angular';
@@ -16,6 +16,7 @@ export class AppComponent {
   constructor(
     public events: Events,
     private navCtrl: NavController,
+    private ngZone: NgZone,
     private platform: Platform,
     private router: Router,
     private splashScreen: SplashScreen,
@@ -48,11 +49,13 @@ export class AppComponent {
     const urlTree = this.router.createUrlTree([url], { queryParams: params });
     console.log('[AppComponent] gotoPage %s.', urlTree.toString());
 
-    if (root) {
-      this.navCtrl.navigateRoot(urlTree, { animated: false } );
-    } else {
-      this.navCtrl.navigateForward(urlTree, { animated: false } );
-    }
+    this.ngZone.run(() => {
+      if (root) {
+        this.navCtrl.navigateRoot(urlTree, { animated: false } );
+      } else {
+        this.navCtrl.navigateForward(urlTree, { animated: false } );
+      }
+    });
   }
 
   private listenLoginEvents() {

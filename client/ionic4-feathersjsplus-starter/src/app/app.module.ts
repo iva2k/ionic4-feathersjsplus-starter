@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -35,8 +37,9 @@ import { NonauthGuardService } from './services/nonauth-guard.service';
     AppRoutingModule
   ],
   providers: [
-    StatusBar,
+    GooglePlus,
     SplashScreen,
+    StatusBar,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     FeathersService,
     AuthGuardService,

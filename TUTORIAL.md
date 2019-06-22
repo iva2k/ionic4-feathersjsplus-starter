@@ -1195,7 +1195,7 @@ Some thoughts on the features developed in this step:
 
 ### Step 11. Login With X
 
-"Login With X" (a.k.a. "Social login") is a must of modern apps. Setting aside invasive tracking and data collection practices done by the Auth providers, even in cases when other login is used, many users prefer to have single login with one password to remember, and use it across many websites and apps.
+"Login With X" (a.k.a. "Social Login") is a must of modern apps. Setting aside invasive tracking and data collection practices done by the Auth providers, even in cases when other login is used, many users prefer to have single login with one password to remember, and use it across many websites and apps.
 
 See this link for a good general overview of the process: <https://github.com/feathersjs/docs/blob/master/guides/auth/recipe.oauth-basic.md>
 (as well as for steps to implement method #1 below).
@@ -1208,7 +1208,7 @@ There are few methods to implement login with OAuth providers:
 
 Each method has its own pluses and minuses.
 
-Methods 1 and 3 use Webview, and recently Google stopped allowing OAuth login on mobile devices (it insists on using native methods).
+Methods 1 and 3 use Webview, and recently Google stopped allowing OAuth login using Webview on mobile devices (it insists on using native methods).
 
 We will use Hello.js in web browser versions, as it works well and gives us most flexibility. On mobile, we have to use native, so we will have to mix both methods as needed.
 
@@ -1227,11 +1227,16 @@ npm install --save feathers-authentication-custom passport-custom axios feathers
 npm install --save-dev @types/axios
 ```
 
-For using HelloJS (module without default import) add ```"allowSyntheticDefaultImports": true;``` to compilerOptions section of client/ionic4-feathersjsplus-starter/tsconfig.json.
+For using HelloJS module without default import in TypeScript, add ```"allowSyntheticDefaultImports": true;``` to compilerOptions section of client/ionic4-feathersjsplus-starter/tsconfig.json.
 
 On the server side we will create new auth strategy 'social_token'.
 
-On the client side we expand src/app/services/feathers.service.ts, add buttons and click handlers to the LoginPage, add Events to feathers.service.ts and app.component.ts for the app to react to login/logout by navigating to appropriate page.
+On the client side we expand src/app/services/feathers.service.ts, add buttons and click handlers to
+the LoginPage, add Events to feathers.service.ts and app.component.ts for the app to react to
+login/logout by navigating to appropriate page. We need Events as HelloJS issues login event upon
+reload of the app, when the app itself has no way of knowing to set up a call and wait for an async
+callback. Route guards, however, perform bad using events, and returning url from angular router
+guards works much better.
 
 You will need to get CLIENT_ID for each social login provider, see section "Providers" below to get them.
 
@@ -1250,7 +1255,38 @@ See the code on Github for few edits:
 - src/app/app.component.ts (Events use for login/logout and guards)
 - src/app/services/feathers/feathers.ts
 
+#### Native Method
+
+##### Google: @ionic-native/google-plus
+
+See <https://ionicframework.com/docs/native/google-plus/>
+
+Get ```WEB_CLIENT_ID``` and ```REVERSED_ID``` (add iOS app on Google and download .plist file):
+
+Note: .plist from Google has iOS ```CLIENT_ID``` - don't use it in place of ```WEB_CLIENT_ID```! Get ```CLIENT_ID``` for Web application.
+
+```bash
+WEB_CLIENT_ID=<your_WEB_CLIENT_ID> 411586170471-cnmvgerljm4f37518sll69omlo7b6h09.apps.googleusercontent.com
+REVERSED_CLIENT_ID=<your_REVERSED_CLIENT_ID> com.googleusercontent.apps.411586170471-cnmvgerljm4f37518sll69omlo7b6h09
+```
+
+```bash
+ionic cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=com.googleusercontent.apps.411586170471-cnmvgerljm4f37518sll69omlo7b6h09 --variable WEB_APPLICATION_CLIENT_ID=411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com
+npm install --save @ionic-native/google-plus
+```
+
+We will use backend (```social_token``` strategy) from section on Hello.js method (above).
+
+See the code on Github for few edits:
+
+- src/app/services/feathers/feathers.ts
+- src/pages/login/login.ts
+- src/app/app.module.ts
+- config.xml
+
 #### Providers
+
+This section captures some notes on getting through each provider's setup.
 
 ##### Google
 

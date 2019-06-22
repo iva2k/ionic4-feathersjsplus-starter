@@ -267,9 +267,13 @@ export class LoginPage implements OnInit {
   onLoginWith(social) {
     this.showLoading('Signing in with ' + social.title);
     console.log('log in with ' + social.title);
-    this.feathersService.loginWith(social).then(() => {
-      this.showLoading('Registering app with ' + social.title);
-      // Login will complete in a callback, possibly even with app reload. Event will be delivered to the app, which will switch pages or open us with an error info.
+    this.feathersService.loginWith(social).then((user) => {
+      if (user) {
+        this.onLoginSuccess(user);
+      } else {
+        this.showLoading('Registering app with ' + social.title);
+        // Login will complete in a callback, possibly even with app reload. Event will be delivered to the app, which will switch pages or open us with an error info.
+      }
     }).catch((error) => {
       this.presentServerError(error, 'Signing in with ' + social.title, 'authenticate');
     });

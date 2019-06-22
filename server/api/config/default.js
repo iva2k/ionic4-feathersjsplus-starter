@@ -18,6 +18,7 @@ module.exports = {
     // Copy server.json to src/assets, so it is available for the app running via 'ionic serve'
     '../../../client/ionic4-feathersjsplus-starter/www/assets', // ionic build
     '../../../client/ionic4-feathersjsplus-starter/src/assets', // ionic serve
+    '../../../client/ionic4-feathersjsplus-starter/platforms/android/assets/www',
     '../../../client/ionic4-feathersjsplus-starter/platforms/browser/www/assets', // ionic build --cordova --platform=browser
   ],
   logo               : process.env.LOGO              || 'logo-white.png', // File in public folder

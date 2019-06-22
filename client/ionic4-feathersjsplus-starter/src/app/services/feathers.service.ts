@@ -17,6 +17,8 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { Subscription } from 'rxjs/Subscription';
 
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+
 import hello from 'hellojs';
 
 import { User } from '../models/user';
@@ -121,7 +123,8 @@ export class FeathersService {
   // TODO: (soon) Provide socialLogins from server (single point of authority), including client_id.
   private socialLogins = [
     // tslint:disable-next-line: max-line-length
-    {title: 'Google Hello', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
+    {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
+    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use local Hello.js method (client_id)
   ];
 
   private loginState: boolean; // undefined=initial, true=loggedin, false=loggedout
@@ -141,6 +144,7 @@ export class FeathersService {
 
   constructor(
     public events: Events,
+    private googlePlus: GooglePlus,
     public http: HttpClient,
     private router: Router,
   ) {
@@ -356,17 +360,20 @@ export class FeathersService {
 
   // Hello.js Integration
   private initHello() {
-    // let loc = window.location.href.split('#')[0];
+    const href = window.location.href;
+    const locs = href.split('/');
+    const loc = locs[0] + '//' + locs[2]; // 'http://localhost:8100',
+    // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
+
     const socials = this.getSocialLogins();
     const clientIds = {};
     for (const social of socials) {
       if (social.client_id) {
-        clientIds[social.name] = social.client_id;
+        clientIds[social.network] = social.client_id;
       }
     }
     hello.init(clientIds, {
-      // redirect_uri: loc, // 'http://localhost:8000',
-      // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
+      redirect_uri: loc,
     });
     hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
     hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
@@ -405,23 +412,26 @@ export class FeathersService {
           this.events.publish('user:login', user);
           this.loginState = true;
         }
-        this.loginHelloDispose( { name: auth.network } ).catch(() => {});
+        this.loginHelloDispose( { network: auth.network } ).catch(() => {});
+        return;
       }).catch(error => {
         console.log('[FeathersService] onHelloLogin() auth error=%o', error);
         this.events.publish('user:failed', error,
           /* activity: */ 'Signing in with ' + auth.network
-          /* TODO: (later) find social(.name == auth.network), use social.title */,
+          /* TODO: (later) find social(.network == auth.network), use social.title */,
           /* command: */ 'validate');
         this.loginState = false;
+        return;
       });
     }, error => {
       console.log('[FeathersService] onHelloLogin() api error=%o', error);
       this.events.publish('user:failed', error,
         /* activity: */ 'Signing in with ' + auth.network
-        /* TODO: (later) find social(.name == auth.network), use social.title */,
+        /* TODO: (later) find social(.network == auth.network), use social.title */,
         /* command: */ 'authenticate');
       this.loginState = false;
-  });
+      return;
+    });
   }
   private onHelloLogout(data) {
     console.log('[FeathersService] onHelloLogout() data: ', data);
@@ -429,7 +439,7 @@ export class FeathersService {
 
   private loginHello(social, display: hello.HelloJSDisplayType = 'page'): Promise<any> {
     return new Promise((resolve, reject) => {
-      hello(social.name).login({
+      hello(social.network).login({
         scope: 'email',
         display, // 'popup' (default), 'page' or 'none' ('none' to refresh access_token in background, useful for reauth)
         // redirect_uri: 'http://localhost:8000',
@@ -452,7 +462,7 @@ export class FeathersService {
         //  &amp; state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
         //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
         //  &scope=https://www.googleapis.com/auth/plus.me%20profile%20email
-    }).then(() => {
+      }).then(() => {
         console.log('[FeathersService] loginHello() callback');
         // We are not done yet, this.onHelloLogin() will be called from Hello.js upon receipt of server confirmation (possible app reload)
         // this.events.publish('user:login', user); // (if successful) will be called from this.onHelloLogin().
@@ -468,7 +478,7 @@ export class FeathersService {
   private loginHelloDispose(social): Promise<any> {
     // Remove session (but keep logged in with provider).
     return new Promise((resolve, reject) => {
-      hello(social.name).logout().then(() => {
+      hello(social.network).logout().then(() => {
         console.log('[FeathersService] loginHelloDispose() callback');
         resolve();
       }, (details) => {
@@ -478,16 +488,77 @@ export class FeathersService {
     });
   }
 
-  public loginWith(social): Promise<any> {
+  private loginGoogleAPI(social): Promise<any> {
+    // TODO: (later) use this.googlePlus.trySilentLogin(options) for quiet auth at start of app.
+    return this.googlePlus.login({
+      // scopes: 'profile email', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+      scopes: 'email',
+      // webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
+      //   - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+      // offline: true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode,
+      //   which can be used to grant offline access to a non-Google server
+    })
+      .catch(error => {
+        console.error('[FeathersService] loginGoogleAPI() error: %o', error);
+        this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + social.title, /* command: */ 'authenticate');
+        this.loginState = false;
+        return Promise.reject(error);
+      })
+      .then(res => {
+        console.log('[FeathersService] loginGoogleAPI() result: %o', res);
+
+        // For scopes: 'profile'?
+        //  res.displayName;
+        //  res.familyName;
+        //  res.givenName;
+        //  res.imageUrl;
+
+        // res.idToken; // idToken that can be exchanged to verify user identity. -> // TODO: (now) send it to the server to
+        //   authenticate (get user information to confirm user identity). perhaps use same social_token auth service?
+        // res.serverAuthCode; // Auth code that can be exchanged for an access token and refresh token for offline access. -> server
+        //   can use it to access google account
+        // res.accessToken;    // OAuth2 access token
+
+        // Send the info to the backend for authentication
+        return this._authenticate({
+          strategy    : 'social_token',
+          network     : social.network,
+          email       : res.email,
+          socialId    : res.userId,
+          socialToken : res.accessToken
+        }).then( (user) => {
+          // This completes the login - server got validation and issued us JWT.
+          console.log('[FeathersService] loginGoogleAPI() auth user=%o', user);
+          if (!this.loginState) {
+            this.events.publish('user:login', user);
+            this.loginState = true;
+          }
+          this.logoutGoogleAPI( social ).catch(() => {});
+          return Promise.resolve(user);
+        }).catch(error => {
+          console.log('[FeathersService] loginGoogleAPI() auth error=%o', error);
+          this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + social.title, /* command: */ 'validate');
+          this.loginState = false;
+          return Promise.reject(error);
+        });
+
+      });
+  }
+  private logoutGoogleAPI(social): Promise<any> {
+    return this.googlePlus.logout();
+  }
+
+  public loginWith(social): Promise<any|User> {
     console.log('[FeathersService] loginWith() social: %o', social);
-    if (social.client_id) {
-      return this.loginHello(social);
+    if (social.loginFn) {
+      return social.loginFn.call(this, social);
     }
-    if (social.login) {
-      return social.login.call(this, social);
+    if (social.client_id) {
+      return this.loginHello(social); // Won't work on mobile
+      // TODO: (now) Check platform and skip this method (should do on socials list generator).
     }
     if (social.url) {
-      // TODO: (soon) return this.openWebpage(social.url);
+      // TODO: (soon) For FeathersJS/backend method: return this.openWebpage(social.url); // Won't work on mobile
     }
     return Promise.reject(new Error('Bad argument'));
   }

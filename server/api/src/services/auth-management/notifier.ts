@@ -133,7 +133,7 @@ let moduleExports = function(app: App) {
       case 'identityChange': // From identityChange API call
         subject = 'Your account was changed. Please verify the changes';
         template = 'identity-change';
-        hash = user.verifyToken; // TODO; is hash & hashLink needed here? Should not be. Verified - there are links in template. Where do they send the user?
+        hash = user.verifyToken; // TODO: is hash & hashLink needed here? Should not be. Verified - there are links in template. Where do they send the user?
         hashLink = getLink('verify-account-changes', hash);
         changes = user.verifyChanges;
         break;
