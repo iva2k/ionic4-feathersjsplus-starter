@@ -33,7 +33,7 @@ export class ResetPasswordPage implements OnInit {
   }
 
   ngOnInit() {
-   this.verificationToken = this.activatedRoute.snapshot.paramMap.get('token');
+    this.verificationToken = this.activatedRoute.snapshot.paramMap.get('token');
   }
 
   ionViewDidEnter() { // IONIC4
@@ -56,7 +56,17 @@ export class ResetPasswordPage implements OnInit {
       return true;
   }
 
-  showLoading(activity: string) {
+  private onLoginSuccess(user, changedPass: boolean) {
+    const message = changedPass
+      ? 'Successfully changed password and signed in as ' + user.email
+      : 'Successfully signed in as ' + user.email;
+    this.toaster(message);
+    console.log(message);
+    this.hideLoading();
+    // The app will switch pages via Events from FeathersService and this.ionViewWillLeave() will do this.hideLoading()
+  }
+
+  private showLoading(activity: string) {
     // Wrapper to manage LoadingController async nature
     this.error = '';
     const message = 'Please wait,<br/>' + activity + '...';
@@ -79,11 +89,11 @@ export class ResetPasswordPage implements OnInit {
     });
     this.loading.then(l => {
       l.present();
-    })
+    });
   }
 
-  hideLoading() {
-    if (!this.loading) return;
+  private hideLoading() {
+    if (!this.loading) { return; }
     this.loading.then(l => {
       setTimeout(() => {
         l.dismiss();
@@ -94,15 +104,10 @@ export class ResetPasswordPage implements OnInit {
     });
   }
 
-  login(credentials, changedPass: boolean) {
+  private login(credentials, changedPass: boolean) {
     this.showLoading('Signing in');
-    return this.feathersService.authenticate(credentials).then(() => {
-      // this.hideLoading();
-      let message = changedPass
-        ? 'Successfully changed password and signed in as ' + credentials.email
-        : 'Successfully signed in as ' + credentials.email;
-      this.toaster(message);
-      this.navCtrl.navigateRoot('/menu/app/tabs/todos', {animated: false});
+    this.feathersService.authenticate(credentials).then((user) => {
+      this.onLoginSuccess(user, changedPass);
     }).catch((error) => {
       this.presentServerError(error, 'Signing in', 'authenticate', changedPass);
     });
@@ -124,11 +129,17 @@ export class ResetPasswordPage implements OnInit {
     });
   }
 
+  /**
+   * Post error message on UI
+   * @param error Error object: { message, name? }
+   * @param activity 'Signing in ...' and similar text, suitable for showing in UI.
+   * @param command 'authenticate', 'validate', 'register', 'reset', 'checkEmailUnique'
+   */
   private presentServerError(error, activity: string, command: string, changedPass: boolean) {
     this.hideLoading();
 
     // By default pass through unknown errors
-    let message = error.message;
+    let message = error.message || 'Error: ' + error;
 
     // Translate cryptic/technical messages like 'socket timeout' to messages understandable by users, e.g. 'cannot reach server'.
 

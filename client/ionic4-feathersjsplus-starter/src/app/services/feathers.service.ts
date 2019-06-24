@@ -258,7 +258,7 @@ export class FeathersService {
     return this.authManagement.resetPwdShort(resetToken, { email: credentials.email}, credentials.password);
   }
 
-  // Internal authentication implementation. Does not track this.loginState, caller must do it.
+  // Internal authentication implementation. Does not track this.loginState and no Events, caller must do it.
   private _authenticate(credentials?): Promise<any|User> {
     this.reauth = null; // Remove stored credentials
     this.fc.removeListener('reauthentication-error', this.errorHandler);
