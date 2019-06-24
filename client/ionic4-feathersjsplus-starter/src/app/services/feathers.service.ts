@@ -120,6 +120,10 @@ export class FeathersService {
   public apiUrl = ''; // endpoint url in use
   private authManagement;
 
+  private urlLoginDestination: string;
+  private urlLogoutDestination: string;
+  private retUrl: string = null;
+
   // TODO: (soon) Provide socialLogins from server (single point of authority), including client_id.
   private socialLogins = [
     // tslint:disable-next-line: max-line-length
@@ -149,6 +153,20 @@ export class FeathersService {
     private router: Router,
   ) {
     this.feathersInit = this.initFeathers();
+  }
+
+  public setGuards(urlLoginDestination: string, urlLogoutDestination: string) {
+    this.urlLoginDestination = urlLoginDestination;
+    this.urlLogoutDestination = urlLogoutDestination;
+  }
+
+  public setRetUrl(retUrl: string) {
+    this.retUrl = retUrl;
+  }
+  public getRetUrl(clear: boolean = true): string {
+    const ret = this.retUrl;
+    if (clear) { this.retUrl = null; }
+    return ret;
   }
 
   private initFeathers(): Promise<void> {
@@ -587,7 +605,6 @@ export class FeathersService {
   public authGuard(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> { // enforceValidIdToken
     const pageUrl = state.url;
     console.log('[FeathersService] authGuard(%s): checking saved auth token...', pageUrl);
-    // const redirectUrl = '/login'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
 
     return this.authenticateNoEvents()
       .then((user) => {
@@ -596,13 +613,14 @@ export class FeathersService {
         return true;
       })
       .catch((err) => {
-        // Force auth guard
-        // const urlTree = this.router.createUrlTree([redirectUrl], { queryParams: { retUrl: pageUrl } });
-        // console.log('[FeathersService] authGuard(%s): no valid saved auth token, redirecting to %s.', pageUrl, urlTree.toString());
-        // return urlTree; // Angular >= 7.1 router
-        console.log('[FeathersService] authGuard(%s): no valid saved auth token, calling guard:login.', pageUrl);
-        this.events.publish('guard:login', pageUrl); // must login, then can go to page
-        return Promise.reject(err);
+        // Force auth guard - return URL for best performance (no Event)
+        const redirectUrl = this.urlLogoutDestination;
+        const urlTree = this.router.createUrlTree([redirectUrl], { queryParams: { retUrl: pageUrl } });
+        console.log('[FeathersService] authGuard(%s): no valid saved auth token, redirecting to %s.', pageUrl, urlTree.toString());
+        return urlTree; // Angular >= 7.1 router
+        // console.log('[FeathersService] authGuard(%s): no valid saved auth token, calling guard:login.', pageUrl);
+        // this.events.publish('guard:login', pageUrl); // must login, then can go to page
+        // return Promise.reject(err);
       })
     ;
   }
@@ -611,18 +629,18 @@ export class FeathersService {
   public nonauthGuard(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> { // enforceInvalidIdToken
     const pageUrl = state.url;
     console.log('[FeathersService] nonauthGuard(%s): checking saved auth token...', pageUrl);
-    // const redirectUrl = '/menu/app/tabs/todos'; // TODO: (soon) this should not be defined in the service. Refactor it out of here.
 
     let guard = false; // Track if guard was triggered for last .catch
     return this.authenticateNoEvents()
       .then((user) => {
-        // Force login guard
-        // console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, redirecting to %s.', pageUrl, redirectUrl);
-        // return this.router.parseUrl(redirectUrl); // Angular >= 7.1 router
         guard = true;
-        console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, calling guard:logout.', pageUrl);
-        this.events.publish('guard:logout', pageUrl); // must logout, then can go to page
-        return Promise.reject(new Error('Already logged in'));
+        // Force login guard - return URL for best performance (no Event)
+        const redirectUrl = this.urlLoginDestination;
+        console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, redirecting to %s.', pageUrl, redirectUrl);
+        return this.router.parseUrl(redirectUrl); // Angular >= 7.1 router
+        // console.log('[FeathersService] nonauthGuard(%s): has valid saved auth token, calling guard:logout.', pageUrl);
+        // this.events.publish('guard:logout', pageUrl); // must logout, then can go to page
+        // return Promise.reject(new Error('Already logged in'));
       })
       .catch((err) => {
         // Only Reject/Error in this._authenticate() should return true.

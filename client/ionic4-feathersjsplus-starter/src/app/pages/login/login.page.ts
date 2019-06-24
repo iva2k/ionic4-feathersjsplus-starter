@@ -102,7 +102,7 @@ export class LoginPage implements OnInit {
     this.activatedRoute.queryParamMap.subscribe(params => {
       this.retUrl  = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: Let the router sort out which page to go to based on authentication.
       if (this.retUrl) {
-// TODO: (now) let app know of this.retUrl so it can navigate properly
+        this.feathersService.setRetUrl(this.retUrl);
       }
       const error    = params.get('error'); // If past login attempt failed, we will get an error.
       const activity = params.get('activity') || '';
@@ -272,7 +272,8 @@ export class LoginPage implements OnInit {
         this.onLoginSuccess(user);
       } else {
         this.showLoading('Registering app with ' + social.title);
-        // Login will complete in a callback, possibly even with app reload. Event will be delivered to the app, which will switch pages or open us with an error info.
+        // Login will complete in a callback, possibly even with app reload. Event will be delivered
+        // to the app, which will switch pages or open us with an error info.
       }
     }).catch((error) => {
       this.presentServerError(error, 'Signing in with ' + social.title, 'authenticate');

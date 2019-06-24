@@ -5,13 +5,15 @@ import { Events, NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
+import { FeathersService } from './services/feathers.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  urlLoginDestination = '/menu/app/tabs/todos';
-  urlLogoutDestination = '/login'; // TODO: (soon) Let the router sort out which page to go to based on authentication.
+  urlLoginDestination  = '/menu/app/tabs/todos';  // TODO: (soon) Let the router sort out which page to go to based on default routes.
+  urlLogoutDestination = '/login'; // ?retUrl=<return_path>
 
   constructor(
     public events: Events,
@@ -21,7 +23,9 @@ export class AppComponent {
     private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
+    private feathersService: FeathersService,
   ) {
+    this.feathersService.setGuards(this.urlLoginDestination, this.urlLogoutDestination);
     this.initializeApp();
   }
 
@@ -45,8 +49,7 @@ export class AppComponent {
   //   console.log('AppComponent.ngOnInit()');
   // }
 
-  private gotoPage(url: string, params: any = {}, root: boolean = true ) {
-    const urlTree = this.router.createUrlTree([url], { queryParams: params });
+  private gotoPageTree(urlTree: UrlTree, root: boolean = true ) {
     console.log('[AppComponent] gotoPage %s.', urlTree.toString());
 
     this.ngZone.run(() => {
@@ -58,10 +61,17 @@ export class AppComponent {
     });
   }
 
+  private gotoPage(url: string, params: any = {}, root: boolean = true ) {
+    const urlTree = this.router.createUrlTree([url], { queryParams: params });
+    this.gotoPageTree(urlTree, root);
+  }
+
   private listenLoginEvents() {
     this.events.subscribe('user:login', (user) => {
       console.log('[AppComponent] got user:login');
-      this.gotoPage(this.urlLoginDestination);
+      const url = this.feathersService.getRetUrl() || this.urlLoginDestination;
+      const urlTree = this.router.parseUrl(url);
+      this.gotoPageTree(urlTree);
     });
 
     this.events.subscribe('user:logout', () => {
