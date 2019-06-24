@@ -1259,19 +1259,12 @@ See the code on Github for few edits:
 
 ##### Google: @ionic-native/google-plus
 
-See <https://ionicframework.com/docs/native/google-plus/>
+_See <https://ionicframework.com/docs/native/google-plus/>._
 
-Get ```WEB_CLIENT_ID``` and ```REVERSED_ID``` (add iOS app on Google and download .plist file):
-
-Note: .plist from Google has iOS ```CLIENT_ID``` - don't use it in place of ```WEB_CLIENT_ID```! Get ```CLIENT_ID``` for Web application.
+Get client ID's for Google (see section "Providers" below).
 
 ```bash
-WEB_CLIENT_ID=<your_WEB_CLIENT_ID> 411586170471-cnmvgerljm4f37518sll69omlo7b6h09.apps.googleusercontent.com
-REVERSED_CLIENT_ID=<your_REVERSED_CLIENT_ID> com.googleusercontent.apps.411586170471-cnmvgerljm4f37518sll69omlo7b6h09
-```
-
-```bash
-ionic cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=com.googleusercontent.apps.411586170471-cnmvgerljm4f37518sll69omlo7b6h09 --variable WEB_APPLICATION_CLIENT_ID=411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com
+ionic cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=<your iOS ID> --variable WEB_APPLICATION_CLIENT_ID=<your Web application ID>
 npm install --save @ionic-native/google-plus
 ```
 
@@ -1290,20 +1283,36 @@ This section captures some notes on getting through each provider's setup.
 
 ##### Google
 
-See <https://developers.google.com/identity/sign-in/web/sign-in>
+_See <https://developers.google.com/identity/sign-in/web/sign-in>._
 
 Short summary:
 
-With google developer account, visit <https://console.developers.google.com/> and create a project, name it ionic4-feathersjsplus-starter (or any name you plan to use it as), optionally give it custom project id.
-Then open credentials page and create OAuth client ID, and follow instructions. Choose "Website" application type.
+With google developer account, visit <https://console.developers.google.com/> and create a project, name it "ionic4-feathersjsplus-starter" (or any name you plan to use it as), optionally give it custom project id.
+Configure OAuth consent screen:
 
-Copy your web client id and client secret into relevant configuration files.
+- Application name: ionic4-feathersjsplus-starter
+- Scopes: email profile openid
+- Authorized domains: (none)
 
-Add domain names for the app (both request and redirect) into allowed lists.
+Then open credentials page and create clients (for each click "Create credentials" on Google console for the project, choose "OAuth client ID", and choose application type) and get their client IDs:
 
-Add Android app, use bundle from config.xml (note that no hyphens in bundle id)
+- ```WEB_CLIENT_ID``` - "Web application" type
+- ```REVERSED_ID``` - "iOS" type
+- ```ANDROID_CLIENT_ID``` - "Android" type
 
-For debug or production app, run keystore command, on linux:
+```bash
+WEB_CLIENT_ID=<your_WEB_CLIENT_ID>
+REVERSED_CLIENT_ID=<your_REVERSED_CLIENT_ID>
+ANDROID_CLIENT_ID=<your_ANDROID_CLIENT_ID>
+```
+
+Copy your web client id and client secret into relevant configuration files (client/ionic4-feathersjsplus-starter/config.xml and client/ionic4-feathersjsplus-starter/package.json).
+
+Add domain names for the app (both request and redirect) into allowed lists: <http://localhost:8100>
+
+For iOS type use bundle from config.xml for Package name and download .plist file, copy reversed ID from .plist.
+
+For Android type, use bundle from config.xml (note that no hyphens in bundle id). For debug or production app, run keystore command, on linux:
 
 ```bash
 keytool -exportcert -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore
@@ -1317,6 +1326,10 @@ keytool -exportcert -list -v -alias androiddebugkey -keystore %USERPROFILE%\.and
 keytool -exportcert -list -v -alias <your-key-name> -keystore <path-to-production-keystore>
 ```
 
-Enter the password, by default for "debug.keystore is "android". Copy SHA1 value and paste into Android app field.
+Enter the password, by default for "debug.keystore" is "android". Copy SHA1 value and paste into signing certifiacte fingerprint field.
+
+#### Step 11 Summary
+
+With all the added source code in place, the app is quite complete, including "Login With X" for wide user acceptance.
 
 ## END

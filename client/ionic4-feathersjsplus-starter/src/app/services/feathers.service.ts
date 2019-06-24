@@ -123,8 +123,8 @@ export class FeathersService {
   // TODO: (soon) Provide socialLogins from server (single point of authority), including client_id.
   private socialLogins = [
     // tslint:disable-next-line: max-line-length
-    {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
-    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use local Hello.js method (client_id)
+    {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
+    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use local Hello.js method (client_id)
   ];
 
   private loginState: boolean; // undefined=initial, true=loggedin, false=loggedout
@@ -493,16 +493,36 @@ export class FeathersService {
     return this.googlePlus.login({
       // scopes: 'profile email', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
       scopes: 'email',
-      // webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
+      webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
       //   - On Android, this MUST be included to get an idToken. On iOS, it is not required.
       // offline: true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode,
       //   which can be used to grant offline access to a non-Google server
     })
       .catch(error => {
+        let message = 'UNKNOWN';
+        switch (error as number) {
+          case -1: message = 'SUCCESS_CACHE'; break;
+          case 0: message = 'SUCCESS'; break;
+          case 2: message = 'SERVICE_VERSION_UPDATE_REQUIRED'; break; /* deprecated */
+          case 3: message = 'SERVICE_DISABLED'; break; /* deprecated */
+          case 4: message = 'SIGN_IN_REQUIRED'; break;
+          case 5: message = 'INVALID_ACCOUNT'; break;
+          case 6: message = 'RESOLUTION_REQUIRED'; break;
+          case 7: message = 'NETWORK_ERROR'; break;
+          case 8: message = 'INTERNAL_ERROR'; break;
+          case 10: message = 'DEVELOPER_ERROR'; break;
+          case 14: message = 'INTERRUPTED'; break;
+          case 15: message = 'TIMEOUT'; break;
+          case 16: message = 'CANCELED'; break;
+          case 17: message = 'API_NOT_CONNECTED'; break;
+          case 12500: message = 'SIGN_IN_FAILED'; break;
+          case 12501: message = 'SIGN_IN_CANCELLED'; break;
+          case 12502: message = 'SIGN_IN_CURRENTLY_IN_PROGRESS'; break;
+        }
         console.error('[FeathersService] loginGoogleAPI() error: %o', error);
         this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + social.title, /* command: */ 'authenticate');
         this.loginState = false;
-        return Promise.reject(error);
+        return Promise.reject({error, message});
       })
       .then(res => {
         console.log('[FeathersService] loginGoogleAPI() result: %o', res);

@@ -104,9 +104,9 @@ export class LoginPage implements OnInit {
       if (this.retUrl) {
 // TODO: (now) let app know of this.retUrl so it can navigate properly
       }
-      let error    = params.get('error'); // If past login attempt failed, we will get an error.
-      let activity = params.get('activity') || '';
-      let command  = params.get('command')  || '';
+      const error    = params.get('error'); // If past login attempt failed, we will get an error.
+      const activity = params.get('activity') || '';
+      const command  = params.get('command')  || '';
       if (error) {
         this.presentServerError(error, activity, command);
       }
@@ -169,7 +169,7 @@ export class LoginPage implements OnInit {
   }
 
   private onLoginSuccess(user) {
-    let message = 'Successfully signed in as ' + user.email;
+    const message = 'Successfully signed in as ' + user.email;
     this.toaster(message);
     console.log('User %s loggeed in.', user.email);
     this.hideLoading();
@@ -201,11 +201,11 @@ export class LoginPage implements OnInit {
     });
     this.loading.then(l => {
       l.present();
-    })
+    });
   }
 
   private hideLoading() {
-    if (!this.loading) return;
+    if (!this.loading) { return; }
     this.loading.then(l => {
       setTimeout(() => {
         l.dismiss();
@@ -281,7 +281,7 @@ export class LoginPage implements OnInit {
 
   /**
    * Post error message on UI
-   * @param error Error object
+   * @param error Error object: { message, name? }
    * @param activity 'Signing in ...' and similar text, suitable for showing in UI.
    * @param command 'authenticate', 'validate', 'register', 'reset', 'checkEmailUnique'
    */
@@ -289,7 +289,7 @@ export class LoginPage implements OnInit {
     this.hideLoading();
 
     // By default pass through unknown errors
-    let message = error.message;
+    let message = error.message || 'Error: ' + error;
 
     // Translate cryptic/technical messages like 'socket timeout' to messages understandable by users, e.g. 'cannot reach server'.
 

@@ -83,8 +83,8 @@
     "plugins": {
       "cordova-plugin-device": {},
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.411586170471-cnmvgerljm4f37518sll69omlo7b6h09",
-        "WEB_APPLICATION_CLIENT_ID": "411586170471-ijmn4j0hoaote48id4pami5tr3u24t8d.apps.googleusercontent.com"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.926208454330-1u4b5dv64ahfa05i2j3popmdc163t5pi",
+        "WEB_APPLICATION_CLIENT_ID": "926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com"
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-ionic-webview": {
