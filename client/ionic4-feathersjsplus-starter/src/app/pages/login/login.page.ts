@@ -168,14 +168,14 @@ export class LoginPage implements OnInit {
     }
   }
 
-  private onLoginSuccess(user) {
-    const message = 'Successfully signed in as ' + user.email;
+  private onLoginSuccess(user, newUser: boolean) {
+    const message = newUser
+      ? 'Successfully registered and signed in as ' + user.email
+      : 'Successfully signed in as ' + user.email;
     this.toaster(message);
-    console.log('User %s loggeed in.', user.email);
+    console.log(message);
     this.hideLoading();
-    // The app will switch pages via Events from service.
-    // e.g. this.navCtrl.setRoot('MenuPage', {}, {animate: false});
-    // this.navCtrl.navigateRoot(this.retUrl, {animated: false});
+    // The app will switch pages via Events from FeathersService and this.ionViewWillLeave() will do this.hideLoading()
   }
 
   private showLoading(activity: string) {
@@ -220,7 +220,7 @@ export class LoginPage implements OnInit {
     if (!this.checkForm()) { return; }
     this.showLoading('Signing in');
     this.feathersService.authenticate(this.credentials).then((user) => {
-      this.onLoginSuccess(user);
+      this.onLoginSuccess(user, false);
     }).catch((error) => {
       this.presentServerError(error, 'Signing in', 'authenticate');
     });
@@ -232,7 +232,7 @@ export class LoginPage implements OnInit {
     this.feathersService.checkUnique({ email: this.credentials.email }).then(() => { // Email is unique
       this.feathersService.register(this.credentials).then((user) => {
         console.log('User created.');
-        this.onLoginSuccess(user);
+        this.onLoginSuccess(user, true);
       }).catch(error => {
         this.presentServerError(error, 'Registering', 'register');
       });
@@ -269,7 +269,7 @@ export class LoginPage implements OnInit {
     console.log('log in with ' + social.title);
     this.feathersService.loginWith(social).then((user) => {
       if (user) {
-        this.onLoginSuccess(user);
+        this.onLoginSuccess(user, false);
       } else {
         this.showLoading('Registering app with ' + social.title);
         // Login will complete in a callback, possibly even with app reload. Event will be delivered
