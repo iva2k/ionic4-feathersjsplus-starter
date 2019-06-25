@@ -1,3 +1,4 @@
+import { AuthGuardService } from './auth-guard.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // For fetching server.json file in dev mode.
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
@@ -128,7 +129,7 @@ export class FeathersService {
   private socialLogins = [
     // tslint:disable-next-line: max-line-length
     {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
-    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use local Hello.js method (client_id)
+    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use native
   ];
 
   private loginState: boolean; // undefined=initial, true=loggedin, false=loggedout
@@ -161,11 +162,13 @@ export class FeathersService {
   }
 
   public setRetUrl(retUrl: string) {
+    console.log ('[FeathersService] setRetUrl(%s)', retUrl);
     this.retUrl = retUrl;
   }
   public getRetUrl(clear: boolean = true): string {
     const ret = this.retUrl;
     if (clear) { this.retUrl = null; }
+    console.log ('[FeathersService] getRetUrl(%s): %s', clear, ret);
     return ret;
   }
 
@@ -400,6 +403,11 @@ export class FeathersService {
     console.log('[FeathersService] onHelloLogin() auth: ', auth);
     // get social token, user's social id and user's email
     const socialToken = auth.authResponse.access_token;
+    const state = JSON.parse(auth.authResponse.state);
+    if (state) {
+      // Restore state across page reload
+      this.retUrl = state.retUrl;
+    }
     // TODO: (later) For OAuth1 (twitter,dropbox,yahoo), it could be:
     // socialToken = auth.authResponse.oauth_token; let secret = auth.authResponse.oauth_token_secret;
 
@@ -480,6 +488,11 @@ export class FeathersService {
         //  &amp; state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
         //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
         //  &scope=https://www.googleapis.com/auth/plus.me%20profile%20email
+
+        state: JSON.stringify({
+          // Preserved state across page reload
+          retUrl: this.retUrl
+        }),
       }).then(() => {
         console.log('[FeathersService] loginHello() callback');
         // We are not done yet, this.onHelloLogin() will be called from Hello.js upon receipt of server confirmation (possible app reload)
