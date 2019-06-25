@@ -81,8 +81,8 @@ export class AppComponent {
 
     this.events.subscribe('user:failed', (error, activity, command) => {
       console.log('[AppComponent] got user:failed');
-      // TODO: (now) error is an object... need to stringify it? Use not queryParams?
-      this.gotoPage(this.urlLogoutDestination, { error, activity, command });
+      // error is an object:
+      this.gotoPage(this.urlLogoutDestination, { error: JSON.stringify(error), activity, command });
     });
 
     // Guard for login pages

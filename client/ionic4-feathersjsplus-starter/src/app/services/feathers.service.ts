@@ -551,7 +551,9 @@ export class FeathersService {
           case 12502: message = 'SIGN_IN_CURRENTLY_IN_PROGRESS'; break;
         }
         console.error('[FeathersService] loginGoogleAPI() error: %o', error);
-        this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + social.title, /* command: */ 'authenticate');
+        this.events.publish('user:failed', error,
+          /* activity: */ 'Signing in with ' + social.title,
+          /* command: */ 'authenticate');
         this.loginState = false;
         return Promise.reject({error, message});
       })
@@ -588,7 +590,9 @@ export class FeathersService {
           return Promise.resolve(user);
         }).catch(error => {
           console.log('[FeathersService] loginGoogleAPI() auth error=%o', error);
-          this.events.publish('user:failed', error, /* activity: */ 'Signing in with ' + social.title, /* command: */ 'validate');
+          this.events.publish('user:failed', error,
+            /* activity: */ 'Signing in with ' + social.title,
+            /* command: */ 'validate');
           this.loginState = false;
           return Promise.reject(error);
         });

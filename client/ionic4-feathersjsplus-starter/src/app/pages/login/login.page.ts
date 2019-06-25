@@ -104,14 +104,15 @@ export class LoginPage implements OnInit {
       if (this.retUrl) {
         this.feathersService.setRetUrl(this.retUrl);
       }
-      const error    = params.get('error'); // If past login attempt failed, we will get an error.
+      // If past login attempt failed, we will get an error:
+      const error    = JSON.parse(params.get('error') || '""');
       const activity = params.get('activity') || '';
       const command  = params.get('command')  || '';
       if (error) {
         this.presentServerError(error, activity, command);
       }
 
-      console.log('LoginPage/ngOnInit retUrl: %s, error: %s, activity: %s, command: %s', this.retUrl, error, activity, command);
+      console.log('LoginPage/ngOnInit retUrl: %s, error: %o, activity: %s, command: %s', this.retUrl, error, activity, command);
     });
     this.onModeChanged({});
   }
