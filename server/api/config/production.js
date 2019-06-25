@@ -1,6 +1,6 @@
 
 module.exports = {
   from               : 'production.js',
-  // ? nedb               :                                                '../data',
+  // ? nedb               : '../data',
 };
 
