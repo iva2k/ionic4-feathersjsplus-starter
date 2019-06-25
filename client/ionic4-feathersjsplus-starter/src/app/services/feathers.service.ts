@@ -384,7 +384,7 @@ export class FeathersService {
     const href = window.location.href;
     const locs = href.split('/');
     const loc = locs[0] + '//' + locs[2]; // 'http://localhost:8100',
-    // TODO: (later) real URL for the client (or the server??), lightweight auth entry page
+    // TODO: (later) real URL for the client (or the server??), lightweight auth entry page // window.location.protocol === "file:"
 
     const socials = this.getSocialLogins();
     const clientIds = {};
