@@ -468,29 +468,8 @@ export class FeathersService {
       hello(social.network).login({
         scope: 'email',
         display, // 'popup' (default), 'page' or 'none' ('none' to refresh access_token in background, useful for reauth)
-        // redirect_uri: 'http://localhost:8000',
-        // Can customize app integration here. Hello.js adds its state to the query and will retrieve its data
-        // from query part from the redirect_uri upon reentry.
-        // - it is fixed (set in oauth2 provider), and only variable part can be passed via state param.
-        // TODO: (now) Google gets redirect_uri that it barks on:
-        // https://accounts.google.com/o/oauth2/v2/auth
-        //  ?client_id=<YOUR_CLIENT_ID>
-        //  &response_type=token
-        // BAD: &redirect_uri=http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate
-        //  &state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
-        //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_3e2aqrxw%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8100%2Flogin%3Ferror%3D%255Bobject%2520Object%255D%26activity%3DSigning%2520in%2520with%2520Google%2520Hello%26command%3Dauthenticate%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
-        //  &scope=openid%20profile%20email
-        // Sends to oauth2 provider, e.g.:
-        // https://accounts.google.com/o/oauth2/auth
-        //  ?client_id=<YOUR_CLIENT_ID>
-        //  &response_type=token
-        //  &redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F
-        //  &amp; state=%7B%22client_id%22%3A%22 <YOUR_CLIENT_ID>
-        //    %22%2C%22network%22%3A%22google%22%2C%22display%22%3A%22popup%22%2C%22callback%22%3A%22_hellojs_2bgwc1py%22%2C%22state%22%3A%22%22%2C%22redirect_uri%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%2C%22scope%22%3A%22basic%2Cemail%22%7D
-        //  &scope=https://www.googleapis.com/auth/plus.me%20profile%20email
-
         state: JSON.stringify({
-          // Preserved state across page reload
+          // Preserve state across page reload
           retUrl: this.retUrl
         }),
       }).then(() => {
