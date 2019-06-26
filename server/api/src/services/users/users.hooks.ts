@@ -14,7 +14,7 @@ import gravatar from './hooks/gravatar';
 // Recipe from https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744
 import { hooks as verifyHooks } from 'feathers-authentication-management';
 
-// TODO: const globalHooks = require ... (new file: hooks/send-verification-email.js)
+// TODO: (when needed) const globalHooks = require ... (new file: hooks/send-verification-email.js)
 /*
 import accountService from '../services/authManagement/notifier'
 exports.sendVerificationEmail = options => hook => {
@@ -56,13 +56,13 @@ let moduleExports: HooksObject = {
     get: [ authenticate('jwt') ],
     create: [
       verifyHooks.addVerification(), // Initialize email verification
-      // TODO: customizeOauthProfile(),
+      // TODO: (when needed) customizeOauthProfile(),
       hashPassword(),
       gravatar()
     ],
     update: [
       commonHooks.disallow('external') // disallow any external modifications
-      // TODO: customizeOauthProfile(),
+      // TODO: (when needed) customizeOauthProfile(),
       // removed: hashPassword(), authenticate('jwt')
     ],
     patch: [
@@ -99,7 +99,7 @@ let moduleExports: HooksObject = {
     find: [],
     get: [],
     create: [
-      // TODO: globalHooks.sendVerificationEmail(),
+      // TODO: (when needed) globalHooks.sendVerificationEmail(),
 
       verifyHooks.removeVerification(), // removes verification/reset fields other than .isVerified
     ],

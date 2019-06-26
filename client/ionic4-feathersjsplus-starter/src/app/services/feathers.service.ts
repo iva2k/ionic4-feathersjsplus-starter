@@ -564,8 +564,8 @@ export class FeathersService {
         //  res.givenName;
         //  res.imageUrl;
 
-        // res.idToken; // idToken that can be exchanged to verify user identity. -> // TODO: (now) send it to the server to
-        //   authenticate (get user information to confirm user identity). perhaps use same social_token auth service?
+        // res.idToken; // idToken that can be exchanged to verify user identity. -> // TODO: (when needed) can send it to the server to
+        //   authenticate (get user information to confirm user identity).
         // res.serverAuthCode; // Auth code that can be exchanged for an access token and refresh token for offline access. -> server
         //   can use it to access google account
         // res.accessToken;    // OAuth2 access token
