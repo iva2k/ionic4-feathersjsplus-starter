@@ -611,7 +611,7 @@ export class FeathersService {
       // TODO: (now) Check platform and skip this method (should do on socials list generator).
     }
     if (social.url) {
-      // TODO: (soon) For FeathersJS/backend method: return this.openWebpage(social.url); // Won't work on mobile
+      // TODO: (when needed) For FeathersJS/backend method: return this.openWebpage(social.url); // Won't work on mobile
     }
     return Promise.reject(new Error('Bad argument'));
   }

@@ -195,7 +195,7 @@ export class LoginPage implements OnInit {
       message,
       // ?dismissOnPageChange: true,
       // spinner: 'lines' | 'lines-small' | 'bubbles' | 'circles' | 'crescent' | 'dots' | null,
-      cssClass: 'loading',
+      cssClass: 'app-loading',
     });
     this.loading.then(l => {
       l.present();

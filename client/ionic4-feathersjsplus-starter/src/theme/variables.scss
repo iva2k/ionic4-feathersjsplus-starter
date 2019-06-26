@@ -80,4 +80,15 @@
     --placeholder-color: var(--ion-color-medium);
   }
 
+  // Loading pop-up styling:
+  .app-loading {
+    --background:#f4b004;
+    --spinner-color:#c0220a;
+    color: #c0220a;
+    // --min-height: ;
+    // --height: ;
+    // -min-width: ;
+    // --width: ;
+  }
+
 }
