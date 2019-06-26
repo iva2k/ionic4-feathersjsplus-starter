@@ -102,7 +102,7 @@ export class LoginPage implements OnInit {
       const retUrl  = params.get('retUrl');
       this.feathersService.setRetUrl(retUrl); // If empty, AppComponent will know where to route after login
       // If past login attempt failed, we will get an error:
-      const error    = JSON.parse(params.get('error') || '""');
+      const error    = this.feathersService.decodeObject(params.get('error'));
       const activity = params.get('activity') || '';
       const command  = params.get('command')  || '';
       if (error) {

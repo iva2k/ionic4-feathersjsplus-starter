@@ -234,6 +234,28 @@ export class FeathersService {
     ;
   }
 
+  // Helper function - use FeathersService.encodeObject() to pass object via string. Preserves .toString() value.
+  public encodeObject(obj: any): string {
+    obj.__toStringVal = obj.toString();
+    const ret = JSON.stringify(obj, Object.getOwnPropertyNames(obj));
+    return ret;
+  }
+
+  // Helper function - use FeathersService.decodeObject() to passreceive object via string.
+  public decodeObject(str: string): any {
+    let obj: any;
+    try { obj = JSON.parse(str || '""'); } catch {}
+
+    const s = obj.__toStringVal || '';
+    if (obj.__toStringVal) { obj.__toStringVal = undefined; }
+    if (s) {
+      obj.toString = () => {
+        return s;
+      };
+    }
+    return obj;
+  }
+
   // Expose services
   public service(name: string) {
     return this.fc.service(name);
@@ -399,33 +421,33 @@ export class FeathersService {
     hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
     hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
   }
-  private onHelloLogin(auth) {
+  private onHelloLogin(auth): void {
     console.log('[FeathersService] onHelloLogin() auth: ', auth);
     // get social token, user's social id and user's email
     const socialToken = auth.authResponse.access_token;
-    const state = JSON.parse(auth.authResponse.state);
+    const state = this.decodeObject(auth.authResponse.state);
     if (state) {
       // Restore state across page reload
       this.retUrl = state.retUrl;
     }
-    // TODO: (later) For OAuth1 (twitter,dropbox,yahoo), it could be:
+    // TODO: (when needed) For OAuth1 (twitter,dropbox,yahoo), it could be:
     // socialToken = auth.authResponse.oauth_token; let secret = auth.authResponse.oauth_token_secret;
 
     // To get some info (synchronous):
     // let session = hello(auth.network).getAuthResponse(); let { access_token, expires } = session;
-    return hello(auth.network).api('me').then(userInfo => {
+    hello(auth.network).api('me').then(userInfo => {
       console.log('[FeathersService] onHelloLogin() userInfo: ', userInfo);
 
       // Avoid repeating login
       if (this.loginState) {
         console.log('[FeathersService] onHelloLogin() already logged in, skipping re-authentication');
-        return; // TODO: (now) what shall we return from onHelloLogin()? return Promise.resolve();
+        return;
       }
 
       // Send the info to the backend for authentication
       const userId = userInfo.id;
       const userEmail = userInfo.email;
-      return this._authenticate({
+      this._authenticate({
         strategy    : 'social_token',
         network     : auth.network,
         email       : userEmail,
@@ -439,7 +461,6 @@ export class FeathersService {
           this.loginState = true;
         }
         this.loginHelloDispose( { network: auth.network } ).catch(() => {});
-        return;
       }).catch(error => {
         console.log('[FeathersService] onHelloLogin() auth error=%o', error);
         this.events.publish('user:failed', error,
@@ -447,7 +468,6 @@ export class FeathersService {
           /* TODO: (later) find social(.network == auth.network), use social.title */,
           /* command: */ 'validate');
         this.loginState = false;
-        return;
       });
     }, error => {
       console.log('[FeathersService] onHelloLogin() api error=%o', error);
@@ -456,7 +476,6 @@ export class FeathersService {
         /* TODO: (later) find social(.network == auth.network), use social.title */,
         /* command: */ 'authenticate');
       this.loginState = false;
-      return;
     });
   }
   private onHelloLogout(data) {
@@ -468,7 +487,7 @@ export class FeathersService {
       hello(social.network).login({
         scope: 'email',
         display, // 'popup' (default), 'page' or 'none' ('none' to refresh access_token in background, useful for reauth)
-        state: JSON.stringify({
+        state: this.encodeObject({
           // Preserve state across page reload
           retUrl: this.retUrl
         }),
@@ -503,7 +522,7 @@ export class FeathersService {
     return this.googlePlus.login({
       // scopes: 'profile email', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
       scopes: 'email',
-      webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
+      // ?webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
       //   - On Android, this MUST be included to get an idToken. On iOS, it is not required.
       // offline: true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode,
       //   which can be used to grant offline access to a non-Google server

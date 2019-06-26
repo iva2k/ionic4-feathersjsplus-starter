@@ -82,7 +82,7 @@ export class AppComponent {
     this.events.subscribe('user:failed', (error, activity, command) => {
       console.log('[AppComponent] got user:failed');
       // error is an object:
-      this.gotoPage(this.urlLogoutDestination, { error: JSON.stringify(error), activity, command });
+      this.gotoPage(this.urlLogoutDestination, { error: this.feathersService.encodeObject(error), activity, command });
     });
 
     // Guard for login pages
