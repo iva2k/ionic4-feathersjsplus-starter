@@ -27,13 +27,20 @@ let schema = {
   // Fields in the model.
   properties: {
     // !code: schema_properties
-    _id: { type: 'ID' },
-    email: { faker: 'internet.email' },
-    // username: { faker: 'internet.userName' },
-    // firstName: { faker: 'name.firstName' },
-    // lastName: { faker: 'name.lastName' },
-    password: { faker: 'internet.password' },
-    // TODO: lastLogin: { faker: () => moment().subtract(7, 'days').format() },
+    _id           : { type: 'ID' },
+    email         : { faker: 'internet.email' },
+    // username     : { faker: 'internet.userName' },
+    // firstName    : { faker: 'name.firstName' },
+    // lastName     : { faker: 'name.lastName' },
+    password      : { faker: 'internet.password' },
+    // TODO: (when needed) lastLogin     : { faker: () => moment().subtract(7, 'days').format() },
+    // feathers-authentication-management:
+    isVerified    : { type: Boolean },
+    verifyToken   : { type: String  },
+    verifyExpires : { type: Date    },
+    verifyChanges : { type: Object  },
+    resetToken    : { type: String  },
+    resetExpires  : { type: Date    },
     // !end
   },
   // !code: schema_more // !end

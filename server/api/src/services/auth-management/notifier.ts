@@ -1,4 +1,4 @@
-/*  tslint:disable no-console  */ // TODO: Remove console.log after DEBUG is done.
+/*  tslint:disable no-console  */ // TODO: (now) Remove console.log after DEBUG is done.
 // import logger from '../../logger';
 
 import { App } from '../../app.interface';
@@ -24,7 +24,7 @@ let moduleExports = function(app: App) {
     supportEmail
     // '' // empty field TODO: check if it produces output 'Reply-To' header.. No "Reply-To" in header.
     // '"" : ' // special string, provides empty list of emails using group notation. Shows up as "Reply-To: undefined:;"
-    // TODO: check how clients fill in reply & reply-all addresses: Gmail: ?, Yahoo: from/from, Hotmail: ?, Outlook: ?.
+    // TODO: (soon) check how clients fill in reply & reply-all addresses: Gmail: ?, Yahoo: from/from, Hotmail: ?, Outlook: ?.
   ;
   const emailAccountTemplatesPath = path.join(app.get('src'), 'email-templates', 'account');
 
@@ -89,7 +89,7 @@ let moduleExports = function(app: App) {
     // tslint:disable next-line no-unused-vars
     notifier(type: string, user: User, notifierOptions: any) {
       console.log(`-- Preparing ${type} email to ${user.email}`);
-      const userName = user.name || user.email; // TODO: Implement user.name
+      const userName = user.name || user.email; // TODO: (now) Implement user.name / use firstName/lastName
       let subject, template, hash, hashLink, changes;
 
       // Insert attachment inline images (URL-based data is blocked by certain clients, e.g. Gmail)
@@ -119,21 +119,21 @@ let moduleExports = function(app: App) {
         break;
 
       case 'resetPwd': // From resetPwdLong and resetPwdShort API calls: inform that user's password was reset
-        subject = 'Your password was reset';
-        template = 'password-was-reset';
-        // hash = user.resetToken; // TODO: is hash & hashLink needed here? Should not be. Checked: template does not have link to use it.
+        subject = 'Your password was changed';
+        template = 'password-change';
+        // hash = user.resetToken; // hash & hashLink are not used.
         // hashLink = getLink('reset-password', hash);
         break;
 
       case 'passwordChange': // From passwordChange API call
         subject = 'Your password was changed';
-        template = 'password-change'; // TODO: There should be no difference between 'password-was-reset' (via reset link) and 'password-change' (via app/API)
+        template = 'password-change';
         break;
 
       case 'identityChange': // From identityChange API call
         subject = 'Your account was changed. Please verify the changes';
         template = 'identity-change';
-        hash = user.verifyToken; // TODO: is hash & hashLink needed here? Should not be. Verified - there are links in template. Where do they send the user?
+        hash = user.verifyToken; // TODO: (when needed) hash & hashLink used in the template. Where do they send the user?
         hashLink = getLink('verify-account-changes', hash);
         changes = user.verifyChanges;
         break;
@@ -159,7 +159,8 @@ let moduleExports = function(app: App) {
       let email = {
         envelope: {
           // Special trick: sets 'Return-Path' header to replyEmail by sending MAIL FROM command to SMTP server.
-          // Unfortunately, Gmail server ignores it. // TODO: Some settings in GMail account should be set to include other "from" addresses explicitly.
+          // Unfortunately, Gmail server ignores it.
+          // TODO: (soon) Some settings in GMail account should be set to include other "from" addresses explicitly.
           from: replyEmail,
           to: user.email
         },
