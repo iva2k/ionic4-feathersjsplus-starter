@@ -55,7 +55,7 @@ export class MenuPage implements OnInit, OnDestroy {
 
   public onClick(menuItem: IMenuItem) {
 
-    if (menuItem.action /* TODO: (now) type of Function */ ) {
+    if (typeof menuItem.action === 'function') {
       return menuItem.action(this);
     } // else ...
 
