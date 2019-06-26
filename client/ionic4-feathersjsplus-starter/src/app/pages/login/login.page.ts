@@ -100,7 +100,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe(params => {
-      this.retUrl  = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: Let the router sort out which page to go to based on authentication.
+      this.retUrl  = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: (now) Let the router sort out which page to go to based on authentication.
       if (this.retUrl) {
         this.feathersService.setRetUrl(this.retUrl);
       }

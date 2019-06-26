@@ -272,7 +272,7 @@ export class FeathersService {
     return this.fc.authenticate(credentials)
       .then(response => {
         console.log('[FeathersService] _authenticate() - authenticate response: ', response);
-        // TODO:
+        // TODO: (later)
         // Can response.accessToken live across server restarts? Its the purpose of JWT. How can we verify that?
         // What about accessToken limited lifetime? Does feathers client keep the tabs on storing login and
         // renewing accessToken?? How can we verify that?

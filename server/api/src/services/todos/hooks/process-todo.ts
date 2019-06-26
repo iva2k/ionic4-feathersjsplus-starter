@@ -11,7 +11,7 @@ function processRecord(record: any, userId: string) {
   //  title: string;
   //  notes: string;
   // userId: string
-  // TODO: implement data-driven approach (based on schema?)
+  // TODO: (soon) implement data-driven approach (based on schema?)
   // Throw an error if we didn't get all fields
   if (!record.title) {
     throw new Error('A todo must have a title');

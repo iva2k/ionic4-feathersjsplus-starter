@@ -64,7 +64,7 @@ function serverIP(): Promise<Ips> {
   });
 }
 function serverJson(ips: Ips): Promise<any[]> {
-  if (process.env.NODE_ENV !== 'development') { // TODO: remove hard-coded NODE_ENV, use targets 'www' parameter per config.
+  if (process.env.NODE_ENV !== 'development') { // TODO: (now) remove hard-coded NODE_ENV, use targets 'www' parameter per config.
     return Promise.resolve([]);
   } // else ...
 
