@@ -9,24 +9,12 @@ import { hooks as localAuthHooks } from '@feathersjs/authentication-local';
 const { hashPassword, protect } = localAuthHooks;
 // tslint:disable-next-line:no-unused-variable
 import gravatar from './hooks/gravatar';
-// !code: imports // !end
-
-// !<DEFAULT> code: used
-// tslint:disable-next-line:no-unused-variable
-const { iff } = commonHooks;
-import validate from './users.validate';
-// tslint:disable-next-line:no-unused-variable
-const { create, update, patch, validateCreate, validateUpdate, validatePatch } = validate;
-// !end
-
-// !code: init
-
+// !code: imports
 // How to add email verification
-// From https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744
+// Recipe from https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744
+import { hooks as verifyHooks } from 'feathers-authentication-management';
 
-// TODO: const verifyHooks = require('feathers-authentication-management').hooks;
-
-// TODO: const globalHooks = require ...
+// TODO: const globalHooks = require ... (new file: hooks/send-verification-email.js)
 /*
 import accountService from '../services/authManagement/notifier'
 exports.sendVerificationEmail = options => hook => {
@@ -40,6 +28,17 @@ exports.sendVerificationEmail = options => hook => {
 }
 */
 
+// !end
+
+// !<DEFAULT> code: used
+// tslint:disable-next-line:no-unused-variable
+const { iff } = commonHooks;
+import validate from './users.validate';
+// tslint:disable-next-line:no-unused-variable
+const { create, update, patch, validateCreate, validateUpdate, validatePatch } = validate;
+// !end
+
+// !code: init
 // !end
 
 let moduleExports: HooksObject = {
@@ -56,7 +55,7 @@ let moduleExports: HooksObject = {
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
     create: [
-      // TODO: verifyHooks.addVerification(), // email verification
+      verifyHooks.addVerification(), // Initialize email verification
       // TODO: customizeOauthProfile(),
       hashPassword(),
       gravatar()
@@ -100,11 +99,9 @@ let moduleExports: HooksObject = {
     find: [],
     get: [],
     create: [
-
       // TODO: globalHooks.sendVerificationEmail(),
-      // // removes verification/reset fields other than .isVerified
-      // verifyHooks.removeVerification(),
 
+      verifyHooks.removeVerification(), // removes verification/reset fields other than .isVerified
     ],
     update: [],
     patch: [],

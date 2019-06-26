@@ -69,7 +69,6 @@ export class LoginPage implements OnInit {
   private loading: Promise<HTMLIonLoadingElement> | null;
   private credentials: User = { email: '', password: '' } as User;
   protected error: string;
-  retUrl: string;
 
   protected slideOpts = {
     allowTouchMove: false, // Slides moved programmatically only
@@ -100,10 +99,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe(params => {
-      this.retUrl  = params.get('retUrl') || '/menu/app/tabs/todos'; // TODO: (now) Let the router sort out which page to go to based on authentication.
-      if (this.retUrl) {
-        this.feathersService.setRetUrl(this.retUrl);
-      }
+      const retUrl  = params.get('retUrl');
+      this.feathersService.setRetUrl(retUrl); // If empty, AppComponent will know where to route after login
       // If past login attempt failed, we will get an error:
       const error    = JSON.parse(params.get('error') || '""');
       const activity = params.get('activity') || '';
@@ -112,7 +109,7 @@ export class LoginPage implements OnInit {
         this.presentServerError(error, activity, command);
       }
 
-      console.log('LoginPage/ngOnInit retUrl: %s, error: %o, activity: %s, command: %s', this.retUrl, error, activity, command);
+      console.log('LoginPage/ngOnInit retUrl: %s, error: %o, activity: %s, command: %s', retUrl, error, activity, command);
     });
     this.onModeChanged({});
   }
