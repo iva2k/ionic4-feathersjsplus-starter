@@ -1332,4 +1332,26 @@ Enter the password, by default for "debug.keystore" is "android". Copy SHA1 valu
 
 With all the added source code in place, the app is quite complete, including "Login With X" for wide user acceptance.
 
+### Step 12 Backend-Driven Login With X
+
+We created "Login With X" with a table of providers in the client app. It makes all client ID's stored in the app, and any updates to the service requires releasing app revision, and ensuring all users update the app, which is far from being optimal.
+
+A better approach is to store the table on the server and retrieve it from the client when needed. We will create a feathers service for that.
+
+Of course using native plugins will still require updating the app when plugin needs to be added (or updated), but HelloJS method will not need that.
+
+```bash
+feathers-plus generate service
+  ? What is the name of the service? loginProviders
+  ? What would you call one row in the loginProviders database? loginProvider
+  ? What kind of service is it? A custom service
+  ? Place service code in which nested folder, e.g. `v1/blog`? (optional)
+  ? Which path should the service be registered on? /login-providers
+  ? Does the service require authentication? No
+  ? Should this be served by GraphQL? No
+```
+
+#### Step 12 Summary
+
+
 ## END

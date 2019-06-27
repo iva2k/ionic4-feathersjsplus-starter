@@ -61,6 +61,17 @@
       "isAuthEntity": false,
       "requiresAuth": false,
       "graphql": false
+    },
+    "loginProviders": {
+      "name": "loginProviders",
+      "nameSingular": "loginProvider",
+      "subFolder": "",
+      "fileName": "login-providers",
+      "adapter": "generic",
+      "path": "/login-providers",
+      "isAuthEntity": false,
+      "requiresAuth": false,
+      "graphql": false
     }
   },
   "hooks": {

@@ -3,6 +3,7 @@
 import { Application } from '@feathersjs/express';
 import { AuthManagement } from './services/auth-management/auth-management.interface';
 import { Email } from './services/emails/emails.interface';
+import { LoginProvider } from './services/login-providers/login-providers.interface';
 import { Todo } from './services/todos/todos.interface';
 import { User } from './services/users/users.interface';
 // !code: imports // !end
@@ -23,6 +24,7 @@ import { User } from './services/users/users.interface';
 export type App = Application<{
   'authManagement': AuthManagement,
   'emails': Email,
+  'login-providers': LoginProvider,
   'todos': Todo,
   'users': User,
   // !code: moduleExports // !end

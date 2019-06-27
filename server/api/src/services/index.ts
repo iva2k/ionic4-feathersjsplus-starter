@@ -3,6 +3,7 @@
 import { App } from '../app.interface';
 import authManagement from './auth-management/auth-management.service';
 import emails from './emails/emails.service';
+import loginProviders from './login-providers/login-providers.service';
 import todos from './todos/todos.service';
 import users from './users/users.service';
 
@@ -14,6 +15,7 @@ import graphql from './graphql/graphql.service';
 let moduleExports = function (app: App) {
   app.configure(authManagement);
   app.configure(emails);
+  app.configure(loginProviders);
   app.configure(todos);
   app.configure(users);
 
