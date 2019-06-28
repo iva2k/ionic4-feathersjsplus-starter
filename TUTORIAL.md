@@ -119,7 +119,7 @@ ionic cordova run android
 
 Use  "Run android on device" configuration (in launch.json file) for debugging in VSCode.
 
-Note: Recent Ionic uses native-run, which on Windows had problem detecting that a phone plugged into USB port was actually hardware (see issue <https://github.com/ionic-team/ionic-cli/issues/4022>). To work around that, add to the configuration "Run android on device" in launch.json:
+Note: If issue in Ionic native-run is encountered, add to the configuration "Run android on device" in launch.json:
 
 ```json
       ...
@@ -298,20 +298,17 @@ Answer some questions:
 Notes:
 
 1. Feathers-plus requires NodeJS v10. However, there is some unresolved bug in feathers-plus dependencies - it hangs under Node 10 on Windows 7 & 10 ([see the issue](https://github.com/feathers-plus/generator-feathers-plus/issues/103)). Install node 8 (e.g. node-v8.11.2-x64.msi) and use [nvm-windows](https://github.com/coreybutler/nvm-windows) to switch to Node 8 for feathers-plus until the issue is resolved.
-2. feathers-plus has an [issue](https://github.com/feathers-plus/cli/issues/38) with changing source files folder from the default 'src' - some entries remain 'src'. So we won't change the default.
-3. app.configure() has been removed in express 4 (actually, kept until 4.16.0 and deleted in 4.16.6 of @types/express-serve-static-core), see [issue](https://github.com/feathersjs/feathers/issues/1090). Further, feathersjs app.configure() polyfill calls the callback with two arguments instead of one. That causes some issues with TypeScript compilation:
+2. Feathers-plus has [cli issue#38](https://github.com/feathers-plus/cli/issues/38) with changing source files folder from the default 'src' - some entries remain 'src'. So we won't change the default.
+3. Feathers-plus has [generator issue#276](https://github.com/feathers-plus/generator-feathers-plus/issues/276) - TypeScript compilation error TS2345 in src/app.ts and error in todos.service configure call (this, app) vs. (app) function types.
 
-   a. Right after first ```feathers-plus generate app``` command ```npm start``` fails in TypeScript compilation (App declaration without services does not compile with error TS2345 in src/app.ts / tried with node-v10.15.3-x64.msi and node-v8.11.2-x64.msi). Adding first service seems to rectify that problem.
+Edit server/api/src/app.interface.ts to fix it:
 
-   b. Adding 'todos' service resolves #a, but command ```npm start``` still fails, now in TypeScript compilation of todos.service configure call (this, app) vs. (app) function types. Pinning express and express-serve-static-core versions to 4.16.0 helps:
-
-Until the [Feathers+ issue #37](https://github.com/feathers-plus/cli/issues/37) is resolved, pin older version of express:
-
-```bash
-npm i -D @types/express-serve-static-core@4.16.0
+```js
+-import { Application } from '@feathersjs/express';
++import { Application } from '@feathersjs/feathers';
 ```
 
-Note that this is purely masking the underlying problem of incompatible types in FeathersJS typings that TypeScript compiler finds, so it's a dirty fix. Hopefully the underlying issues will be resolved cleanly and then the fix should be removed.
+(Note that re-running the ```feathers-plus generate``` will erase the edit).
 
 To start server:
 
@@ -946,7 +943,7 @@ import { Service } from '@feathersjs/feathers';
   // !end
 ```
 
-Unfortunately, this fix hampers the generator ability to automatically add more services when re-generating, but keeping the "\<DEFAULT>" tag will remove the edits upon re-generation.
+Unfortunately, this fix hampers the feathers-plus generator ability to automatically add more services when re-generating, but keeping the "\<DEFAULT>" tag will remove the edits upon re-generation.
 
 Another type error (mostly due to TypeScript inability to match complex types) is fixed by an edit that adds ```... as any``` at the end of the statements (and removing "\<DEFAULT> tags):
 
@@ -969,6 +966,10 @@ Another type error (mostly due to TypeScript inability to match complex types) i
       // !end
     },
 ```
+
+There is an open [issue](https://github.com/feathers-plus/graphql/issues/18) on the
+npm warning about peer dependency of graphql-tools in join-monster-graphql-tools-adapter.
+This warning can be ignored, as there's no real need for an older graphql-tools version.
 
 Install and run GraphiQL app <https://github.com/skevy/graphiql-app> to browse the GraphQL endpoint at <http://localhost:3030/graphql>, and enter the query:
 
@@ -1094,6 +1095,14 @@ Also, modern CSS (e.g. with variables) won't work in most email clients. We coul
 ```bash
 npm install --save pug juice
 npm install --save-dev @types/pug
+```
+
+We need to add "dom" to compilerOptions/lib in tsconfig.json file for using juice.d.ts:
+
+```json
+  "compilerOptions": {
+    "lib": [                                  /* Specify library files to be included in the compilation. */
+      "dom",                                  /* Fix "error TS2304: Cannot find name 'HTMLElement'" issue in juice.d.ts */
 ```
 
 See added code on Github.
@@ -1352,6 +1361,5 @@ feathers-plus generate service
 ```
 
 #### Step 12 Summary
-
 
 ## END

@@ -1,6 +1,6 @@
 
 // Application interface. (Can be re-generated.)
-import { Application } from '@feathersjs/express';
+import { Application } from '@feathersjs/feathers'; // Fixes TypeScript compilation issues
 import { AuthManagement } from './services/auth-management/auth-management.interface';
 import { Email } from './services/emails/emails.interface';
 import { LoginProvider } from './services/login-providers/login-providers.interface';
