@@ -15,6 +15,11 @@ interface ServiceOptions {}
 export class Service implements Partial<ServiceMethods<any>>, SetupMethod {
   // !<DEFAULT> code: properties
   public app!: App;
+  private socialLogins = [
+    // tslint:disable-next-line: max-line-length
+    {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , clientId: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', clientSecret: 'SECRET!', }, // Use local Hello.js method (client_id)
+    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , clientId: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', clientSecret: 'SECRET!', loginFn: 'loginGoogleAPI' /* client's feathers.service.ts:this.loginGoogleAPI */, }, // Use native
+  ];
   // !end
 
   constructor (private options: ServiceOptions = {}) {
@@ -29,7 +34,7 @@ export class Service implements Partial<ServiceMethods<any>>, SetupMethod {
 
   // !<DEFAULT> code: find
   public async find(params?: Params): Promise<any[] | Paginated<any>> {
-    return [];
+    return this.socialLogins;
   }
   // !end
 

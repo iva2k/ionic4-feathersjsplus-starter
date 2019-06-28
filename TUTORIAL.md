@@ -1360,6 +1360,8 @@ feathers-plus generate service
   ? Should this be served by GraphQL? No
 ```
 
+Edit the generated files to send data table (see code on Github).
+
 #### Step 12 Summary
 
 ## END

@@ -13,7 +13,9 @@ let schema = {
 
   // Required fields.
   required: [
-    // !code: schema_required // !end
+    // !code: schema_required
+    'title',
+    // !end
   ],
   // Fields with unique values.
   uniqueItemProperties: [

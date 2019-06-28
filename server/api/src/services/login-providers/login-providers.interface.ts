@@ -5,7 +5,16 @@
 
 // tslint:disable-next-line:no-empty-interface
 export interface LoginProviderBase {
-  // !code: interface // !end
+  // !code: interface
+  title: string;
+  network: string;
+  name: string;
+  icon: string;
+  url: string;
+  clientId: string;
+  clientSecret: string;
+  loginFn: string;
+  // !end
 }
 
 // tslint:disable-next-line:no-empty-interface
