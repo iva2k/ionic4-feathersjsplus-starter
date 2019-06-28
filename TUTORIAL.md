@@ -261,7 +261,7 @@ With all the source code in place, but no server running, the app fills a few du
 
 _From Feathers guide <https://docs.feathersjs.com/guides/chat/readme.html> with changes for TypeScript and Feathers+ generator. Also see <https://medium.com/feathers-plus/feathers-plus-cli-5c7ba0015e8e> ._
 
-We will use Feathers+ generator, see <https://generator.feathers-plus.com:> instead of ```feathers generate ...``` we will do ```feathers-plus generate ...```, so any existing tutorials can be used. BTW, according to the [FeathersJS blog](https://blog.feathersjs.com/feathers-2019-new-years-news-f478d5f2c8cd), Feathers+ is scheduled to move into mainline FeathersJS in Crow release.
+We will use Feathers+ generator, see <https://generator.feathers-plus.com:> instead of ```feathers generate ...``` we will do ```feathers-plus generate ...```, so any existing tutorials for FeathersJS can be used. BTW, according to the [FeathersJS blog](https://blog.feathersjs.com/feathers-2019-new-years-news-f478d5f2c8cd), Feathers+ is scheduled to move into mainline FeathersJS in Crow release.
 
 ```bash
 npm i -g @feathers-plus/cli
