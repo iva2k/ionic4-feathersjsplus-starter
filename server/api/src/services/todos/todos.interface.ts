@@ -1,7 +1,8 @@
-import { User } from './../users/users.interface';
 
 // Define TypeScript interface for service `todos`. (Can be re-generated.)
-// !code: imports // !end
+// !code: imports
+import { User } from './../users/users.interface';
+// !end
 // !code: init // !end
 
 // tslint:disable-next-line:no-empty-interface

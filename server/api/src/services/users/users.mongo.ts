@@ -21,8 +21,35 @@ let moduleExports = merge({},
       password: {
         faker: "internet.password",
         bsonType: "string"
+      },
+      isVerified: {
+        bsonType: "boolean"
+      },
+      verifyToken: {
+        bsonType: "string"
+      },
+      verifyExpires: {
+        bsonType: "int"
+      },
+      verifyChanges: {
+        bsonType: "object",
+        additionalProperties: false,
+        properties: {
+          _id: {
+            bsonType: "objectId"
+          }
+        }
+      },
+      resetToken: {
+        bsonType: "string"
+      },
+      resetExpires: {
+        bsonType: "int"
       }
-    }
+    },
+    required: [
+      "email"
+    ]
   },
   // !end
   // !code: moduleExports // !end

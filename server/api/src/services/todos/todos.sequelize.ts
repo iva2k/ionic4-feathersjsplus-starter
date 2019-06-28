@@ -17,13 +17,14 @@ let moduleExports = merge({},
       primaryKey: true
     },
     title: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: false
     },
     notes: {
       type: DataTypes.TEXT
     },
     userId: {
-      type: DataTypes.TEXT
+      type: DataTypes.INTEGER
     }
   } as DefineAttributes,
   // !end

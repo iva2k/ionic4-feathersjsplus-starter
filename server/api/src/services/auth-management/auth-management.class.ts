@@ -1,5 +1,5 @@
 
-// Class for the custom service `authManagement` on path `/auth-management`. (Can be re-generated.)
+// Class for the custom service `authManagement` on path `/authManagement`. (Can be re-generated.)
 /* tslint:disable no-unused-variable */
 
 import { App } from '../../app.interface';

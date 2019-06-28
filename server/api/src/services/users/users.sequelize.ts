@@ -17,10 +17,29 @@ let moduleExports = merge({},
   // !<DEFAULT> code: sequelize_model
   {
     email: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: false
     },
     password: {
       type: DataTypes.TEXT
+    },
+    isVerified: {
+      type: DataTypes.BOOLEAN
+    },
+    verifyToken: {
+      type: DataTypes.TEXT
+    },
+    verifyExpires: {
+      type: DataTypes.INTEGER
+    },
+    verifyChanges: {
+      type: DataTypes.JSONB
+    },
+    resetToken: {
+      type: DataTypes.TEXT
+    },
+    resetExpires: {
+      type: DataTypes.INTEGER
     }
   } as DefineAttributes,
   // !end

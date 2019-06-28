@@ -89,7 +89,7 @@ let moduleExports = function(app: App) {
     // tslint:disable next-line no-unused-vars
     notifier(type: string, user: User, notifierOptions: any) {
       console.log(`-- Preparing ${type} email to ${user.email}`);
-      const userName = user.name || user.email; // TODO: (now) Implement user.name / use firstName/lastName
+      const userName = user.email; // TODO: (now) Implement user.name / use firstName/lastName
       let subject, template, hash, hashLink, changes;
 
       // Insert attachment inline images (URL-based data is blocked by certain clients, e.g. Gmail)

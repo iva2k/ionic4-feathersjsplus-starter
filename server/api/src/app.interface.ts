@@ -22,12 +22,14 @@ import { User } from './services/users/users.interface';
   });
  */
 export type App = Application<{
-  'authManagement': AuthManagement,
+  'auth-management': AuthManagement,
   'emails': Email,
   'login-providers': LoginProvider,
   'todos': Todo,
   'users': User,
-  // !code: moduleExports // !end
+  // !code: moduleExports
+  'authManagement': AuthManagement, // we also keep the 'auth-management' line, so generator can be used
+  // !end
 }>;
 // !code: funcs // !end
 // !code: end // !end

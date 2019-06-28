@@ -8,8 +8,6 @@ import { GraphQLFieldResolver } from 'graphql';
 import { GraphQLResolveInfo } from 'graphql/type/definition';
 import { ArgMap, ResolverContext } from './graphql.interfaces';
 
-import { Service } from '@feathersjs/feathers';
-
 export interface BatchloaderResolverOptions {
   convertArgsToParams: any;
   convertArgsToFeathers: (args: any[]) => (...args: any[]) => Params;
@@ -19,7 +17,9 @@ export interface BatchloaderResolverOptions {
     feathersBatchLoader: any,
   };
 }
-// !code: imports // !end
+// !code: imports
+import { Service } from '@feathersjs/feathers';
+// !end
 // !code: init // !end
 
 let moduleExports = function batchLoaderResolvers(app: App, options: BatchloaderResolverOptions ) {

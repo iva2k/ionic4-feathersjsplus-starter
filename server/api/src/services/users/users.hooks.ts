@@ -9,6 +9,8 @@ import { hooks as localAuthHooks } from '@feathersjs/authentication-local';
 const { hashPassword, protect } = localAuthHooks;
 // tslint:disable-next-line:no-unused-variable
 import gravatar from './hooks/gravatar';
+// tslint:disable-next-line:no-unused-variable
+import usersPopulate from './users.populate';
 // !code: imports
 // How to add email verification
 // Recipe from https://blog.feathersjs.com/how-to-setup-email-verification-in-feathersjs-72ce9882e744

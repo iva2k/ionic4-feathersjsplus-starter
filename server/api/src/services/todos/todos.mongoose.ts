@@ -10,9 +10,12 @@ import mongoose from 'mongoose';
 let moduleExports = merge({},
   // !<DEFAULT> code: model
   {
-    title: String,
+    title: {
+      type: String,
+      required: true
+    },
     notes: String,
-    userId: String
+    userId: mongoose.Schema.Types.ObjectId
   },
   // !end
   // !code: moduleExports // !end

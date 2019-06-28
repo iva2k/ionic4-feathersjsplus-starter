@@ -32,6 +32,8 @@ let moduleExports = function (app: App) {
   // Get our initialized service so that we can register hooks
   const service = app.service('todos');
 
+  service.hooks(hooks);
+  // !code: func_return
   // NeDB-specific:
   let model = (service as any).getModel();
   if (model.persistence) {
@@ -53,9 +55,7 @@ let moduleExports = function (app: App) {
       model.persistence.compactDatafile();
     }
   }
-
-  service.hooks(hooks);
-  // !code: func_return // !end
+  // !end
 };
 
 // !code: exports // !end

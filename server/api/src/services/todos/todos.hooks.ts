@@ -1,13 +1,16 @@
 
 // Hooks for service `todos`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
-import { hooks } from '@feathersjs/authentication';
 import { HooksObject } from '@feathersjs/feathers';
 // tslint:disable-next-line:no-unused-variable
 import populateUser from './hooks/populate-user';
 // tslint:disable-next-line:no-unused-variable
 import processTodo from './hooks/process-todo';
-// !code: imports // !end
+// tslint:disable-next-line:no-unused-variable
+import todosPopulate from './todos.populate';
+// !code: imports
+import { hooks } from '@feathersjs/authentication';
+// !end
 
 // !<DEFAULT> code: used
 // tslint:disable-next-line:no-unused-variable

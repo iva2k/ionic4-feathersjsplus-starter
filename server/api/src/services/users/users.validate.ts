@@ -18,9 +18,14 @@ let base = merge({},
     title: "Users",
     description: "Users database.",
     fakeRecords: 3,
-    required: [],
+    required: [
+      "email"
+    ],
     uniqueItemProperties: [],
     properties: {
+      _id: {
+        type: ID
+      },
       email: {
         faker: "internet.email",
         type: "string"
@@ -28,6 +33,24 @@ let base = merge({},
       password: {
         faker: "internet.password",
         type: "string"
+      },
+      isVerified: {
+        type: "boolean"
+      },
+      verifyToken: {
+        type: "string"
+      },
+      verifyExpires: {
+        type: "integer"
+      },
+      verifyChanges: {
+        type: "object"
+      },
+      resetToken: {
+        type: "string"
+      },
+      resetExpires: {
+        type: "integer"
       }
     }
   },

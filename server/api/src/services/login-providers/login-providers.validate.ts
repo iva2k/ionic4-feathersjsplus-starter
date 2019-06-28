@@ -17,7 +17,9 @@ let base = merge({},
   {
     title: "LoginProviders",
     description: "LoginProviders database.",
-    required: [],
+    required: [
+      "title"
+    ],
     uniqueItemProperties: [],
     properties: {}
   },

@@ -2,9 +2,9 @@
 // Hooks for service `authManagement`. (Can be re-generated.)
 import * as commonHooks from 'feathers-hooks-common';
 import { HooksObject } from '@feathersjs/feathers';
+// !code: imports
 import { hooks as authHooks } from '@feathersjs/authentication';
 const { authenticate } = authHooks;
-// !code: imports
 // TODO: (when needed) const isEnabled = require('../../hooks/is-enabled');
 // !end
 
@@ -25,8 +25,6 @@ const isAction = (...actions: string[]) => {
 
 let moduleExports: HooksObject = {
   before: {
-    // Your hooks should include:
-    //   all   : authenticate('jwt')
     // !code: before
     all: [],
     find: [],

@@ -18,7 +18,9 @@ let base = merge({},
     title: "Todos",
     description: "Todos database.",
     fakeRecords: 3,
-    required: [],
+    required: [
+      "title"
+    ],
     uniqueItemProperties: [],
     properties: {
       id: {
@@ -33,8 +35,10 @@ let base = merge({},
         type: "string"
       },
       userId: {
-        faker: "",
-        type: "string"
+        type: ID,
+        faker: {
+          fk: "users:random"
+        }
       }
     }
   },

@@ -23,10 +23,15 @@ let moduleExports = merge({},
         bsonType: "string"
       },
       userId: {
-        faker: "",
-        bsonType: "string"
+        faker: {
+          fk: "users:random"
+        },
+        bsonType: "objectId"
       }
-    }
+    },
+    required: [
+      "title"
+    ]
   },
   // !end
   // !code: moduleExports // !end

@@ -6,19 +6,25 @@
 // tslint:disable-next-line:no-empty-interface
 export interface UserBase {
   // !<DEFAULT> code: interface
+  _id: unknown;
   email: string;
   password: string;
+  isVerified: boolean;
+  verifyToken: string;
+  verifyExpires: number;
+  verifyChanges: {
+
+};
+  resetToken: string;
+  resetExpires: number;
   // !end
 }
 
 // tslint:disable-next-line:no-empty-interface
 export interface User extends UserBase {
-  name: string;
-  verifyToken?: any;
-  resetToken?: any;
-  verifyChanges?: any;
-
-  // !code: more // !end
+  // !<DEFAULT> code: more
+  _id: any; // change if needed
+  // !end
 }
 
 // !code: funcs // !end

@@ -1,6 +1,5 @@
 
 // Configure authentication. (Can be re-generated.)
-import { Service } from '@feathersjs/feathers';
 import authentication from '@feathersjs/authentication';
 import jwt from '@feathersjs/authentication-jwt';
 import local from '@feathersjs/authentication-local';
@@ -10,6 +9,7 @@ import FacebookStrategy from 'passport-facebook';
 
 import { App } from './app.interface';
 // !code: imports
+import { Service } from '@feathersjs/feathers';
 import custom from 'feathers-authentication-custom'; // wrapper for 'passport-custom'
 import verifySocialToken from './utility/verifySocialToken';
 // !end
@@ -98,7 +98,7 @@ let moduleExports = function (app: App) {
   service.hooks({
     before: {
       create: [
-        // !<DEFAULT> code: before_create
+        // !code: before_create
         authentication.hooks.authenticate(config.strategies),
         // This hook adds userId attribute to the JWT payload // TODO: (soon) Move to a proper hook file.
         (hook) => {

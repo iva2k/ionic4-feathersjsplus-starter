@@ -10,8 +10,17 @@ import mongoose from 'mongoose';
 let moduleExports = merge({},
   // !<DEFAULT> code: model
   {
-    email: String,
-    password: String
+    email: {
+      type: String,
+      required: true
+    },
+    password: String,
+    isVerified: Boolean,
+    verifyToken: String,
+    verifyExpires: Number,
+    verifyChanges: {},
+    resetToken: String,
+    resetExpires: Number
   },
   // !end
   // !code: moduleExports // !end

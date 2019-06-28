@@ -16,6 +16,12 @@ type Todo {
 type User {
   _id: ID
   email: String!
+  isVerified: Boolean
+  verifyToken: String
+  verifyExpires: Int
+  verifyChanges: JSON
+  resetToken: String
+  resetExpires: Int
   todos: [Todo!]
 }
  

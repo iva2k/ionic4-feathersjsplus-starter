@@ -1,5 +1,5 @@
 
-// Initializes the `authManagement` service on path `/auth-management`. (Can be re-generated.)
+// Initializes the `authManagement` service on path `/authManagement`. (Can be re-generated.)
 import { App } from '../../app.interface';
 
 import createService from './auth-management.class';

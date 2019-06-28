@@ -35,12 +35,12 @@ let schema = {
     password      : { faker: 'internet.password' },
     // TODO: (when needed) lastLogin     : { faker: () => moment().subtract(7, 'days').format() },
     // feathers-authentication-management:
-    isVerified    : { type: Boolean },
-    verifyToken   : { type: String  },
-    verifyExpires : { type: Date    },
-    verifyChanges : { type: Object  },
-    resetToken    : { type: String  },
-    resetExpires  : { type: Date    },
+    isVerified    : { type: 'boolean' },
+    verifyToken   : { type: 'string'  },
+    verifyExpires : { type: 'integer' /* Date */    },
+    verifyChanges : { type: 'object'  },
+    resetToken    : { type: 'string'  },
+    resetExpires  : { type: 'integer' /* Date */    },
     // !end
   },
   // !code: schema_more // !end

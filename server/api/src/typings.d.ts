@@ -25,6 +25,7 @@ declare module '@feathers-plus/test-utils';
 declare module 'feathers-authentication-custom';
 declare module 'feathers-authentication-management';
 declare module 'feathers-mailer';
+declare module '@feathers-plus/graphql/lib/run-time';
 // !end
 
 // !code: funcs // !end

@@ -13,7 +13,7 @@ interface ServiceOptions {}
 // !end
 
 export class Service implements Partial<ServiceMethods<any>>, SetupMethod {
-  // !<DEFAULT> code: properties
+  // !code: properties
   public app!: App;
   private socialLogins = [
     // tslint:disable-next-line: max-line-length
@@ -32,7 +32,7 @@ export class Service implements Partial<ServiceMethods<any>>, SetupMethod {
   }
   // !end
 
-  // !<DEFAULT> code: find
+  // !code: find
   public async find(params?: Params): Promise<any[] | Paginated<any>> {
     return this.socialLogins;
   }
