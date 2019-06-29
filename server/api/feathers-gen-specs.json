@@ -88,13 +88,6 @@
       "ifMulti": "n",
       "multiServices": [],
       "singleService": "users"
-    },
-    "populate-user": {
-      "fileName": "populate-user",
-      "camelName": "populateUser",
-      "ifMulti": "n",
-      "multiServices": [],
-      "singleService": "todos"
     }
   },
   "connections": {

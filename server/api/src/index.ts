@@ -59,7 +59,7 @@ function serverIP(): Promise<Ips> {
     logger.info('Internal IP ipv4: ' + ip4 + ' ipv6: ' + ip6);
     return { ip4, ip6 };
   }).catch(err => {
-    logger.error('Error saving IP address for client: %o', err);
+    logger.error('Error getting server IP address: %o', err);
     throw err;
   });
 }

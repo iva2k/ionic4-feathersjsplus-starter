@@ -98,16 +98,17 @@ let moduleExports: HooksObject = {
     //   all   : protect('password') /* Must always be the last hook */
     // !code: after
     all: [ protect('password') /* Must always be the last hook */ ],
-    find: [],
-    get: [],
+    find: [ usersPopulate ],
+    get: [ usersPopulate ],
     create: [
+      usersPopulate,
       // TODO: (when needed) globalHooks.sendVerificationEmail(),
 
       verifyHooks.removeVerification(), // removes verification/reset fields other than .isVerified
     ],
     update: [],
     patch: [],
-    remove: []
+    remove: [ usersPopulate ]
     // !end
   },
 

@@ -994,6 +994,12 @@ npm start
 
 (see the [issue](<https://github.com/feathers-plus/generator-feathers-plus/issues/247>))
 
+With GraphQL we get very useful facility for free - populating relational data. Feathers+ generates *.populate.ts hook file for each service that has GraphQL enabled
+(Note that ```feathers-plus generate graphql``` does not write the *.populate.ts files, but ```feathers-plus generate all``` does).  All we need to do is insert each of the populate hooks into service hooks.ts file.
+With that, we can remove populate-user hook from todos service.
+
+See code on Github for the "populate" hook edits.
+
 #### Step 9 Summary
 
 Though we don't use GraphQL in our client app, we now have a GraphQL endpoint that could be usefull for other implementations.

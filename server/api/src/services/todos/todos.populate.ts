@@ -40,11 +40,11 @@ async function todosPopulate (context: HookContext) {
 
   // !code: populate
   // Example: always the same query
-  ({ query, options, serializer } = queries.foo);
+  ({ query, options, serializer } = queries.twoLevels);
 
   /*
   // Example: select query based on user being authenticated or not
-  ({ query, options, serializer } = queries[params.user ? queries.foo : queries.bar]);
+  ({ query, options, serializer } = params.user ? queries.foo : queries.bar);
 
   // Example: select query based on the user role
   if (params.user && params.user.roles.includes('foo')) {
@@ -57,16 +57,21 @@ async function todosPopulate (context: HookContext) {
   }
   */
 
-  // Populate the data.
-  let newContext: any = await fgraphql({
-    parse,
-    runTime,
-    schema,
-    resolvers,
-    recordType: 'Todo',
-    query,
-    options,
-  } as FGraphQLHookOptions)(context);
+  let newContext: any;
+  if (query) {
+    // Populate the data.
+    let newContext: any = await fgraphql({
+      parse,
+      runTime,
+      schema,
+      resolvers,
+      recordType: 'Todo',
+      query,
+      options,
+    } as FGraphQLHookOptions)(context);
+  } else {
+    newContext = context;
+  }
 
   // Prune and sanitize the data.
   if (serializer) {
