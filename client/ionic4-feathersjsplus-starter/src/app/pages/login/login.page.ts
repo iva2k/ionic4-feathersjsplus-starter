@@ -294,7 +294,7 @@ export class LoginPage implements OnInit {
 
     if (command === 'checkEmailUnique' && error.message === 'Values already taken.') {
       message = 'Email "' + this.credentials.email + '" is already registered.'
-        + ' Please enter your password and click "Login", or click "Forgot" to recover your password.';
+        + ' Please enter your password and click "Login", or click "Reset" to recover your password.';
     }
 
     if (error.name === 'Timeout' || error.message === 'Socket connection timed out') {
