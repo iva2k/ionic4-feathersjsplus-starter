@@ -37,10 +37,10 @@ let schema = {
     // feathers-authentication-management:
     isVerified    : { type: 'boolean' },
     verifyToken   : { type: 'string'  },
-    verifyExpires : { type: 'integer' /* Date */    },
+    verifyExpires : { type: 'integer' /* Date */, faker: { exp: 'Date.now() + 60*60*1000' /* 1hr */} },
     verifyChanges : { type: 'object'  },
     resetToken    : { type: 'string'  },
-    resetExpires  : { type: 'integer' /* Date */    },
+    resetExpires  : { type: 'integer' /* Date */, faker: { exp: 'Date.now() + 5*60*1000'} /* 5min */},
     // !end
   },
   // !code: schema_more // !end

@@ -29,8 +29,8 @@ let schema = {
     // !code: schema_properties
     id: { type: 'ID' },
     title: { faker: 'commerce.productName'},
-    // ?notes: { faker: {exp: '"Perform " + company.catchPhrase + ", then " + hacker.verb + "."'} },
-    notes: { faker: 'company.catchPhrase' },
+    // notes: { faker: 'company.catchPhrase' },
+    notes: { faker: {fake: 'Perform {{company.catchPhrase}}, then {{hacker.verb}}.'} },
     userId: { type: 'ID', faker: { fk: 'users:random' } }, // Foreign key from `users`
     // !end
   },
