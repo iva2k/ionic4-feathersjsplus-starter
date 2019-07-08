@@ -998,6 +998,8 @@ With GraphQL we get very useful facility for free - populating relational data. 
 (Note that ```feathers-plus generate graphql``` does not write the *.populate.ts files, but ```feathers-plus generate all``` does).  All we need to do is insert each of the populate hooks into service hooks.ts file.
 With that, we can remove populate-user hook from todos service.
 
+Note that *.populate.ts always puts relational data into an array, even if it is a single-to- relationship, so todos.user on the client-side and in tests should change to todo.user[0]. 
+
 See code on Github for the "populate" hook edits.
 
 #### Step 9 Summary

@@ -58,14 +58,14 @@
     <ion-row>
       <ion-col size="auto">
         <ion-avatar>
-          <img src="{{todo.user?.avatar}}">
+          <img src="{{todo.user[0]?.avatar}}">
         </ion-avatar>
       </ion-col>
       <ion-col>
         <ion-note>
           Created <br/>
           {{todo.createdAt | date:'M/d/yy h:mm a'}} <br/>
-          {{todo.user?.email}} <br/>
+          {{todo.user[0]?.email}} <br/>
           <small>{{todo._id}}</small> <br/>
         </ion-note>
       </ion-col>
