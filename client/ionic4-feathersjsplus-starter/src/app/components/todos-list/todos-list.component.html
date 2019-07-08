@@ -4,7 +4,7 @@
     <ion-item-sliding *ngFor="let todo of todos" [class.deleting]="itemsBusyDeleting.indexOf(item) > -1" #item>
       <ion-item>
         <ion-avatar slot="start">
-          <img src="{{todo.user?[0].avatar ? todo.user[0].avatar : ''}}">
+          <img src="{{todo.user[0]?.avatar ? todo.user[0].avatar : ''}}">
         </ion-avatar>
         <ion-label text-wrap>
           <h2>{{todo.title}}</h2>
