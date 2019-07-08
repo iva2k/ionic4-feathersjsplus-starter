@@ -24,7 +24,7 @@ let moduleExports: HooksObject = {
   before: {
     // !code: before
     all: [ hooks.authenticate('jwt') ],
-    find: [ todosPopulate ],
+    find: [],
     get: [],
     create: [ processTodo() ],
     update: [],
@@ -35,7 +35,7 @@ let moduleExports: HooksObject = {
 
   after: {
     // !code: after
-    all: [],
+    all: [ todosPopulate ],
     find: [],
     get: [],
     create: [],

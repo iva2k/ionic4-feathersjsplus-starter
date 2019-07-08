@@ -48,7 +48,6 @@ describe('Test users/hooks/gravatar.integ.test.ts', () => {
     done();
   });
 
-
   it('creates a gravatar link from the users email',  () => {
     params.provider = undefined;
     return service.create({
@@ -60,4 +59,5 @@ describe('Test users/hooks/gravatar.integ.test.ts', () => {
         assert.strictEqual(user.avatar, 'https://s.gravatar.com/avatar/27fd0591698758a7fb0b86bdf1a5e17e.jpg?s=60&d=robohash&r=g');
       });
   });
+
 });

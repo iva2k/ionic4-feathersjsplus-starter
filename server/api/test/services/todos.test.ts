@@ -14,7 +14,7 @@ describe('\'todos\' service', () => {
     // Create a new user we can use for testing
     // ?Promise.resolve({ _id: 'test' }) // A user stub with just an `_id`
     return app.service('users').create({
-      email: 'todotest@example.com',
+      email: 'test-todos@example.com',
       password: 'supersecret'
     })
       .then(user => {
@@ -30,7 +30,7 @@ describe('\'todos\' service', () => {
             assert.strictEqual(todo.title, 'a test', 'does not contain expected title');
             assert.strictEqual(todo.userId, user._id, 'does not contain expected userId');
             assert.ok(!todo.additional, 'additional property has not been removed');
-            assert.deepEqual(todo.user, user, 'user object has not been populated');
+            assert.notDeepStrictEqual(todo.user[0], user, 'user object has not been populated');
           });
       });
   });

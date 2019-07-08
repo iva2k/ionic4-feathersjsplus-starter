@@ -34,6 +34,7 @@ let schema = {
     // lastName     : { faker: 'name.lastName' },
     password      : { faker: 'internet.password' },
     // TODO: (when needed) lastLogin     : { faker: () => moment().subtract(7, 'days').format() },
+    createdFrom   : { type: 'string'  }, // from authenticatio.ts:CustomVerifier() / LoginWith
     // feathers-authentication-management:
     isVerified    : { type: 'boolean' },
     verifyToken   : { type: 'string'  },

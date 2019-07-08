@@ -27,11 +27,12 @@ let schema = {
   // Fields in the model.
   properties: {
     // !code: schema_properties
-    id: { type: 'ID' },
+    _id: { type: 'ID' },
     title: { faker: 'commerce.productName'},
     // notes: { faker: 'company.catchPhrase' },
     notes: { faker: {fake: 'Perform {{company.catchPhrase}}, then {{hacker.verb}}.'} },
     userId: { type: 'ID', faker: { fk: 'users:random' } }, // Foreign key from `users`
+    createdAt: { type: 'integer' /* Date */, faker: { exp: 'Date.now() - 60*60*1000' /* 1hr */} },
     // !end
   },
   // !code: schema_more // !end

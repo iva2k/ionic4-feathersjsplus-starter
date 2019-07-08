@@ -5,8 +5,11 @@ import assert from 'assert';
 // import { join } from 'path';
 // import { readJsonFileSync } from '@feathers-plus/test-utils';
 import memory from 'feathers-memory';
-// import hooks from '../../../../src/services/todos/todos.hooks';
-import populateUser from '../../../../src/services/todos/hooks/populate-user';
+import hooks from '../../../../src/services/todos/todos.hooks';
+// import populateUser from '../../../../src/services/todos/hooks/populate-user';
+// ?import todosPopulate from '../../../../src/services/todos/todos.populate';
+
+import fullApp from '../../../../src/app';
 
 // Get generated fake data
 // tslint:disable-next-line:no-unused-variable
@@ -30,27 +33,33 @@ describe('Test todos/hooks/populate-user.integ.test.ts', () => {
       }
     };
 
-    app = feathers();
+    if (false) {
+      app = feathers();
 
-    // Register `users` and `todos` service in-memory
-    app.use('/users', memory(options));
-    app.use('/todos', memory(options));
+      // Register `users` and `todos` service in-memory
+      app.use('/users', memory(options));
+      app.use('/todos', memory(options));
 
-    service = app.service('todos');
+      service = app.service('todos');
 
-    // Add the hook to the service
-    service.hooks({
-      after: populateUser()
-    });
-
+      // Add the hook to the service
+      // service.hooks({
+      //   after: populateUser()
+      // });
+      service.hooks(hooks);
+    } else {
+      // Use complete app
+      app = fullApp;
+      service = app.service('todos');
+    }
     // Create a new user we can use to test with
     user = await app.service('users').create({
-      email: 'test@user.com'
+      email: 'test-populate-user@example.com'
     });
 
     // params = {
     //   user: (fakeData['users'] || [])[0] || {
-    //     email: 'test@example.com'
+    //     email: 'test-populate-user@example.com'
     //   }
     // };
   });
@@ -63,7 +72,7 @@ describe('Test todos/hooks/populate-user.integ.test.ts', () => {
     });
 
     // Make sure that user got added to the returned todo
-    assert.deepEqual(todo.user, user);
+    assert.notDeepStrictEqual(todo.user[0], user);
   });
 
 });

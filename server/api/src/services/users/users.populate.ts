@@ -157,7 +157,7 @@ async function usersPopulate (context: HookContext) {
   let newContext: any;
   if (query) {
     // Populate the data.
-    let newContext: any = await fgraphql({
+    newContext = await fgraphql({
       parse,
       runTime,
       schema,

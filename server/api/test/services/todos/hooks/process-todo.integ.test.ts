@@ -9,6 +9,8 @@ import appHooks from '../../../../src/app.hooks';
 import hooks from '../../../../src/services/todos/todos.hooks';
 // import processTodo from '../../../../src/services/todos/hooks/process-todo';
 
+import fullApp from '../../../../src/app';
+
 // Get generated fake data
 // tslint:disable-next-line:no-unused-variable
 const fakeData = readJsonFileSync(join(__dirname, '../../../../seeds/fake-data.json')) || {};
@@ -18,6 +20,7 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
   // tslint:disable-next-line:no-unused-variable
   let service: Service<any>;
   let user: any;
+  let instance = 1;
 
   beforeEach(async () => {
     // Database adapter options
@@ -29,34 +32,43 @@ describe('Test todos/hooks/process-todo.integ.test.ts', () => {
       }
     };
 
-    app = feathers();
+    if (false) {
+      app = feathers();
 
-    // Register 'users' service in-memory
-    app.use('/users', memory(options));
+      // Register 'users' service in-memory
+      app.use('/users', memory(options));
 
-    // Register a dummy custom service that just return the message data back
-    app.use('/todos', {
-      async create(data: any) {
-        return data;
-      }
+      // Register a dummy custom service that just return the message data back
+      app.use('/todos', {
+        async create(data: any) {
+          return data;
+        }
+      });
+
+      service = app.service('todos');
+
+      //// Register the `processTodo` hook on that service - bad, can hide broken inter-dependencies.
+      // app.service('todos').hooks({
+      //  before: {
+      //    create: processTodo()
+      //  }
+      // });
+
+      // Load all appHooks, to increase test coverage (e.g. for log.js)
+      app.hooks(appHooks);
+
+      // Load actual hooks file to increase test coverage - good, verifies actual inter-dependencies.
+      service.hooks(hooks);
+    } else {
+      // Use complete app
+      app = fullApp;
+      service = app.service('todos');
+    }
+    // Create a new user we can use to test with
+    user = await app.service('users').create({
+      email: 'test-process-todo' + instance + '@example.com'
     });
-
-    service = app.service('todos');
-
-    //// Register the `processTodo` hook on that service - bad, can hide broken inter-dependencies.
-    // app.service('todos').hooks({
-    //  before: {
-    //    create: processTodo()
-    //  }
-    // });
-
-    // Load all appHooks, to increase test coverage (e.g. for log.js)
-    app.hooks(appHooks);
-
-    // Load actual hooks file to increase test coverage - good, verifies actual inter-dependencies.
-    service.hooks(hooks);
-
-    user = await app.service('users').create({ email: 'test@example.com' });
+    instance += 1;
 
     params = {
       user, // Provide the user for service method calls
