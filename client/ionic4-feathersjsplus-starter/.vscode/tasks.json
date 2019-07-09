@@ -19,6 +19,23 @@
       ]
     },
     {
+      "label": "Serve Ionic/Cordova app",
+      "type": "shell",
+      "command": "ionic",
+      "args": [
+        "serve",
+        "--cordova",
+        "--platform=browser",
+        "-b"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+      ]
+    },
+    {
       "label": "Serve Cordova browser app",
       "type": "shell",
       "command": "ionic",

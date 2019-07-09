@@ -6,7 +6,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { IonSlides, LoadingController, NavController, ToastController } from '@ionic/angular';
 
 import { User } from '../../models/user';
-import { FeathersService } from '../../services/feathers.service';
+import { FeathersService, Login } from '../../services/feathers.service';
 
 const animFormDuration = 400;  // Form input fields transition animation time
 const animButtonsDurationMs = 1600; // Buttons transition animation time (in ms), longer than form to give visual sequence cue.
@@ -74,7 +74,7 @@ export class LoginPage implements OnInit {
     allowTouchMove: false, // Slides moved programmatically only
   };
 
-  protected logins = [];
+  protected logins: Login[] = [];
 
   constructor(
     private feathersService: FeathersService,
@@ -85,7 +85,11 @@ export class LoginPage implements OnInit {
     // private ngZone: NgZone,
     private toastCtrl: ToastController
   ) {
-    this.logins = this.feathersService.getSocialLogins();
+    this.feathersService.getSocialLogins().then(logins => {
+      this.logins = logins;
+    }).catch(err => {
+      this.presentServerError(err, 'getting available logins', 'getLogins');
+    });
 
     const required    = Validators.required;
     const passSymbols = Validators.pattern('[0-9a-zA-Z*_\-]*');
@@ -262,7 +266,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-  onLoginWith(social) {
+  onLoginWith(social: Login) {
     this.showLoading('Signing in with ' + social.title);
     console.log('log in with ' + social.title);
     this.feathersService.loginWith(social).then((user) => {
@@ -298,7 +302,7 @@ export class LoginPage implements OnInit {
     }
 
     if (error.name === 'Timeout' || error.message === 'Socket connection timed out') {
-      message = 'Cannot reach the server. Check your connection and try again.';
+      message = 'Cannot reach the server while ' + activity + '. Check your connection and try again.';
     }
 
     console.log('presentServerError() result: "%s", activity: \'%s\', command: \'%s\', error: %o', message, activity, command, error);

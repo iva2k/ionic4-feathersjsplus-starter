@@ -1370,6 +1370,12 @@ feathers-plus generate service
 
 Edit the generated files to send data table (see code on Github).
 
+On the client side we need to modify FeathersService method getSocialLogins() to return a Promise that gets data from the backend, and all its users to get data in .then() of getSocialLogins().
+
+See the edits on Github.
+
 #### Step 12 Summary
+
+"Login With X" list of providers is now server-defined, with client ID and client Secret maintained on the server.
 
 ## END

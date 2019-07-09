@@ -28,7 +28,7 @@ const defaultApiUrl = 'http://localhost:3030'; // TODO: (soon) move to config/en
 
 // Base type for all record data types, used by DataSubscriber.
 export interface Record {
-    _id: string;
+    _id?: string;
 }
 
 export class DataSubscriber<T extends Record> {
@@ -37,19 +37,19 @@ export class DataSubscriber<T extends Record> {
   };
   private records$: Observable<T[]>;
   private observer: Observer<T[]>;
-  private feathersService: any;
+  private fs: any;
   private subscription: Subscription;
   // protected query: {};
 
   constructor(
-    feathersService: any,
+    service: any, // TODO: (soon) FeathersJS Service<T>
     cbData: (records: any) => void,
     cbErr: (err: any) => void
   ) {
-    this.feathersService = feathersService;
-    this.feathersService.on('created', record => this.onCreated(record));
-    this.feathersService.on('updated', record => this.onUpdated(record));
-    this.feathersService.on('removed', record => this.onRemoved(record));
+    this.fs = service;
+    this.fs.on('created', record => this.onCreated(record));
+    this.fs.on('updated', record => this.onUpdated(record));
+    this.fs.on('removed', record => this.onRemoved(record));
 
     this.records$ = new Observable(observer => (this.observer = observer));
     this.dataStore = { records: [] };
@@ -58,7 +58,7 @@ export class DataSubscriber<T extends Record> {
 
   public find(query) {
     // this.query = query;
-    return this.feathersService.find({ query })
+    return this.fs.find({ query })
       .then( (records: any) => { // records.data: T[]
         this.dataStore.records = records.data;
         this.observer.next(this.dataStore.records);
@@ -110,6 +110,16 @@ export class DataSubscriber<T extends Record> {
 
 }
 
+export interface Login extends Record {
+  title: string;
+  network: string;
+  name: string;
+  icon: string;
+  url?: string;
+  clientId: string;
+  loginFn?: ((social: Login) => Promise<any>) | string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -120,17 +130,13 @@ export class FeathersService {
   private feathersInit: Promise<void>; // Promise that resolves after this.fc is fully initialized and configured.
   public apiUrl = ''; // endpoint url in use
   private authManagement;
+  private isAppDevice: boolean | null = null;
 
   private urlLoginDestination: string;
   private urlLogoutDestination: string;
   private retUrl: string = null;
 
-  // TODO: (soon) Provide socialLogins from server (single point of authority), including client_id.
-  private socialLogins = [
-    // tslint:disable-next-line: max-line-length
-    {title: 'Google Hello', network: 'google', name: 'google'     , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com' }, // Use local Hello.js method (client_id)
-    {title: 'Google API',   network: 'google', name: 'googleAPI'  , icon: 'logo-google'  , url: ''              , client_id: '926208454330-vjmhag3a6b72rct9phmr26lj8r3oamtq.apps.googleusercontent.com', loginFn: this.loginGoogleAPI }, // Use native
-  ];
+  private socialLogins: Promise<Login[]> = null;
 
   private loginState: boolean; // undefined=initial, true=loggedin, false=loggedout
   private reauth; // Stored login credentials for reauth if session fails.
@@ -397,7 +403,75 @@ export class FeathersService {
   //   // })
   // }
 
-  public getSocialLogins(): any[] {
+  public isApp(): boolean {
+    if (this.isAppDevice === null) {
+      this.isAppDevice = this.isAppEx();
+      console.log('[FeathersService] isAppEx(): %s', this.isAppDevice);
+    }
+    return this.isAppDevice;
+  }
+  private isAppEx(): boolean {
+    // Ionic's Platform is misleading and useless, can't rely on it to distinguish between browser and mobile app.
+    // E.g. Platform.platforms() returns:
+    // - in Android app   : android,cordova,mobile,hybrid
+    // - in Android Chrome: android,cordova,mobile,hybrid
+    // -- no difference whatsoever.
+    // see <https://forum.ionicframework.com/t/how-to-determine-if-browser-or-app/89149/25>
+    // We need to rely on circumstantial evidence here to tease out if we're in a browser or in an app (that uses Webview too)
+    if (
+      (document.URL.indexOf('http:localhost:81'    ) === 0 /* developer server                   */ ) ||
+      (document.URL.indexOf('https:localhost:81'   ) === 0 /* developer server / https           */ )
+    ) {
+      // For sure not an app
+      return false;
+    }
+    if (
+      ( document.URL.indexOf('ionic:'              ) === 0 /* ionic://localhost on iOS           */ ) ||
+      ( document.URL.indexOf('http://localhost'    ) === 0 /* reported iOS/Android app condition */ ) ||
+      ( document.URL.indexOf('https://localhost'   ) === 0 /* reported iOS/Android app condition */ ) ||
+      !(document.URL.indexOf('http'                ) === 0 /* browser                            */ )
+    ) {
+      // For sure an app
+      return true;
+    }
+    return false;
+  }
+
+  public getSocialLogins(): Promise<any[]> {
+    if (!this.socialLogins) {
+      this.socialLogins = this.feathersInit.then(() => {
+        const query = {};
+        return this.service('login-providers').find({ query })
+        .then((socials: Login[]) => {
+          return socials.filter(social => {
+            // Process and prune socials[] based on platform and loginFn available.
+            if (typeof social.loginFn === 'string') {
+              if (this[social.loginFn]) {
+                social.loginFn = this[social.loginFn];
+              } else {
+                console.error('Unknown social.loginFn %s', social.loginFn);
+                return false;
+              }
+              if (this.isApp()) {
+                return true;
+              }
+            } else if (social.clientId) {
+              // For HelloJS method social.clientId is used // Won't work on mobile, works only on 'browser'
+              if (!this.isApp()) {
+                return true;
+              }
+            } else if (social.url) {
+              // For FeathersJS/backend method social.url is used // Won't work on mobile, works only on 'browser'
+              if (!this.isApp()) {
+                return true;
+              }
+            }
+            console.log('Can\'t use social login %s', social.title);
+            return false;
+          });
+        });
+      });
+    }
     return this.socialLogins;
   }
 
@@ -408,18 +482,20 @@ export class FeathersService {
     const loc = locs[0] + '//' + locs[2]; // 'http://localhost:8100',
     // TODO: (later) real URL for the client (or the server??), lightweight auth entry page // window.location.protocol === "file:"
 
-    const socials = this.getSocialLogins();
     const clientIds = {};
-    for (const social of socials) {
-      if (social.client_id) {
-        clientIds[social.network] = social.client_id;
+    this.getSocialLogins().then((socials: Login[]) => {
+
+      for (const social of socials) {
+        if (social.clientId) {
+          clientIds[social.network] = social.clientId;
+        }
       }
-    }
-    hello.init(clientIds, {
-      redirect_uri: loc,
+      hello.init(clientIds, {
+        redirect_uri: loc,
+      });
+      hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
+      hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
     });
-    hello.on('auth.login', (auth) => { this.onHelloLogin.call(this, auth); } );
-    hello.on('auth.logout', (data) => { this.onHelloLogout.call(this, data); } );
   }
   private onHelloLogin(auth): void {
     console.log('[FeathersService] onHelloLogin() auth: ', auth);
@@ -460,7 +536,7 @@ export class FeathersService {
           this.events.publish('user:login', user);
           this.loginState = true;
         }
-        this.loginHelloDispose( { network: auth.network } ).catch(() => {});
+        this.loginHelloDispose( { network: auth.network as string } as Login ).catch(() => {});
       }).catch(error => {
         console.log('[FeathersService] onHelloLogin() auth error=%o', error);
         this.events.publish('user:failed', error,
@@ -482,7 +558,7 @@ export class FeathersService {
     console.log('[FeathersService] onHelloLogout() data: ', data);
   }
 
-  private loginHello(social, display: hello.HelloJSDisplayType = 'page'): Promise<any> {
+  private loginHello(social: Login, display: hello.HelloJSDisplayType = 'page'): Promise<any> {
     return new Promise((resolve, reject) => {
       hello(social.network).login({
         scope: 'email',
@@ -504,7 +580,7 @@ export class FeathersService {
       });
     });
   }
-  private loginHelloDispose(social): Promise<any> {
+  private loginHelloDispose(social: Login): Promise<any> {
     // Remove session (but keep logged in with provider).
     return new Promise((resolve, reject) => {
       hello(social.network).logout().then(() => {
@@ -517,12 +593,12 @@ export class FeathersService {
     });
   }
 
-  private loginGoogleAPI(social): Promise<any> {
+  private loginGoogleAPI(social: Login): Promise<any> {
     // TODO: (later) use this.googlePlus.trySilentLogin(options) for quiet auth at start of app.
     return this.googlePlus.login({
       // scopes: 'profile email', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
       scopes: 'email',
-      // ?webClientId: social.client_id, // optional clientId of your Web application from Credentials settings of your project
+      // ?webClientId: social.clientId, // optional clientId of your Web application from Credentials settings of your project
       //   - On Android, this MUST be included to get an idToken. On iOS, it is not required.
       // offline: true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode,
       //   which can be used to grant offline access to a non-Google server
@@ -597,18 +673,17 @@ export class FeathersService {
 
       });
   }
-  private logoutGoogleAPI(social): Promise<any> {
+  private logoutGoogleAPI(social: Login): Promise<any> {
     return this.googlePlus.logout();
   }
 
-  public loginWith(social): Promise<any|User> {
+  public loginWith(social: Login): Promise<any|User> {
     console.log('[FeathersService] loginWith() social: %o', social);
-    if (social.loginFn) {
+    if (social.loginFn && typeof social.loginFn === 'function') {
       return social.loginFn.call(this, social);
     }
-    if (social.client_id) {
+    if (social.clientId) {
       return this.loginHello(social); // Won't work on mobile
-      // TODO: (now) Check platform and skip this method (should do on socials list generator).
     }
     if (social.url) {
       // TODO: (when needed) For FeathersJS/backend method: return this.openWebpage(social.url); // Won't work on mobile
@@ -726,7 +801,7 @@ export class FeathersService {
 
   // ?private subscribers[]: DataSubscriber<any>[];
   public subscribe<T extends Record>(service: string, query: any, cbData: (records: any) => void, cbErr: (err: any) => void): any {
-    const subscriber = new DataSubscriber<T>(this.service(service), cbData, cbErr);
+    const subscriber = new DataSubscriber<T>(this, this.service(service), cbData, cbErr);
     subscriber.find(query)
       .catch(err => { cbErr(err); })
     ;
