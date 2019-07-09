@@ -422,8 +422,8 @@ export class FeathersService {
     // use device.platform. Note: only available if platform.is('cordova') === true.
     // see <http://www.damirscorner.com/blog/posts/20171124-DetectingWhereIonicAppIsRunning.html>
     if (
-      (document.URL.indexOf('http:localhost:81'    ) === 0 /* developer server                   */ ) ||
-      (document.URL.indexOf('https:localhost:81'   ) === 0 /* developer server / https           */ )
+      (document.URL.indexOf('http://localhost:81'    ) === 0 /* developer server                   */ ) ||
+      (document.URL.indexOf('https://localhost:81'   ) === 0 /* developer server / https           */ )
     ) {
       // For sure not an app
       return false;
