@@ -417,7 +417,10 @@ export class FeathersService {
     // - in Android Chrome: android,cordova,mobile,hybrid
     // -- no difference whatsoever.
     // see <https://forum.ionicframework.com/t/how-to-determine-if-browser-or-app/89149/25>
-    // We need to rely on circumstantial evidence here to tease out if we're in a browser or in an app (that uses Webview too)
+    // We need to rely on circumstantial evidence here to tease out if we're in a browser or in an app (that uses Webview too).
+    // TODO: (later) Explore use of: import { Device } from '@ionic-native/device'; inject Device into constructor(), then
+    // use device.platform. Note: only available if platform.is('cordova') === true.
+    // see <http://www.damirscorner.com/blog/posts/20171124-DetectingWhereIonicAppIsRunning.html>
     if (
       (document.URL.indexOf('http:localhost:81'    ) === 0 /* developer server                   */ ) ||
       (document.URL.indexOf('https:localhost:81'   ) === 0 /* developer server / https           */ )
