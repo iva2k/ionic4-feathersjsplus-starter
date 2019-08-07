@@ -90,7 +90,7 @@
     "helmet": "^3.18.0",
     "internal-ip": "^4.3.0",
     "juice": "^5.2.0",
-    "lodash.merge": "^4.6.1",
+    "lodash.merge": "^4.6.2",
     "merge-graphql-schemas": "^1.5.8",
     "nedb": "^1.8.0",
     "nodemailer-smtp-transport": "^2.7.4",
