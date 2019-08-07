@@ -1378,4 +1378,31 @@ See the edits on Github.
 
 "Login With X" list of providers is now server-defined, with client ID and client Secret maintained on the server.
 
+### Step 13 CI / Continuous Integration
+
+We will add TravisCI so our tests and coverage will run automatically.
+
+First enable TravisCI:
+
+1. Go to <https://travis-ci.org> and create an account (can login with Github, so your account is linked).
+2. Add .travis.yml file to your Github repo.
+3. Enable your repo on <https://travis-ci.org/account/repositories>.
+4. Configure your repo - add "AUTH_SECRET" environment variable.
+
+Next enable coverall.io:
+
+1. Go to <https://coveralls.io> and create an account (can login with Github, so your account is linked)
+2. Add your repo at <https://coveralls.io/repos/new>
+3. install npm package with ```npm i -D coveralls```
+4. Add coveralls script to serer/api/package.json "nyc report --reporter=text-lcov | coveralls"
+5. Add server/api/.coveralls.yml file with repo_token from coveralls.io
+
+Also add build and coverage badges to README.md file
+
+Push all changes to Github.
+
+#### Step 13 Summary
+
+With this step complete we will have automated testing of server/api running every time changes are pushed to Github.
+
 ## END
