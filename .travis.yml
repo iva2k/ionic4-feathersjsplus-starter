@@ -1,0 +1,16 @@
+language: node_js
+branches:
+    only:
+        - master
+node_js:
+    - "4"
+    - "6"
+    - "8"
+    - "node"
+before_script:
+    - cd server/api
+script:
+    - npm test
+after_script:
+    - npm run coverage
+    - npm run coveralls
