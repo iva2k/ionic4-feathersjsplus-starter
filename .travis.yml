@@ -3,8 +3,6 @@ branches:
     only:
         - master
 node_js:
-    - "4"
-    - "6"
     - "8"
     - "node"
 before_install:
