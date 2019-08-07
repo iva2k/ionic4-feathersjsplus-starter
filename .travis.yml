@@ -7,10 +7,9 @@ node_js:
     - "6"
     - "8"
     - "node"
-before_script:
+before_install:
     - cd server/api
 script:
     - npm test
 after_script:
     - npm run coverage
-    - npm run coveralls
