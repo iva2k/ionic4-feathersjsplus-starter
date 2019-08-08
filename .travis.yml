@@ -9,6 +9,6 @@ before_install:
     - cd server/api
 script:
     - npm test
-after_success:
+after_script:
     - npm run coverage
     - npm run coveralls
