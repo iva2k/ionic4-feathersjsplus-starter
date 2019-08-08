@@ -1392,10 +1392,10 @@ First enable TravisCI:
 Next enable coverall.io:
 
 1. Go to <https://coveralls.io> and create an account (can login with Github, so your account is linked)
-2. Add your repo at <https://coveralls.io/repos/new>
+2. Add your repo at <https://coveralls.io/repos/new> (if the repo isn't listed, yet, then "Sync GitHub Repos").
 3. install npm package with ```npm i -D coveralls```
 4. Add coveralls script to serer/api/package.json "nyc report --reporter=text-lcov | coveralls"
-5. Add server/api/.coveralls.yml file with repo_token from coveralls.io
+5. For private repo: Add server/api/.coveralls.yml file with repo_token from coveralls.io (alternatively can use COVERALLS_REPO_TOKEN oenvironment variable in TravisCI)
 
 Also add build and coverage badges to README.md file
 
