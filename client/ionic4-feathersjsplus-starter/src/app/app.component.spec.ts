@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,8 +9,31 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 
 import { FeathersService } from './services/feathers.service';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { HttpClientModule } from '@angular/common/http';
+// import { GooglePlus } from '@ionic-native/google-plus/ngx';
+// import { HttpClientModule } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root'
+})
+class FeathersMockService {
+  urlLoginDestination: string;
+  urlLogoutDestination: string;
+  retUrl: string;
+  public setGuards(urlLoginDestination: string, urlLogoutDestination: string) {
+    this.urlLoginDestination = urlLoginDestination;
+    this.urlLogoutDestination = urlLogoutDestination;
+  }
+
+  public setRetUrl(retUrl: string) {
+    this.retUrl = retUrl;
+  }
+  public getRetUrl(clear: boolean = true): string {
+    const ret = this.retUrl;
+    if (clear) { this.retUrl = null; }
+    return ret;
+  }
+
+}
 
 describe('AppComponent', () => {
 
@@ -28,7 +51,7 @@ describe('AppComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [
         RouterTestingModule,
-        HttpClientModule,
+        // HttpClientModule,
       ],
       providers: [
         Events,
@@ -36,8 +59,9 @@ describe('AppComponent', () => {
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
         { provide: Platform, useValue: platformSpy },
-        GooglePlus,
-        FeathersService,
+        // GooglePlus,
+        // FeathersService,
+        { provide: FeathersService, useClass: FeathersMockService },
       ],
     })
     .compileComponents();
