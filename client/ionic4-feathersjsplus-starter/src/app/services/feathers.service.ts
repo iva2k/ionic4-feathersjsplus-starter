@@ -804,7 +804,7 @@ export class FeathersService {
 
   // ?private subscribers[]: DataSubscriber<any>[];
   public subscribe<T extends Record>(service: string, query: any, cbData: (records: any) => void, cbErr: (err: any) => void): any {
-    const subscriber = new DataSubscriber<T>(this, this.service(service), cbData, cbErr);
+    const subscriber = new DataSubscriber<T>(this.service(service), cbData, cbErr);
     subscriber.find(query)
       .catch(err => { cbErr(err); })
     ;

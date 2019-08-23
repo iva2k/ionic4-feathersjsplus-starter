@@ -1,3 +1,4 @@
+server/api:
 [![Build Status server/api](https://travis-ci.org/iva2k/ionic4-feathersjsplus-starter.svg?branch=master)](https://travis-ci.org/iva2k/ionic4-feathersjsplus-starter)
 [![Coverage Status server/api](https://coveralls.io/repos/github/iva2k/ionic4-feathersjsplus-starter/badge.svg?branch=master)](https://coveralls.io/github/iva2k/ionic4-feathersjsplus-starter?branch=master)
 
