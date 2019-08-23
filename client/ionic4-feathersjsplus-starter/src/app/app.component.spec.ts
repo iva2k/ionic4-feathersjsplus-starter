@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { Events, NavController, Platform } from '@ionic/angular';
@@ -24,7 +24,7 @@ describe('AppComponent', () => {
     platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy, is: platformIsSpy });
 
     TestBed.configureTestingModule({
-      declarations: [AppComponent],
+      declarations: [ AppComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [
         RouterTestingModule,
@@ -39,7 +39,8 @@ describe('AppComponent', () => {
         GooglePlus,
         FeathersService,
       ],
-    }).compileComponents();
+    })
+    .compileComponents();
   }));
 
   it('should create the app', () => {
