@@ -47,9 +47,11 @@ export class DataSubscriber<T extends Record> {
     cbErr: (err: any) => void
   ) {
     this.fs = service;
-    this.fs.on('created', record => this.onCreated(record));
-    this.fs.on('updated', record => this.onUpdated(record));
-    this.fs.on('removed', record => this.onRemoved(record));
+    if (this.fs) {
+      this.fs.on('created', record => this.onCreated(record));
+      this.fs.on('updated', record => this.onUpdated(record));
+      this.fs.on('removed', record => this.onRemoved(record));
+    }
 
     this.records$ = new Observable(observer => (this.observer = observer));
     this.dataStore = { records: [] };
@@ -179,7 +181,7 @@ export class FeathersService {
   }
 
   private initFeathers(): Promise<void> {
-    // Featch server.json
+    // Fetch server.json
     const url = 'assets/server.json';
     return this.getJsonData(url).then(data => {
       console.log('[FeathersService] Loaded "%s", data: %o', url, data);
