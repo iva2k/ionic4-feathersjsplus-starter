@@ -15,7 +15,7 @@ import { FeathersService } from './services/feathers.service';
 @Injectable({
   providedIn: 'root'
 })
-class FeathersMockService {
+class MockFeathersService {
   urlLoginDestination: string;
   urlLogoutDestination: string;
   retUrl: string;
@@ -55,13 +55,13 @@ describe('AppComponent', () => {
       ],
       providers: [
         Events,
-        {provide: NavController, useValue: null}, // NavController,
+        { provide: NavController, useValue: null }, // NavController,
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
         { provide: Platform, useValue: platformSpy },
         // GooglePlus,
         // FeathersService,
-        { provide: FeathersService, useClass: FeathersMockService },
+        { provide: FeathersService, useClass: MockFeathersService },
       ],
     })
     .compileComponents();
