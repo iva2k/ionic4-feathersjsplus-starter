@@ -14,9 +14,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 })
 class MockFeathersService {
   private socialLogins: Promise<Login[]> = Promise.resolve([]);
-  public getSocialLogins(): Promise<any[]> {
-    return this.socialLogins;
-  }
+  public getSocialLogins(): Promise<any[]> { return this.socialLogins; }
+  public setRetUrl(retUrl: string) {}
+  public decodeObject(str: string) { return JSON.parse(str || '""'); }
 }
 
 @Component({
@@ -64,7 +64,7 @@ describe('LoginPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // ngOnInit()??
+    fixture.detectChanges(); // ngOnInit()
   });
 
   it('should create', () => {
