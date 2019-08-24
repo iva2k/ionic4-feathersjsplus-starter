@@ -9,8 +9,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 
 import { FeathersService } from './services/feathers.service';
-// import { GooglePlus } from '@ionic-native/google-plus/ngx';
-// import { HttpClientModule } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
