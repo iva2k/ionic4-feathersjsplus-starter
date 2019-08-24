@@ -60,7 +60,7 @@ describe('MenuPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MenuPage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // ngOnInit()
   });
 
   it('should create', () => {
