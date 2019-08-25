@@ -57,18 +57,20 @@ describe('AppComponent', () => {
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
         { provide: Platform, useValue: platformSpy },
-        // GooglePlus,
-        // FeathersService,
         { provide: FeathersService, useClass: MockFeathersService },
       ],
     })
     .compileComponents();
   }));
 
+  // afterEach(() => {
+  // });
+
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
+    fixture.destroy();
   });
 
   it('should initialize the app', async () => {

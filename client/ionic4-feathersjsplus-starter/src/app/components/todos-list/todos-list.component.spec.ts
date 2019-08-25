@@ -45,7 +45,7 @@ describe('TodosListComponent', () => {
       declarations: [ TodosListComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-         {provide: FeathersService, useClass: FeathersMockService},
+        {provide: FeathersService, useClass: FeathersMockService},
       ],
     })
     .compileComponents();
@@ -54,7 +54,12 @@ describe('TodosListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TodosListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // ngOnInit()
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    component = null;
   });
 
   it('should create', () => {

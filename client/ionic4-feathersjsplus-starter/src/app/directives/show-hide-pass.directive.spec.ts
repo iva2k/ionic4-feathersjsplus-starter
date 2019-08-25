@@ -39,7 +39,7 @@ describe('ShowHidePassDirective', () => {
   beforeEach( async () => {
     fixture = TestBed.createComponent(TestShowHidePassComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // ngOnInit
+    fixture.detectChanges(); // ngOnInit()
     await fixture.whenStable();
 
     fixture.detectChanges(); // let ngOnInit() resolve
@@ -61,7 +61,7 @@ describe('ShowHidePassDirective', () => {
     expect(buttonEl).toBeTruthy();
   });
 
-  it('should change type and class', fakeAsync( () => {
+  it('should change type of input and class of button', fakeAsync( () => {
     // const directive = fixture.debugElement.query(By.directive(ShowHidePassDirective))
     //   .injector.get(ShowHidePassDirective) as ShowHidePassDirective;
     // const spy = spyOn(directive, 'onClick');
@@ -94,4 +94,7 @@ describe('ShowHidePassDirective', () => {
     expect(buttonEl.nativeElement.className).not.toContain('toggle-text');
     expect(inputEl.nativeElement.type).toBe('password');
   }));
+
+  // TODO: (later) add more tests!
+
 });

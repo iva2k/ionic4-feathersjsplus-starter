@@ -18,10 +18,18 @@ describe('TabsPage', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TabsPage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    fixture.detectChanges(); // ngOnInit()
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    component = null;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // TODO: (later) add more tests!
+
 });

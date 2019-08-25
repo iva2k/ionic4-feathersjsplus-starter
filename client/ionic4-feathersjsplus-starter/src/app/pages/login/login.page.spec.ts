@@ -67,7 +67,15 @@ describe('LoginPage', () => {
     fixture.detectChanges(); // ngOnInit()
   });
 
+  afterEach(() => {
+    fixture.destroy();
+    component = null;
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // TODO: (later) add more tests!
+
 });
