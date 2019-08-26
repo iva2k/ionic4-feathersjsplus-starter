@@ -65,7 +65,7 @@ export class DataSubscriber<T extends Record> {
         this.dataStore.records = records.data;
         this.observer.next(this.dataStore.records);
       })
-      .catch( (err) => {
+      .catch( (err: any) => {
         console.error('[FeathersService] Error in find: %o query: %o', err, query);
       });
   }
@@ -195,7 +195,7 @@ export class FeathersService {
       console.log('[FeathersService] Using default API URL %s', defaultApiUrl);
       return defaultApiUrl;
     }).then((apiUrl) => {
-      // Note: we explicitly set <void> type on promis to avoid issue <https://github.com/Microsoft/TypeScript/issues/8516>.
+      // Note: we explicitly set <void> type on promise to avoid issue <https://github.com/Microsoft/TypeScript/issues/8516>.
       return new Promise<void>((resolve) => {
 
         // Add socket.io plugin
@@ -454,7 +454,7 @@ export class FeathersService {
               if (this[social.loginFn]) {
                 social.loginFn = this[social.loginFn];
               } else {
-                console.error('Unknown social.loginFn %s', social.loginFn);
+                console.error('[FeathersService] Unknown social.loginFn %s', social.loginFn);
                 return false;
               }
               if (this.isApp()) {
@@ -474,6 +474,9 @@ export class FeathersService {
             console.log('Can\'t use social login %s', social.title);
             return false;
           });
+        }).catch( (error: any) => {
+          console.error('[FeathersService] getSocialLogins() error: %o', error);
+          return Promise.resolve([]);
         });
       });
     }
