@@ -140,7 +140,7 @@ module.exports = {
       // foo: (bar, baz) => { return ... }
     },
     // Mutate fake data after its generated.
-    postGeneration: data => data,
+    // postGeneration: data => data,
     // https://github.com/json-schema-faker/json-schema-faker#custom-options
     jsf: {
       // Configure a maximum amount of items to generate in an array.
