@@ -1,4 +1,3 @@
-import { AuthGuardService } from './auth-guard.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'; // For fetching server.json file in dev mode.
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
