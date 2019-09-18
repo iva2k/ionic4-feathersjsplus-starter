@@ -15,8 +15,7 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": [
-      ]
+      "problemMatcher": []
     },
     {
       "label": "Serve Ionic/Cordova app",
@@ -26,14 +25,15 @@
         "serve",
         "--cordova",
         "--platform=browser",
+        "--address",
+        "0.0.0.0",
         "-b"
       ],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": [
-      ]
+      "problemMatcher": []
     },
     {
       "label": "Serve Cordova browser app",
@@ -45,12 +45,13 @@
         "browser",
         "-l",
         "--address",
-        "localhost"
+        "0.0.0.0"
       ],
-      "group": "build"
+      "group": "build",
+      "problemMatcher": []
     },
     {
-      "label": "Build Cordova browser app",
+      "label": "Prepare Cordova browser app",
       "type": "shell",
       "command": "ionic",
       "args": [
@@ -59,7 +60,20 @@
         "--no-build",
         "browser"
       ],
-      "group": "build"
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Cordova browser app",
+      "type": "shell",
+      "command": "ionic",
+      "args": [
+        "cordova",
+        "build",
+        "browser"
+      ],
+      "group": "build",
+      "problemMatcher": []
     },
     {
       "label": "Serve Cordova android app",
@@ -74,10 +88,11 @@
         "--address",
         "localhost"
       ],
-      "group": "build"
+      "group": "build",
+      "problemMatcher": []
     },
     {
-      "label": "Build Cordova android app",
+      "label": "Prepare Cordova android app",
       "type": "shell",
       "command": "ionic",
       "args": [
@@ -86,7 +101,20 @@
         "--no-build",
         "android"
       ],
-      "group": "build"
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Cordova android app",
+      "type": "shell",
+      "command": "ionic",
+      "args": [
+        "cordova",
+        "build",
+        "android"
+      ],
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }
