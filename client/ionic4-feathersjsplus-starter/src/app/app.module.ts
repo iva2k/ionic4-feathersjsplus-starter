@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -33,6 +34,13 @@ import { NonauthGuardService } from './services/nonauth-guard.service';
         // 'overlay' - slide out covering the page (MD and Windows)
         // No more platforms! (see https://github.com/ionic-team/ionic/issues/16272 https://ionicframework.com/docs/utilities/config)
       // (!) platforms: { ios: { menuType: 'reveal', } }
+    }),
+    IonicStorageModule.forRoot({
+      // // See https://github.com/localForage/localForage#configuration
+      // name: '__mydb',
+      // storeName: '_ionickv',
+      // dbKey: '_ionickey',
+      // driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
     }),
     AppRoutingModule
   ],

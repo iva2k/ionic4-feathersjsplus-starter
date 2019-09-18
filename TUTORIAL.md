@@ -1405,4 +1405,24 @@ Push all changes to Github.
 
 With this step complete we will have automated testing of server/api running every time changes are pushed to Github.
 
+(More steps to come for testing)
+
+### Step 17. App preferences, Themes & Dark Mode
+
+Dark mode is becoming a very desirable feature, as many phones with OLED display can have much better battery life.
+
+We will add dark theme CSS file, include it in src/theme/variables.scss file, and implement user preferences which allow switching dark theme in a menu item with a toggle.
+
+Later (e.g. for a bigger app), preferences can be moved to a separate page.
+
+```bash
+npm install --save @ionic/storage
+ionic cordova plugin add cordova-sqlite-storage --save
+ionic g service services/preferences
+```
+
+### Step 18. App config in json files
+
+See <https://devblogs.microsoft.com/premier-developer/angular-how-to-editable-config-files/>.
+
 ## END

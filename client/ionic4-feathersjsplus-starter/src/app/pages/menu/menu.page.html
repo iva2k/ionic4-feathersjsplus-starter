@@ -16,6 +16,7 @@
             <ion-label>
               {{ item.title }}
             </ion-label>
+            <ion-toggle id="themeToggle" [(ngModel)]="darkTheme" (ionChange)="onChange(item)" slot="end" *ngIf="item.control === 'toggle'"></ion-toggle>
           </ion-item>
         </ion-menu-toggle>
 

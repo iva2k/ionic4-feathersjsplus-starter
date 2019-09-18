@@ -76,14 +76,15 @@
   --ion-color-light-tint: #f5f6f9;
 
   --placeholder-color: var(--ion-color-medium);
+
   ion-input {
     --placeholder-color: var(--ion-color-medium);
   }
 
   // Loading pop-up styling:
   .app-loading {
-    --background:#f4b004;
-    --spinner-color:#c0220a;
+    --background: #f4b004;
+    --spinner-color: #c0220a;
     color: #c0220a;
     // --min-height: ;
     // --height: ;
@@ -92,3 +93,6 @@
   }
 
 }
+
+/** Themes **/
+@import 'dark.scss'

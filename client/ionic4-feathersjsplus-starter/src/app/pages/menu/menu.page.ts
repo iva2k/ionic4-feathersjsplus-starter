@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs/Subscription';
 
 import { FeathersService } from '../../services/feathers.service';
+import { PreferencesService } from '../../services/preferences.service';
+
 
 export interface IMenuItem {
   title: string;
@@ -17,6 +19,7 @@ export interface IMenuItem {
   fix?: boolean; // If true, use hack, see <https://github.com/angular/angular/issues/18469>
   // ? tabPage?: any;
   // ? tabIndex?: number; // Equal to the order of our tabs inside tabs.ts
+  control?: string;
 }
 
 @Component({
@@ -25,19 +28,23 @@ export interface IMenuItem {
   styleUrls: ['./menu.page.scss'],
 })
 export class MenuPage implements OnInit, OnDestroy {
+  @ViewChild('themeToggle') themeToggle;
   public id: number;
   public mode: string;
   private paramMapSubscription: Subscription;
+  public darkTheme: boolean;
 
   menuItems: IMenuItem[] = [
     { title: 'Todos'      , icon: 'home'    , url: '/menu/app/tabs/todos' },
     { title: 'Logout'     , icon: 'log-out' , action(that) { that.onLogout(); } },
+    { title: 'Dark Theme' , icon: 'moon'    , action(that) { that.onDarkTheme(); }, control: 'toggle' },
   ];
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
     public feathersService: FeathersService,
+    public preferencesService: PreferencesService,
   ) { }
 
   ngOnInit() {
@@ -47,6 +54,11 @@ export class MenuPage implements OnInit, OnDestroy {
           this.mode = paramMap.get('mode');
       }
     );
+    this.preferencesService.ready().then(() => {
+      const saved = this.darkTheme;
+      this.darkTheme = (this.preferencesService.get('theme') === 'dark');
+      this.onChange(null); // Ensure we trigger change to paint the theme correctly
+    });
   }
 
   ngOnDestroy() {
@@ -83,4 +95,13 @@ export class MenuPage implements OnInit, OnDestroy {
     ;
   }
 
+  public onDarkTheme() {
+    // const isSet = document.body.classList.contains('dark');
+    // document.body.classList.toggle('dark', !isSet);
+  }
+
+  public onChange(item) {
+    document.body.classList.toggle('dark', this.darkTheme);
+    this.preferencesService.set('theme', this.darkTheme ? 'dark' : '');
+  }
 }
