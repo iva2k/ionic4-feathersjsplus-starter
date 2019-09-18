@@ -7,8 +7,8 @@ describe('new App', () => {
     page = new AppPage();
   });
 
-  it('should be blank', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toContain('The world is your oyster.');
+  it('should be blank', async () => {
+    await page.navigateTo();
+    expect(page.getParagraphText()).toContain('Login');
   });
 });
