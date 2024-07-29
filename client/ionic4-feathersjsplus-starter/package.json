@@ -37,7 +37,7 @@
     "cordova-sqlite-storage": "^3.3.0",
     "core-js": "^2.5.4",
     "deep-object-diff": "^1.1.0",
-    "feathers-authentication-management": "^2.0.1",
+    "feathers-authentication-management": "^5.1.0",
     "hellojs": "^1.18.8",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
